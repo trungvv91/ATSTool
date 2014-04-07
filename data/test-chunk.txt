@@ -1,0 +1,17 @@
+Quá_trình	Np	B-NP
+khám_xét	V	B-VP
+6	M	B-NP
+container	N	I-NP
+này	P	I-NP
+,	,	O
+đội	N	B-NP
+Kiểm_soát	Np	I-NP
+Hải_quan	Np	I-NP
+đã	R	B-VP
+phát_hiện	V	I-VP
+hàng	R	B-NP
+trăm	M	I-NP
+xe	N	I-NP
+mô_tô	N	I-NP
+.	.	O
+
