@@ -14,7 +14,7 @@ import nlp.dict.Punctuation;
 import nlp.dict.Stopword;
 import nlp.sentenceExtraction.Datum;
 import nlp.sentenceExtraction.IdfScore;
-import nlp.util.CmdTest;
+import nlp.util.CmdCommand;
 import nlp.util.IOUtil;
 import nlp.util.MyStringUtil;
 
@@ -87,7 +87,7 @@ public class VNTagger {
         /// Chay command line cua chuong trinh VietChunker
         /// đã có file -postag.txt
         try {
-            CmdTest.runCommand(inputNum);
+            CmdCommand.runCommand(inputNum);
         } catch (Exception e) {
             System.out.println("Can't run VietChunker. Error : " + e);
         }
@@ -100,12 +100,12 @@ public class VNTagger {
 
         for (int lineCounter = 0, datumCounter = 0; lineCounter < nLines; lineCounter++, datumCounter++) {
 //            System.out.println("old: " + datums.get(i).tf);
-            String word = lines.get(lineCounter);
-            String[] w = word.split("\\s");
-            Datum d = new Datum(w[0], w[1]);
+            String line = lines.get(lineCounter);
+            String[] parts = line.split("\\s");
+            Datum d = new Datum(parts[0], parts[1]);
 
             d.iSentence = sentenceCounter;
-            d.chunk = w[2];
+            d.chunk = parts[2];
             if (d.chunk.contains("B-")) {
                 phrase++;
             }
@@ -180,12 +180,12 @@ public class VNTagger {
                     Datum dj = datums.get(j);
                     if (di.equals(dj)) {
                         count++;
-                        dj.tf = -i;     /// !!! cần tốt hơn
+                        dj.tf = -i;     /// lưu lại chỉ số
                     }
                 }
                 di.tf = count;
             } else if (di.tf < 0) {
-                di.tf = datums.get(-di.tf).tf;
+                di.tf = datums.get(-di.tf).tf;      /// chỉ số được lưu dùng ở đây
             }
             di.idf = maps.get(di.word.toLowerCase());
             di.score = di.idf * di.tf;

@@ -14,6 +14,7 @@ import nlp.dict.Conjunction;
 import nlp.sentenceExtraction.Sentence;
 import nlp.sentenceExtraction.SentenceExtraction;
 import nlp.tool.vnTextPro.VNTagger;
+import nlp.util.IOUtil;
 import nlp.util.MyStringUtil;
 
 /**
@@ -62,10 +63,10 @@ public class WordsGraph {
         System.out.println("End word-importance set...");
     }
 
-    public void mainWordGraph(String inputNum, List<Datum> dts, int wordMax) throws IOException {
+    public void mainWordGraph(String inputNum, List<Datum> dts, int maxWord) throws IOException {
 
         SentenceExtraction se = new SentenceExtraction();
-        ArrayList<Sentence> sentences = se.ExtractSentences(inputNum, dts);
+        ArrayList<Sentence> sentences = se.extract(inputNum, dts);
 
         //Lay 15% so tu la importance words  ???      
         setWordImportance(sentences, 0.15f);
@@ -421,8 +422,8 @@ public class WordsGraph {
         /// bỏ các câu score thấp nhất, cho đến khi word < wordMax
         Set<Integer> senExclude = new HashSet<>();
         int count = 0;      /// số câu bị loại
-        int words = wordMax + 1;
-        while (words > wordMax) {
+        int words = maxWord + 1;
+        while (words > maxWord) {
             words = 0;
             for (Sentence sentence : sentences) {
                 ArrayList<Datum> sen = sentence.dataList;
@@ -434,10 +435,10 @@ public class WordsGraph {
                     }
                 }
             }
-            if (words > wordMax) {
+            if (words > maxWord) {
                 count++;
                 /// lấy thằng thấp nhất
-                senExclude.add(SentenceExtraction.mapSenOrderByScore.get(sentences.size() - count));
+                senExclude.add(se.mapSenOrderByScore.get(sentences.size() - count));
             }
         }
 
@@ -452,22 +453,19 @@ public class WordsGraph {
                 int sIndex = termIndex.get(senIndex)[0];
                 int eIndex = termIndex.get(senIndex)[1];
                 if (sIndex != -1 && eIndex != -1) {
-                    sen.get(sIndex).word = MyStringUtil.capitalize(sen.get(sIndex).word);          /// !!! tự code hay hơn
+                    sen.get(sIndex).word = MyStringUtil.capitalize(sen.get(sIndex).word);
                     for (Datum d : sen) {
                         if (!d.chunk.endsWith("O")) {
                             numOfWords++;
                         }
                         if (sen.indexOf(d) >= sIndex && sen.indexOf(d) <= eIndex) {
                             /// thuộc essential fragment
-                            if (!d.word.contains("nlp.sentenceExtraction.Datum")) {     /// ???
-                                System.out.print(d.word);
-                                outString += d.word.replace("_", " ");
-                                outString += " ";
-                                System.out.print(" ");
-                            }
+                            System.out.print(d.word + " ");
+                            outString += d.word.replace("_", " ");
+                            outString += " ";
                         }
                     }
-                    System.out.println(" ");
+                    System.out.println("");
                     outString += "\n";
                 }
             }
@@ -475,9 +473,7 @@ public class WordsGraph {
 
         System.out.println("Number of words: " + numOfWords);
         String outputFilename = "corpus/AutoSummary/" + inputNum + ".txt";
-        try (FileWriter fwriter = new FileWriter(new File(outputFilename))) {
-            fwriter.write(outString);
-        }
+        IOUtil.WriteToFile(outputFilename, outString);
     }
 
     public static void main(String[] args) {

@@ -5,7 +5,6 @@
 package nlp.dict;
 
 import java.util.ArrayList;
-import nlp.tool.vnTextPro.VNTagger;
 import nlp.util.IOUtil;
 
 /**

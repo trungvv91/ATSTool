@@ -10,7 +10,7 @@ package nlp.util;
  */
 import java.io.*;
 
-public class CmdTest {
+public class CmdCommand {
 
     public static void runCommand(String filename) throws Exception {
         String[] command = {"cmd"};

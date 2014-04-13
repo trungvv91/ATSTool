@@ -79,9 +79,9 @@ public class Decomposer {
                     .replaceAll("…|\\.\\.\\.", " ")
                     .replaceAll("[„“”\"]", " ")
                     .replaceAll("[‘’']", " ")
-                    .replaceAll("[–\\-]", " ")
+                    .replaceAll("[–]", "-")
                     .replaceAll("[()\\[\\]]", " ")
-                    .replaceAll("[!,:;\\?] ", " ")
+                    .replaceAll("[!,:;\\?\\-] ", " ")
                     .replaceAll("\\s+", " ")
                     .replaceAll("\\.(\\s)*", "\n")
                     .split("\n");

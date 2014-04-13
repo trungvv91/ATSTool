@@ -48,20 +48,14 @@ public class Datum {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
+        boolean rs;
+        if (obj == null || this.getClass() != obj.getClass()) {
+            rs = false;
+        } else {
+            final Datum objDatum = (Datum) obj;
+            rs = this.word.toLowerCase().equals(objDatum.word.toLowerCase()) && this.posTag.equals(objDatum.posTag);
         }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Datum other = (Datum) obj;
-        if (!Objects.equals(this.word.toLowerCase(), other.word.toLowerCase())) {
-            return false;
-        }
-        if (!Objects.equals(this.posTag, other.posTag)) {
-            return false;
-        }
-        return true;
+        return rs;
     }
 
     @Override

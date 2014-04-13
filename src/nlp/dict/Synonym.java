@@ -18,11 +18,8 @@ public class Synonym {
     public Map<String, String> synonymMap = new HashMap<>();
     private final String filename = "train-data/VNsynonym.txt";
 
-    public boolean isSynonum(String str) {
-        if (synonymMap.containsKey(str.toLowerCase())) {
-            return true;
-        }
-        return false;
+    public boolean isSynonym(String str) {
+        return synonymMap.containsKey(str.toLowerCase());
     }
 
     public String[] getSynonyms(String str) {
@@ -31,12 +28,7 @@ public class Synonym {
         return array;
     }
 
-    /**
-     * Setup synonymMap
-     *
-     * @throws IOException
-     */
-    public void initSynonymMap() throws IOException {
+    public Synonym() {
         String line;
         try (BufferedReader br = new BufferedReader(new FileReader(
                 new File(filename)))) {

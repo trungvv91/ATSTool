@@ -62,10 +62,12 @@ public class VNTokenizer {
 //		
 //		tokenizer.tokenize(outputFilePre, outputFile);
 //		tokenizer.tokenize2(inputFile, outputFile2);
-        String test = "Ông ấy rât là tham vọng.người đầy tham vọng và thông minh";
-        String result = tokenizer.tokenize(test);
-        System.out.println(result);
-        String test2 = "Hôm nay trời nắng chang chang. Mèo con đi học chẳng mang cái gì";
-        System.out.println(tokenizer.tokenize(test2));
+//        String test = "Ông ấy rât là tham vọng.người đầy tham vọng và thông minh";
+//        String result = tokenizer.tokenize(test);
+//        System.out.println(result);
+//        String test2 = "Hôm nay trời nắng chang chang. Mèo con đi học chẳng mang cái gì";
+//        System.out.println(tokenizer.tokenize(test2));
+//        tokenizer.tokenize("D:\\Git\\word2vector\\testCorpus0.txt", "D:\\Git\\word2vector\\VNESEcorpus-tokenized3.txt");
+        tokenizer.tokenize("D:/Git/word2vector/document/corpus-edited.txt", "D:/Git/word2vector/document/corpus-tokenized.txt");
     }
 }

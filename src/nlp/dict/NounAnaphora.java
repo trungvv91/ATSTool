@@ -193,17 +193,18 @@ public class NounAnaphora {
             Sentence seni = sentences.get(i);
             int[] indices = seni.getSubject();
             for (int j = indices[0]; j <= indices[1]; j++) {
-                if (seni.dataList.get(j).posTag.equals("P")) {
-                    Sentence seni_1 = sentences.get(i - 1);
-                    int[] indices_1 = seni_1.getSubject();
-                    /// anaphoring pronoun
-                    seni.deletePhrase(indices[0], indices[1]);
-                    for (int k = indices_1[1]; k >= indices_1[0]; k--) {
-                        seni.dataList.add(indices[0], seni_1.dataList.get(k));
-                    }
-                    return;
-                } else if (seni.dataList.get(j).posTag.equals("Np")) {
-                    
+                switch (seni.dataList.get(j).posTag) {
+                    case "P":
+                        Sentence seni_1 = sentences.get(i - 1);
+                        int[] indices_1 = seni_1.getSubject();
+                        /// anaphoring pronoun
+                        seni.deletePhrase(indices[0], indices[1]);
+                        for (int k = indices_1[1]; k >= indices_1[0]; k--) {
+                            seni.dataList.add(indices[0], seni_1.dataList.get(k));
+                        }
+                        return;
+                    case "Np":
+                        break;
                 }
             }
         }

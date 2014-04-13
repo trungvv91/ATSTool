@@ -6,6 +6,7 @@ package nlp.sentenceExtraction;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,11 +20,15 @@ import nlp.tool.vnTextPro.VNTagger;
  */
 public class SentenceExtraction {
 
-    public static Map<Integer, Integer> mapSenOrderByScore = new HashMap<>();
+    /**
+     * <K, V> = <isenstence, order>
+     */
+    public Map<Integer, Integer> mapSenOrderByScore = new HashMap<>();
     public NounAnaphora na = new NounAnaphora();
+    final double REMAIN_RATE = 2.0 / 3;
 
     /**
-     * Eliminate similar sentences !!!
+     * Loại bỏ các câu gần giống nhau
      *
      * @param datums
      * @throws IOException
@@ -78,15 +83,13 @@ public class SentenceExtraction {
             }
         }
 
-//        System.out.println(senRedun);        
-//        System.out.println(datums.size());
         if (!senRedun.equals("")) {
             String[] arrRedun = senRedun.split(":");
             for (int i = 0; i < arrRedun.length; i++) {
                 sentenceArray.remove(Integer.parseInt(arrRedun[i]) - i);
             }
+            System.out.println(arrRedun.length + " sentences are removed");
         }
-//        System.out.println(datums.size());
         System.out.println("End of redundancy...");
     }
 
@@ -98,36 +101,45 @@ public class SentenceExtraction {
      * @return tagged datums list
      * @throws IOException
      */
-    public ArrayList<Sentence> ExtractSentences(String inputNum, List<Datum> datums) throws IOException {
+    public ArrayList<Sentence> extract(String inputNum, List<Datum> datums) throws IOException {
         ArrayList<Sentence> sentences = Sentence.DatumToSentence(datums);
-        int numOfSen = sentences.size();
 
-        na.nounAnaphoring(sentences);
+//        na.nounAnaphoring(sentences);
 //        SentenceRedundancing(datums);
+        //
         /// Set mapSenOrderByScore
         System.out.println("Start of sen-scoring");
-        double[] senScore = new double[numOfSen];
-        int[] senIndex = new int[numOfSen];
-        for (int i = 0; i < numOfSen; i++) {
-            ArrayList<Datum> seni = sentences.get(i).dataList;
-            int numOfPhr_i = seni.get(seni.size() - 1).iPhrase + 1;
-            senScore[i] = 0.0;
+        int nSentences = sentences.size();
+        double[] senScore = new double[nSentences];
+        int[] senIndex = new int[nSentences];
+        for (int i = 0; i < nSentences; i++) {
             senIndex[i] = i;
-            int tf = 0;
-            for (Datum dt : seni) {
+            ArrayList<Datum> sen_i = sentences.get(i).dataList;
+            double tf = 0;
+            for (Datum dt : sen_i) {
                 if (!dt.stopWord) {
                     tf += dt.tf;
                 }
             }
-            senScore[i] = tf / (double) numOfPhr_i;
+            int nPhrases_i = sen_i.get(sen_i.size() - 1).iPhrase + 1;
+            senScore[i] = tf / nPhrases_i;
         }
-        QuickSort.QuickSort(senScore, senIndex, 0, numOfSen - 1);
-        int remainSen = (int) (2 * numOfSen / 3) + 1;
-        int[] topSenIndex = new int[remainSen];
-        int[] topSenIndexTmp = new int[remainSen];
-        System.arraycopy(senIndex, 0, topSenIndex, 0, remainSen);
-        System.arraycopy(topSenIndex, 0, topSenIndexTmp, 0, remainSen);
-        QuickSort.QuickSort(topSenIndexTmp, 0, remainSen - 1);
+        QuickSort.QuickSort(senScore, senIndex, 0, nSentences - 1);
+        int nremains = (int) (nSentences * REMAIN_RATE) + 1;
+
+        // Remove unimportant sentences 
+        for (int i = senIndex.length - 1; i >= nremains; i--) {
+            sentences.remove(senIndex[i]);
+            System.out.println("remove sentence " + senIndex[i]);
+        }
+        System.out.println(nremains + " sentences remained");
+
+        // 
+        int[] topSenIndex = new int[nremains];
+        int[] topSenIndexTmp = new int[nremains];
+        System.arraycopy(senIndex, 0, topSenIndex, 0, nremains);
+        System.arraycopy(topSenIndex, 0, topSenIndexTmp, 0, nremains);
+        Arrays.sort(topSenIndexTmp, 0, nremains);
         for (int i = 0; i < topSenIndexTmp.length; i++) {
             for (int j = 0; j < topSenIndex.length; j++) {
                 if (topSenIndexTmp[i] == topSenIndex[j]) {
@@ -136,35 +148,12 @@ public class SentenceExtraction {
             }
         }
         for (int i = 0; i < topSenIndex.length; i++) {
-            mapSenOrderByScore.put(topSenIndex[i], i);
+//            mapSenOrderByScore.put(topSenIndex[i], i);
+            mapSenOrderByScore.put(i, topSenIndex[i]);
         }
+        System.out.println(mapSenOrderByScore.toString());
         System.out.println("End of sen-scoring...");
 
-// <editor-fold defaultstate="collapsed" desc="Đoạn này không hiểu để làm gì">
-//        String taggerExt = "";
-//        String strExtract = "";                     //out-string extraction
-//        String[] strSen = new String[remainSen];
-//        for (int i = 0; i < remainSen; i++) {
-//            int tmp = topSen[i];
-//            strSen[i] = "";
-//            for (Datum dt : datums) {
-//                if (dt.iSentence == tmp) {
-//                    strExtract += dt.word + " ";
-//                    strSen[i] += dt.word + " ";
-//                    taggerExt += dt.word + "/" + dt.posTag + "/" + dt.chunk + "/" + dt.iPhrase + "\n";
-//                }
-//            }
-//            strExtract += "\n";
-//        }
-// </editor-fold>
-        // Remove unimportant sentences 
-        QuickSort.QuickSort(senIndex, remainSen, senIndex.length - 1);
-        for (int i = senIndex.length - 1; i >= remainSen; i--) {
-//            sentences.remove(senIndex[i] - (i - remainSen));
-            sentences.remove(senIndex[i]);
-        }
-//        System.out.println(remainSen + " sentences remain");
-        System.out.println(sentences.toString());
         return sentences;
     }
 
@@ -174,7 +163,10 @@ public class SentenceExtraction {
         try {
             datums = tagger.tagger("1");
             SentenceExtraction se = new SentenceExtraction();
-            se.ExtractSentences("1", datums);
+            ArrayList<Sentence> sentences = se.extract("1", datums);
+//            for (Sentence sentence : sentences) {
+//                System.out.println(sentence.toString());
+//            }
         } catch (IOException ex) {
             ex.printStackTrace();
         }

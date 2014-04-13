@@ -90,8 +90,8 @@ public class Conjunction {
     
     public static boolean checkDeclareWord(String s) {
         String s1 = s.toLowerCase();
-        for (int i = 0; i < DECLARE_WORDS.length; i++) {
-            if (s1.equals(DECLARE_WORDS[i])) {
+        for (String DECLARE_WORDS1 : DECLARE_WORDS) {
+            if (s1.equals(DECLARE_WORDS1)) {
                 return true;
             }
         }

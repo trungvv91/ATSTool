@@ -4,8 +4,16 @@
  */
 package nlp.sentenceExtraction;
 
-import java.util.*;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -13,27 +21,30 @@ import java.io.*;
  */
 public class IdfScore {
 
-    Map<String, Double> map;
+    final String fileName = "train-data/idf_final.txt";
     Map<String, Double> idf_index;
 
     public IdfScore() {
-        map = new HashMap<>();
         idf_index = new HashMap<>();
-    }
-
-    public Map<String, Double> getIdfScoreMap(List<Datum> datums) throws IOException {
-        String fileName = "train-data/idf_final.txt";
         try (BufferedReader br = new BufferedReader(new FileReader(new File(fileName)))) {
-            String line = "";
+            String line;
             while ((line = br.readLine()) != null) {
                 String[] word = line.split(" ");
                 double idf = Double.parseDouble(word[1]);
                 idf_index.put(word[0], idf);
             }
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(IdfScore.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(IdfScore.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    public Map<String, Double> getIdfScoreMap(ArrayList<Datum> datums) {
+        Map<String, Double> map = new HashMap<>();
         for (Datum datum : datums) {
             String word = datum.word.toLowerCase();
-            double idf = 0.0;
+            double idf;
             if (idf_index.containsKey(word)) {
                 idf = (double) idf_index.get(word);
             } else {

@@ -9,8 +9,8 @@ package nlp.dict;
  * @author TRUNG
  */
 public class Punctuation {
-
-    public final static String PUNCTUATIONS[] = {"...", ".", ",", "!", "?", ";", "\"", ":"};
+    
+    public final static String PUNCTUATIONS[] = {"...", ".", ",", "!", "?", ";", "\"", ":", "-", "'"};
 
     public static boolean isPuctuation(String s) {
         for (String PUNCTUATIONS1 : PUNCTUATIONS) {
