@@ -1,4 +1,4 @@
-Tính Np
+tính E
 đến E
 cuối N
 tháng N
@@ -9,16 +9,14 @@ toàn L
 hệ_thống N
 ngân_hàng N
 tăng V
-4 M
-, ,
-5% M
+4,5% M
 so Nu
 với E
 cuối N
 năm N
 2012 M
 . .
-Để E
+để E
 đạt V
 mức N
 tăng_trưởng V
@@ -42,15 +40,13 @@ các L
 lĩnh_vực N
 ưu_tiên A
 . .
-Ngân_hàng Np
+ngân_hàng N
 Nhà_nước N
 vừa R
 ban_hành V
-Chỉ_thị N
-03 CT M
-- -
-NHNN Ny
-về E
+Chỉ_thị Np
+03 CT-NHNN M
+về R
 các L
 giải_pháp N
 điều_hành V
@@ -68,7 +64,7 @@ cuối N
 năm N
 2013 M
 . .
-Một M
+một M
 trong E
 những L
 điểm N
@@ -101,16 +97,14 @@ năm N
 , ,
 tín_dụng N
 tăng V
-4 M
-, ,
-5% M
+4,5% M
 so Nu
 với E
 cuối N
 năm N
 2012 M
 . .
-Mức Np
+mức N
 tăng Nb
 này P
 được V
@@ -130,11 +124,9 @@ mới A
 chỉ R
 tăng V
 được V
-2 M
-, ,
-98% M
+2,98% M
 . .
-Theo E
+theo V
 đánh_giá V
 của E
 Ngân_hàng Np
@@ -191,7 +183,7 @@ các L
 tổ_chức V
 tín_dụng N
 . .
-Do_đó Np
+do_đó A
 , ,
 Thống_đốc Np
 NHNN Ny
@@ -220,7 +212,7 @@ tháng N
 cuối N
 năm N
 . .
-Đáng Np
+đáng R
 chú_ý V
 , ,
 NHNN Ny
@@ -246,13 +238,14 @@ hệ_thống N
 mức N
 12% M
 . .
-Các L
+các L
 đơn_vị N
 tại E
 trụ_sở N
 chính T
 NHNN Ny
 có_thể R
+" "
 xem_xét V
 điều_chỉnh V
 chỉ_tiêu N
@@ -273,8 +266,9 @@ vốn N
 lành_mạnh A
 , ,
 vững_chắc A
+" "
 . .
-Theo E
+theo V
 chỉ_thị N
 của E
 NHNN Ny
@@ -326,7 +320,7 @@ tài_chính N
 của E
 TCTD Ny
 . .
-Trên E
+trên A
 cơ_sở N
 định_hướng V
 điều_hành V
@@ -382,7 +376,7 @@ và C
 hộ N
 dân N
 . .
-Một M
+một M
 trong E
 những L
 lưu_ý V
@@ -415,8 +409,8 @@ ngoại_hối N
 và C
 tỷ_giá N
 . .
-Cùng_với Np
-đó V
+cùng_với E
+đó T
 , ,
 tại E
 các L
@@ -424,9 +418,7 @@ văn_bản N
 số N
 5174 M
 và C
-5175 NHNN M
-- -
-QLNH Ny
+5175 NHNN-QLNH M
 ban_hành V
 ngày N
 18 7 M
@@ -452,7 +444,7 @@ công_tác N
 quản_lý V
 ngoại_hối N
 . .
-Đồng_thời Np
+đồng_thời R
 , ,
 NHNN Ny
 yêu_cầu V
@@ -501,7 +493,7 @@ và C
 giao_dịch V
 hối_đoái N
 . .
-Đặc_biệt Np
+đặc_biệt A
 với E
 thị_trường N
 , ,
@@ -554,7 +546,7 @@ vốn N
 bằng E
 vàng Np
 . .
-Với E
+với C
 hoạt_động N
 giữ V
 hộ N
@@ -602,7 +594,7 @@ thế_chấp V
 ký_quỹ V
 bảo_đảm V
 . .
-Sở_dĩ Np
+sở_dĩ C
 có V
 quy_định V
 này P
@@ -633,8 +625,10 @@ cho E
 người Nc
 đi V
 gửi V
-… …
-Ngoài_ra Np
+. .
+. .
+. .
+ngoài_ra X
 , ,
 tại E
 Chỉ_thị Np
@@ -663,4 +657,6 @@ xấu A
 bán V
 cho E
 VAMC Ny
-... ...
+. .
+. .
+. .

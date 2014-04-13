@@ -36,8 +36,8 @@ public class VNPreprocessing {
     }
 
     /**
-     * inputFile - tốt nhất là mỗi line 1 câu
-     * Dùng để tiền xử lý cho Tokenizer
+     * inputFile - tốt nhất là mỗi line 1 câu Dùng để tiền xử lý cho Tokenizer
+     *
      * @param inputFile
      * @param outputFile
      */
@@ -68,8 +68,9 @@ public class VNPreprocessing {
 
     /**
      * Tiền xử lý cho Tagger
+     *
      * @param inputFile File đã tokenize
-     * @return 
+     * @return
      */
     public static String prepareTag(String inputFile) {
         ArrayList<String> lines = IOUtil.ReadFile(inputFile);
@@ -79,12 +80,14 @@ public class VNPreprocessing {
                     .replaceAll("(\\d) : (\\d)", "$1-$2") // giờ 18:05
                     .split(" ");
             int i = 0;
-            while (Punctuation.isPuctuation(tokens[i])) {
+            while (i < tokens.length && Punctuation.isPuctuation(tokens[i])) {
                 i++;
             }
-            String[] words = tokens[i].split("_");
-            if (words.length < 2 || MyStringUtil.isUncapitalize(words[1])) {
-                tokens[i] = MyStringUtil.unCapitalize(tokens[i]);
+            if (i < tokens.length) {
+                String[] words = tokens[i].split("_");
+                if (words.length < 2 || MyStringUtil.isUncapitalize(words[1])) {
+                    tokens[i] = MyStringUtil.unCapitalize(tokens[i]);
+                }
             }
             for (String token : tokens) {
                 str += token + " ";
@@ -132,6 +135,6 @@ public class VNPreprocessing {
 //        preprocess("corpus/Plaintext/1.txt", "temp/1-presource-temp.txt");
 //        VNTokenizer token = VNTokenizer.getInstance();
 //        token.tokenize("temp/1-presource-temp.txt", "data/1-token.txt");
-        prepareTag("D:\\Git\\word2vector\\VNESEcorpus-tokenized.txt", "D:\\Git\\word2vector\\VNESEcorpus-tokenized1.txt");
+//        prepareTag("D:\\Git\\word2vector\\VNESEcorpus-tokenized.txt", "D:\\Git\\word2vector\\VNESEcorpus-tokenized1.txt");
     }
 }

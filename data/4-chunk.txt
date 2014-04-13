@@ -1,5 +1,5 @@
-Tính	Np	B-NP
-đến	E	B-PP
+tính	E	B-PP
+đến	E	I-PP
 cuối	N	B-NP
 tháng	N	I-NP
 6	2013	M	I-NP
@@ -8,17 +8,15 @@ tín_dụng	N	B-NP
 toàn	L	I-NP
 hệ_thống	N	I-NP
 ngân_hàng	N	I-NP
-tăng	V	I-NP
-4	M	I-NP
-,	,	I-NP
-5%	M	I-NP
+tăng	V	B-VP
+4,5%	M	B-NP
 so	Nu	I-NP
 với	E	B-PP
 cuối	N	B-NP
 năm	N	I-NP
 2012	M	I-NP
-.	.	O
-Để	E	B-PP
+.	.	I-NP
+để	E	B-PP
 đạt	V	B-VP
 mức	N	B-NP
 tăng_trưởng	V	B-VP
@@ -42,16 +40,14 @@ các	L	B-NP
 lĩnh_vực	N	I-NP
 ưu_tiên	A	I-NP
 .	.	I-NP
-Ngân_hàng	Np	I-NP
+ngân_hàng	N	I-NP
 Nhà_nước	N	I-NP
 vừa	R	B-VP
 ban_hành	V	I-VP
-Chỉ_thị	N	B-NP
-03	CT	M	I-NP
--	-	I-NP
-NHNN	Ny	I-NP
-về	E	B-PP
-các	L	B-NP
+Chỉ_thị	Np	B-NP
+03	CT-NHNN	M	I-NP
+về	R	I-NP
+các	L	I-NP
 giải_pháp	N	I-NP
 điều_hành	V	B-VP
 chính_sách	N	B-NP
@@ -68,7 +64,7 @@ cuối	N	I-NP
 năm	N	I-NP
 2013	M	I-NP
 .	.	I-NP
-Một	M	I-NP
+một	M	I-NP
 trong	E	I-NP
 những	L	I-NP
 điểm	N	I-NP
@@ -98,19 +94,17 @@ nay	P	I-NP
 tháng	N	I-NP
 đầu	A	I-NP
 năm	N	I-NP
-,	,	I-NP
-tín_dụng	N	I-NP
-tăng	V	I-NP
-4	M	I-NP
-,	,	I-NP
-5%	M	I-NP
+,	,	O
+tín_dụng	N	B-NP
+tăng	V	B-VP
+4,5%	M	B-NP
 so	Nu	I-NP
 với	E	B-PP
 cuối	N	B-NP
 năm	N	I-NP
 2012	M	I-NP
 .	.	I-NP
-Mức	Np	I-NP
+mức	N	I-NP
 tăng	Nb	I-NP
 này	P	I-NP
 được	V	B-VP
@@ -130,12 +124,10 @@ mới	A	B-VP
 chỉ	R	I-VP
 tăng	V	I-VP
 được	V	I-VP
-2	M	B-QP
-,	,	I-QP
-98%	M	I-QP
+2,98%	M	B-QP
 .	.	O
-Theo	E	B-PP
-đánh_giá	V	B-VP
+theo	V	B-VP
+đánh_giá	V	I-VP
 của	E	B-PP
 Ngân_hàng	Np	B-NP
 Nhà_nước	N	I-NP
@@ -191,9 +183,9 @@ các	L	B-NP
 tổ_chức	V	I-NP
 tín_dụng	N	I-NP
 .	.	I-NP
-Do_đó	Np	I-NP
-,	,	I-NP
-Thống_đốc	Np	I-NP
+do_đó	A	I-NP
+,	,	O
+Thống_đốc	Np	B-NP
 NHNN	Ny	I-NP
 yêu_cầu	V	B-VP
 các	L	B-NP
@@ -219,9 +211,9 @@ những	L	I-NP
 tháng	N	I-NP
 cuối	N	I-NP
 năm	N	I-NP
-.	.	O
-Đáng	Np	B-NP
-chú_ý	V	B-VP
+.	.	I-NP
+đáng	R	B-VP
+chú_ý	V	I-VP
 ,	,	O
 NHNN	Ny	B-NP
 yêu_cầu	V	B-VP
@@ -246,13 +238,14 @@ hệ_thống	N	I-NP
 mức	N	B-NP
 12%	M	I-NP
 .	.	O
-Các	L	B-NP
+các	L	B-NP
 đơn_vị	N	I-NP
 tại	E	B-PP
 trụ_sở	N	B-NP
 chính	T	I-NP
 NHNN	Ny	I-NP
 có_thể	R	B-VP
+"	"	I-VP
 xem_xét	V	I-VP
 điều_chỉnh	V	I-VP
 chỉ_tiêu	N	B-NP
@@ -273,8 +266,9 @@ vốn	N	I-NP
 lành_mạnh	A	I-NP
 ,	,	I-NP
 vững_chắc	A	I-NP
-.	.	I-NP
-Theo	E	B-PP
+"	"	I-NP
+.	.	O
+theo	V	B-VP
 chỉ_thị	N	B-NP
 của	E	B-PP
 NHNN	Ny	B-NP
@@ -326,8 +320,8 @@ tài_chính	N	I-NP
 của	E	B-PP
 TCTD	Ny	B-NP
 .	.	I-NP
-Trên	E	B-PP
-cơ_sở	N	B-NP
+trên	A	I-NP
+cơ_sở	N	I-NP
 định_hướng	V	B-VP
 điều_hành	V	I-VP
 lãi_suất	N	B-NP
@@ -382,7 +376,7 @@ và	C	I-NP
 hộ	N	I-NP
 dân	N	I-NP
 .	.	I-NP
-Một	M	I-NP
+một	M	I-NP
 trong	E	B-PP
 những	L	B-VP
 lưu_ý	V	I-VP
@@ -415,8 +409,8 @@ ngoại_hối	N	I-NP
 và	C	I-NP
 tỷ_giá	N	I-NP
 .	.	I-NP
-Cùng_với	Np	I-NP
-đó	V	I-NP
+cùng_với	E	B-PP
+đó	T	I-PP
 ,	,	O
 tại	E	B-PP
 các	L	B-NP
@@ -424,9 +418,7 @@ văn_bản	N	I-NP
 số	N	I-NP
 5174	M	I-NP
 và	C	I-NP
-5175	NHNN	M	I-NP
--	-	I-NP
-QLNH	Ny	I-NP
+5175	NHNN-QLNH	M	I-NP
 ban_hành	V	B-VP
 ngày	N	B-NP
 18	7	M	I-NP
@@ -452,9 +444,9 @@ công_tác	N	B-NP
 quản_lý	V	B-VP
 ngoại_hối	N	B-NP
 .	.	I-NP
-Đồng_thời	Np	I-NP
-,	,	I-NP
-NHNN	Ny	I-NP
+đồng_thời	R	I-NP
+,	,	O
+NHNN	Ny	B-NP
 yêu_cầu	V	B-VP
 Chủ_tịch	N	B-NP
 Hội_đồng_quản_trị	N	I-NP
@@ -500,8 +492,8 @@ và	C	B-VP
 và	C	I-VP
 giao_dịch	V	I-VP
 hối_đoái	N	B-NP
-.	.	I-NP
-Đặc_biệt	Np	I-NP
+.	.	O
+đặc_biệt	A	B-AP
 với	E	B-PP
 thị_trường	N	B-NP
 ,	,	O
@@ -554,7 +546,7 @@ vốn	N	B-NP
 bằng	E	B-PP
 vàng	Np	B-NP
 .	.	O
-Với	E	B-PP
+với	C	O
 hoạt_động	N	B-NP
 giữ	V	B-VP
 hộ	N	B-NP
@@ -602,7 +594,7 @@ thế_chấp	V	I-VP
 ký_quỹ	V	I-VP
 bảo_đảm	V	I-VP
 .	.	O
-Sở_dĩ	Np	B-NP
+sở_dĩ	C	O
 có	V	B-VP
 quy_định	V	I-VP
 này	P	B-NP
@@ -633,8 +625,10 @@ cho	E	B-PP
 người	Nc	B-NP
 đi	V	I-NP
 gửi	V	I-NP
-…	…	I-NP
-Ngoài_ra	Np	I-NP
+.	.	I-NP
+.	.	I-NP
+.	.	I-NP
+ngoài_ra	X	I-NP
 ,	,	O
 tại	E	B-PP
 Chỉ_thị	Np	B-NP
@@ -663,5 +657,7 @@ xấu	A	B-AP
 bán	V	B-VP
 cho	E	B-PP
 VAMC	Ny	B-NP
-...	...	O
+.	.	I-NP
+.	.	I-NP
+.	.	O
 

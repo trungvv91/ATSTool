@@ -1,4 +1,4 @@
-Bệnh_nhân Np
+bệnh_nhân N
 Vũ_Dư Np
 được V
 đưa V
@@ -10,14 +10,14 @@ dùng V
 thuốc N
 Biseptol Np
 . .
-Anh_ấy Np
+anh_ấy N
 bị V
 biến_chứng V
 nặng A
 . .
-Thật Np
+thật T
 không R
 ? ?
-Thật Np
-chứ X
+thật T
+chứ I
 ? ?

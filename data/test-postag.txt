@@ -1,4 +1,4 @@
-Quá_trình Np
+quá_trình N
 khám_xét V
 6 M
 container N

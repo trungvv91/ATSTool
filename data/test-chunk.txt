@@ -1,4 +1,4 @@
-Quá_trình	Np	B-NP
+quá_trình	N	B-NP
 khám_xét	V	B-VP
 6	M	B-NP
 container	N	I-NP

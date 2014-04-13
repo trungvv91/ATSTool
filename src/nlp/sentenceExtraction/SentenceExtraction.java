@@ -127,14 +127,7 @@ public class SentenceExtraction {
         QuickSort.QuickSort(senScore, senIndex, 0, nSentences - 1);
         int nremains = (int) (nSentences * REMAIN_RATE) + 1;
 
-        // Remove unimportant sentences 
-        for (int i = senIndex.length - 1; i >= nremains; i--) {
-            sentences.remove(senIndex[i]);
-            System.out.println("remove sentence " + senIndex[i]);
-        }
-        System.out.println(nremains + " sentences remained");
-
-        // 
+        // map score
         int[] topSenIndex = new int[nremains];
         int[] topSenIndexTmp = new int[nremains];
         System.arraycopy(senIndex, 0, topSenIndex, 0, nremains);
@@ -151,6 +144,15 @@ public class SentenceExtraction {
 //            mapSenOrderByScore.put(topSenIndex[i], i);
             mapSenOrderByScore.put(i, topSenIndex[i]);
         }
+        
+        // Remove unimportant sentences
+        Arrays.sort(senIndex, nremains, senIndex.length);
+        for (int i = senIndex.length - 1; i >= nremains; i--) {
+            sentences.remove(senIndex[i]);
+            System.out.println("remove sentence " + senIndex[i]);
+        }
+        System.out.println(nremains + " sentences remained");
+        
         System.out.println(mapSenOrderByScore.toString());
         System.out.println("End of sen-scoring...");
 
