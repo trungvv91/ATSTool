@@ -13,7 +13,7 @@ import java.util.Set;
 import nlp.dict.Conjunction;
 import nlp.sentenceExtraction.Sentence;
 import nlp.sentenceExtraction.SentenceExtraction;
-import nlp.tool.vnTextPro.VNTagger;
+import nlp.sentenceExtraction.VNTagger;
 import nlp.util.IOUtil;
 import nlp.util.MyStringUtil;
 
@@ -479,7 +479,7 @@ public class WordsGraph {
     public static void main(String[] args) {
         try {
             WordsGraph graph = new WordsGraph();
-            VNTagger tagger = VNTagger.getInstance();
+            VNTagger tagger = new VNTagger();
             List<Datum> datums = tagger.tagger("1");
             graph.mainWordGraph("1", datums, 120);
         } catch (IOException e) {

@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 import nlp.dict.NounAnaphora;
 import nlp.graph.QuickSort;
-import nlp.tool.vnTextPro.VNTagger;
 
 /**
  *
@@ -160,7 +159,7 @@ public class SentenceExtraction {
     }
 
     public static void main(String[] args) {
-        VNTagger tagger = VNTagger.getInstance();
+        VNTagger tagger = new VNTagger();
         List<Datum> datums;
         try {
             datums = tagger.tagger("1");

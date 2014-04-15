@@ -11,7 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import nlp.sentenceExtraction.Datum;
 import nlp.sentenceExtraction.Sentence;
-import nlp.tool.vnTextPro.VNTagger;
+import nlp.sentenceExtraction.VNTagger;
 import nlp.util.IOUtil;
 
 /**
@@ -215,7 +215,7 @@ public class NounAnaphora {
         NounAnaphora na = new NounAnaphora();
         System.out.println(na.isNounAnaphora1("ông_ấy"));
 
-        VNTagger ins = VNTagger.getInstance();
+        VNTagger ins = new VNTagger();
         String fileNameSource = "corpus/Plaintext/test.txt";
         String strTest = "Bệnh nhân Lê Cao Thắng dùng thuốc Biseptol. "
                 + "Sau khi uống, anh Dư bị biến chứng nặng.";
@@ -223,11 +223,7 @@ public class NounAnaphora {
         IOUtil.WriteToFile(fileNameSource, strTest);
 
         List<Datum> datum = null;
-        try {
-            datum = ins.tagger("test");
-        } catch (IOException ex) {
-            Logger.getLogger(VNTagger.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        datum = ins.tagger("test");
         ArrayList<Sentence> sens = Sentence.DatumToSentence(datum);
         na.nounAnaphoring(sens);
         System.out.println("\n");

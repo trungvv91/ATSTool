@@ -1,1 +1,0 @@
-crf_test -m model_crf2 < vchunk.test.BIO > vchunk.test.out

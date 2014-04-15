@@ -7,7 +7,7 @@ package nlp.graph;
 import java.io.*;
 import java.util.List;
 import nlp.sentenceExtraction.Datum;
-import nlp.tool.vnTextPro.VNTagger;
+import nlp.sentenceExtraction.VNTagger;
 
 /**
  *
@@ -33,7 +33,7 @@ public class Main {
                     String inputNum = file.split("\\.")[0];
                     try {
                         WordsGraph graph = new WordsGraph();
-                        VNTagger tagger = VNTagger.getInstance();
+                        VNTagger tagger = new VNTagger();
                         List<Datum> datums = tagger.tagger(inputNum);
                         graph.mainWordGraph(inputNum, datums, 120);
                     } catch (IOException e) {

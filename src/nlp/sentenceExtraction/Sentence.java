@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import nlp.dict.Punctuation;
-import nlp.tool.vnTextPro.VNTagger;
 import nlp.util.IOUtil;
 
 /**
@@ -102,7 +101,7 @@ public class Sentence {
     }
 
     public static void main(String[] args) {
-        VNTagger ins = VNTagger.getInstance();
+        VNTagger ins = new VNTagger();
         String fileNameSource = "corpus/Plaintext/test.txt";
         String strTest = "Bệnh nhân Vũ Dư dùng thuốc Biseptol. "
                 + "Sau khi uống, anh ấy có biểu hiện dị ứng với các thành phần của thuốc.";
@@ -110,11 +109,7 @@ public class Sentence {
         IOUtil.WriteToFile(fileNameSource, strTest);
 
         List<Datum> datum = null;
-        try {
-            datum = ins.tagger("test");
-        } catch (IOException ex) {
-            Logger.getLogger(VNTagger.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        datum = ins.tagger("test");
         ArrayList<Sentence> sens = Sentence.DatumToSentence(datum);
         System.out.println("\n");
         System.out.println(strTest);
