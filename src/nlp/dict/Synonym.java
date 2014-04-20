@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author Manh Tien
+ * @author Trung
  */
 public class Synonym {
 
@@ -39,9 +39,9 @@ public class Synonym {
                 }
             }
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(Stopword.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Synonym.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
-            Logger.getLogger(Stopword.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Synonym.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }

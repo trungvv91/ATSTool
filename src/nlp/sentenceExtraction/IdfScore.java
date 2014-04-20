@@ -17,7 +17,7 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author Manh Tien
+ * @author Trung
  */
 public class IdfScore {
 
@@ -40,10 +40,10 @@ public class IdfScore {
         }
     }
 
-    public Map<String, Double> getIdfScoreMap(ArrayList<Datum> datums) {
+    public Map<String, Double> getIdfScoreMap(ArrayList<Datum> data) {
         Map<String, Double> map = new HashMap<>();
-        for (Datum datum : datums) {
-            String word = datum.word.toLowerCase();
+        for (Datum datum : data) {
+            String word = datum.word;
             double idf;
             if (idf_index.containsKey(word)) {
                 idf = (double) idf_index.get(word);

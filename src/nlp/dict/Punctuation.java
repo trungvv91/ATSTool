@@ -13,8 +13,8 @@ public class Punctuation {
     public final static String PUNCTUATIONS[] = {"...", ".", ",", "!", "?", ";", "\"", ":", "-", "'"};
 
     public static boolean isPuctuation(String s) {
-        for (String PUNCTUATIONS1 : PUNCTUATIONS) {
-            if (s.equals(PUNCTUATIONS1)) {
+        for (String punc : PUNCTUATIONS) {
+            if (s.equals(punc)) {
                 return true;
             }
         }

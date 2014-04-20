@@ -6,7 +6,7 @@ package nlp.util;
 
 /**
  *
- * @author Manh Tien
+ * @author Trung
  */
 import java.io.IOException;
 import java.io.InputStream;
@@ -78,14 +78,14 @@ public class CmdCommand {
     }
 
     /**
-     * Chạy command line của chương trình VietChunker đã có file .tagged.sd.txt,
-     * đã được tách dòng
+     * Chạy command line của chương trình VietChunker với file .tagged.txt, đã
+     * được tách dòng
      *
-     * @param inputFile
-     * @param outputFile
+     * @param inputFile each line of the form: Vũ_Dư	Np
+     * @param outputFile each line of the form: Vũ_Dư	Np	B-NP
      */
     public void crf_test(String inputFile, String outputFile) {
-        String cmd = "crf_test.exe -m model_crf2 0< ../" + inputFile + " 1> ../" + outputFile;
+        String cmd = "crf_test.exe -m model_crf2 < ../" + inputFile + " > ../" + outputFile;
         runCmd(cmd);
     }
 
@@ -121,7 +121,13 @@ public class CmdCommand {
      * option -p.
      *
      * @param inputFile file đã được Sentence Detected
-     * @param outputFile
+     * @param outputFile The tagset in use contains 17 main lexical tags: 1. Np
+     * - Proper noun 2. Nc - Classifier 3. Nu - Unit noun 4. N - Common noun 5.
+     * V - Verb 6. A - Adjective 7. P - Pronoun 8. R - Adverb 9. L - Determiner
+     * 10. M - Numeral 11. E - Preposition 12. C - Subordinating conjunction 13.
+     * CC - Coordinating conjunction 14. I - Interjection 15. T - Auxiliary,
+     * modal words 16. Y - Abbreviation 17. Z - Bound morphemes 18. X - Unknown.
+     * 19. Delimiters and punctuations.
      */
     public void vnTagger(String inputFile, String outputFile) {
         String cmd = "vnTagger" + fileExt + " -i ../" + inputFile + " -o ../" + outputFile;
@@ -145,10 +151,11 @@ public class CmdCommand {
 
     public static void main(String[] args) {
         CmdCommand cmdCommand = new CmdCommand();
-        cmdCommand.vnSentDetector("data/1.txt", "data/1.sd.txt");
+//        cmdCommand.vnSentDetector("data/1.txt", "data/1.sd.txt");
 //        cmdCommand.vnTokenizer("data/1.sd.txt", "data/1.tok.xml");
 //        cmdCommand.vnTokenizer("data/1.sd.txt", "data/1.tok.txt");
-//        cmdCommand.vnTagger("data/1.sd.txt", "data/1.tagged.txt");
+//        cmdCommand.vnTagger("data/0.sd.txt", "data/0.tagged.txt");
+//        cmdCommand.crf_test("data/0.tagged.line.txt", "data/0.chunk.txt");
 //        cmdCommand.testTaggedFile("data/1.tagged.txt");
     }
 }

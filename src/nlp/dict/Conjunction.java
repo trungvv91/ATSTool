@@ -9,7 +9,7 @@ import java.util.List;
 
 /**
  *
- * @author Manh Tien
+ * @author Trung
  * Conjunction for 
  */
 public class Conjunction {

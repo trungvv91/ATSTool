@@ -5,11 +5,8 @@
  */
 package nlp.sentenceExtraction;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import nlp.dict.Punctuation;
 import nlp.util.IOUtil;
 
@@ -69,16 +66,16 @@ public class Sentence {
     }    
 
     /**
-     * Convert list of datums to list of sentences
+     * Convert list of data to list of sentences
      *
-     * @param datums
+     * @param data
      * @return
      */
-    public static ArrayList<Sentence> DatumToSentence(List<Datum> datums) {
+    public static ArrayList<Sentence> DatumToSentence(List<Datum> data) {
         ArrayList<Sentence> sentences = new ArrayList<>();
 
         Sentence sen = new Sentence();
-        for (Datum dt : datums) {
+        for (Datum dt : data) {
             sen.dataList.add(dt);
             if (Punctuation.isEndOfSentence(dt.word)) {
                 sentences.add(sen);
@@ -89,19 +86,19 @@ public class Sentence {
     }
     
     public static ArrayList<Datum> SentenceToDatum(ArrayList<Sentence> sentences) {
-        ArrayList<Datum> datums = new ArrayList<>();
+        ArrayList<Datum> data = new ArrayList<>();
         for (Sentence sentence : sentences) {
             for (Datum datum : sentence.dataList) {
                 datum.iSentence = sentences.indexOf(sentence);
-                datums.add(datum);
+                data.add(datum);
             }
         }
 
-        return datums;
+        return data;
     }
 
     public static void main(String[] args) {
-        VNTagger ins = new VNTagger();
+        MyTagger ins = new MyTagger();
         String fileNameSource = "corpus/Plaintext/test.txt";
         String strTest = "Bệnh nhân Vũ Dư dùng thuốc Biseptol. "
                 + "Sau khi uống, anh ấy có biểu hiện dị ứng với các thành phần của thuốc.";
@@ -109,7 +106,7 @@ public class Sentence {
         IOUtil.WriteToFile(fileNameSource, strTest);
 
         List<Datum> datum = null;
-        datum = ins.tagger("test");
+        datum = ins.getData("test");
         ArrayList<Sentence> sens = Sentence.DatumToSentence(datum);
         System.out.println("\n");
         System.out.println(strTest);

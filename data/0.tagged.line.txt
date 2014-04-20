@@ -1,0 +1,52 @@
+Bệnh_nhân	N
+Vũ_Dư	Np
+được	V
+đưa	V
+đến	E
+bệnh_viện	N
+.	.
+
+Vũ_Dư	Np
+dùng	V
+thuốc	N
+Biseptol	Np
+.	.
+
+Anh_ấy	N
+bị	V
+biến_chứng	V
+nặng	A
+.	.
+
+Anh	N
+này	P
+hay	C
+thật	R
+.	.
+
+Chúng_nó	N
+đã	R
+đến	V
+đâu	T
+!	!
+
+Tôi	P
+không	R
+biết	V
+họ	P
+.	.
+
+Nhưng	C
+họ	P
+biết	V
+cô	N
+ta	P
+.	.
+
+Mẹ	N
+của	E
+Bách	Np
+rất	R
+chu_đáo	A
+!	!
+

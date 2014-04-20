@@ -23,9 +23,7 @@ nhiều	A	I-NP
 xe	N	I-NP
 có	V	B-VP
 dung_tích	N	B-NP
-xy	V	B-VP
--	-	I-VP
-lanh	V	I-VP
+xy_lanh	V	B-VP
 lên	R	I-VP
 tới	E	B-PP
 1800	M	B-NP
@@ -37,7 +35,6 @@ hàng_hóa	N	I-NP
 cấm	V	B-VP
 nhập_khẩu	V	I-VP
 .	.	O
-
 Chiều	N	B-NP
 19	7	M	I-NP
 ,	,	O
@@ -50,8 +47,7 @@ quyết_định	V	I-VP
 tạm	A	I-VP
 giữ	V	I-VP
 4	M	B-NP
-lô	N	I-NP
-hàng	N	I-NP
+lô_hàng	N	I-NP
 gồm	V	B-VP
 xe	N	B-NP
 mô_tô	N	I-NP
@@ -76,7 +72,6 @@ vào	E	B-PP
 cảng	N	B-NP
 Hải_Phòng	Np	I-NP
 .	.	O
-
 Qua	E	B-PP
 công_tác	N	B-NP
 trinh_sát	N	I-NP
@@ -93,10 +88,9 @@ Hải_Quan_Hải_Phòng	Np	I-NP
 đã	R	B-VP
 phát_hiện	V	I-VP
 3	M	B-NP
-lô	N	I-NP
-hàng	N	I-NP
-khai_báo	V	B-VP
-là	V	I-VP
+lô_hàng	N	I-NP
+khai_báo	V	I-NP
+là	V	B-VP
 xe_máy	N	B-NP
 LX125	Np	I-NP
 và	CC	I-NP
@@ -115,10 +109,8 @@ xuất_nhập_khẩu	V	I-NP
 của	E	B-PP
 Nhà_nước	N	B-NP
 .	.	O
-
 Những	L	B-NP
-lô	N	I-NP
-hàng	N	I-NP
+lô_hàng	N	I-NP
 này	P	I-NP
 xuất_phát	V	B-VP
 từ	E	B-PP
@@ -134,7 +126,6 @@ vào	E	B-PP
 ngày	N	B-NP
 19-6	M	I-NP
 .	.	O
-
 Trên	E	B-PP
 chứng_từ	N	B-NP
 nhập_cảnh	V	I-NP
@@ -147,10 +138,13 @@ dịch_vụ	N	I-NP
 Tầm_Nhìn_Xa	Np	I-NP
 là	V	B-VP
 người	N	B-NP
-nhận	V	I-NP
-hàng	R	I-NP
+nhận	V	B-VP
+hàng	R	B-NP
+(	M	I-NP
+đại_lý	N	I-NP
+giao_nhận	V	B-VP
+)	A	B-AP
 .	.	O
-
 Quá_trình	N	B-NP
 khám_xét	V	B-VP
 6	M	B-NP
@@ -165,7 +159,22 @@ phát_hiện	V	I-VP
 hàng	R	B-NP
 trăm	M	I-NP
 xe	N	I-NP
+mô_tô	V	B-VP
+(	A	B-AP
+trong	E	B-PP
+đó	P	B-NP
+có	V	B-VP
+nhiều	A	B-NP
+xe	N	I-NP
 mô_tô	A	I-NP
+phân_khối	V	B-VP
+lớn	A	B-AP
+,	,	B-VP
+lên	V	I-VP
+đến	E	B-PP
+1800	M	B-NP
+phân_khối	N	I-NP
+)	A	I-NP
 và	CC	I-NP
 nhiều	A	I-NP
 máy_tính	N	I-NP
@@ -177,7 +186,6 @@ máy_tính	N	I-NP
 qua	V	I-VP
 sử_dụng	V	I-VP
 .	.	O
-
 Đây	P	B-NP
 là	V	B-VP
 các	L	B-NP
@@ -196,9 +204,8 @@ số	N	I-NP
 12	2006	M	I-NP
 của	E	B-PP
 Chính_phủ	N	B-NP
-.	.	O
-
-Hiện_tại	N	B-NP
+.	.	I-NP
+Hiện_tại	N	I-NP
 Cục	N	I-NP
 Hải_Quan_Hải_Phòng	Np	I-NP
 đã	R	B-VP
@@ -215,10 +222,9 @@ này	P	I-NP
 điều_tra	V	B-VP
 làm	V	I-VP
 rõ	A	B-AP
-.	.	O
-
-Cũng	R	B-PP
-trong	E	I-PP
+.	.	I-AP
+Cũng	R	I-AP
+trong	E	B-PP
 thời_gian	N	B-NP
 này	P	I-NP
 ,	,	O
@@ -240,8 +246,13 @@ giữ	V	I-VP
 169	M	B-NP
 xe	N	I-NP
 mô_tô	N	I-NP
-phân_khối	V	I-NP
-lớn	A	I-NP
+phân_khối	V	B-VP
+lớn	A	B-AP
+(	M	B-NP
+loại	N	I-NP
+2-3	M	I-NP
+bánh	N	I-NP
+)	A	I-NP
 ,	,	I-NP
 11425	M	I-NP
 máy_tính_xách_tay	X	I-NP

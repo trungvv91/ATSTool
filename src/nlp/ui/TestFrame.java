@@ -10,20 +10,52 @@
  */
 package nlp.ui;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import nlp.graph.WordsGraph;
+import nlp.sentenceExtraction.Datum;
+import nlp.sentenceExtraction.MyTagger;
 
 /**
  *
- * @author Manh Tien
+ * @author Trung
  */
 public class TestFrame extends javax.swing.JFrame {
 
     public String sourceText;
     public String sumText;
+    
+    /**
+     * @param source
+     * @param wordMax
+     * @return
+     * @throws java.io.IOException
+     */
+    public static String summarize(String source, int wordMax) throws IOException {
+//        System.out.println(source);
+        String displayFile = "corpus/Plaintext/displayFile.txt";
+        String inputNum = "displayFile";
+        try (FileWriter fr = new FileWriter(new File(displayFile))) {
+            fr.write(source);
+        }
+        WordsGraph graph = new WordsGraph();
+        MyTagger tagger = new MyTagger();
+        ArrayList<Datum> data = tagger.getData(inputNum);
+        try {
+            graph.mainWordGraph(inputNum, data, wordMax);
+        } catch (IOException e) {
+            System.out.println("Error: " + e);
+        }
+        String out = graph.outString;
+//        System.out.println(out);
+        return out;
+    }
 
     public void setSourceText(String sourceText) {
         this.sourceText = sourceText;
@@ -177,7 +209,7 @@ public class TestFrame extends javax.swing.JFrame {
             sumTextArea.setText(null);
             int wordMax = Integer.parseInt(sumNumOfWords.getText());
             try {
-                out = Summarization.summarize(sourceTextArea.getText(), wordMax);
+                out = summarize(sourceTextArea.getText(), wordMax);
             } catch (IOException ex) {
                 Logger.getLogger(TestFrame.class.getName()).log(Level.SEVERE, null, ex);
             }

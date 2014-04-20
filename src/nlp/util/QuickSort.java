@@ -2,17 +2,17 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package nlp.graph;
+package nlp.util;
 
 import java.util.Arrays;
 
 /**
  *
- * @author Manh Tien
+ * @author Trung
  */
 public class QuickSort {
 
-   public static void swap(double A[], int B[], int x, int y) {
+    public static void swap(double A[], int B[], int x, int y) {
         double temp = A[x];
         A[x] = A[y];
         A[y] = temp;
@@ -30,7 +30,7 @@ public class QuickSort {
      * @param B
      * @param left
      * @param right
-     * @return
+     * @return index of the selected element (pivot)
      */
     public static int partition(double A[], int B[], int left, int right) {
         int pivotIndex = (left + right) / 2;

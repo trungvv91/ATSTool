@@ -2,16 +2,17 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package nlp.graph;
+
 
 import java.io.*;
-import java.util.List;
+import java.util.ArrayList;
+import nlp.graph.WordsGraph;
 import nlp.sentenceExtraction.Datum;
-import nlp.sentenceExtraction.VNTagger;
+import nlp.sentenceExtraction.MyTagger;
 
 /**
  *
- * @author Manh Tien
+ * @author Trung
  */
 public class Main {
 
@@ -33,9 +34,9 @@ public class Main {
                     String inputNum = file.split("\\.")[0];
                     try {
                         WordsGraph graph = new WordsGraph();
-                        VNTagger tagger = new VNTagger();
-                        List<Datum> datums = tagger.tagger(inputNum);
-                        graph.mainWordGraph(inputNum, datums, 120);
+                        MyTagger tagger = new MyTagger();
+                        ArrayList<Datum> data = tagger.getData(inputNum);
+                        graph.mainWordGraph(inputNum, data, 120);
                     } catch (IOException e) {
                         System.out.println("Error: " + e);
                     }

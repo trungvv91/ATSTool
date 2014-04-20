@@ -4,14 +4,11 @@
  */
 package nlp.dict;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import nlp.sentenceExtraction.Datum;
 import nlp.sentenceExtraction.Sentence;
-import nlp.sentenceExtraction.VNTagger;
+import nlp.sentenceExtraction.MyTagger;
 import nlp.util.IOUtil;
 
 /**
@@ -19,110 +16,7 @@ import nlp.util.IOUtil;
  * @author tien
  */
 public class NounAnaphora {
-//    // <editor-fold defaultstate="collapsed" desc="mảng static chứa các đồng tham chiếu thường gặp">
-//    public final static String NA1[] = {
-//        "anh_ấy",
-//        "anh này",
-//        "anh_ta",
-//        "ả",
-//        "ả ta",
-//        "bà ấy",
-//        "bà này",
-//        "bà ta",
-//        "bác ấy",
-//        "bác này",
-//        "chị ấy",
-//        "chị này",
-//        "chị ta",
-//        "cô ấy",
-//        "cô này",
-//        "cô ta",
-//        "chú ấy",
-//        "chú này",
-//        "hắn",
-//        "hắn ta",
-//        "ông ấy",
-//        "ông này",
-//        "mợ ấy",
-//        "mụ ấy",
-//        "mụ ta",
-//        "người này",
-//        "người đó",
-//        "thằng ấy",
-//        "thím ấy",
-//        "ông ta",
-//        "thằng",
-//        "thằng này",
-//        "y", 
-//        "anh_chàng đó",
-//        "anh_chàng ấy",
-//        "anh_chàng này",
-//        "cô_nàng đó",
-//        "cô_nàng này",
-//        "cô_nàng ấy",
-//        "cô_bé đó",
-//        "cô_bé này",
-//        "cô_bé ấy",
-//        "cậu_bé đó",
-//        "cậu_bé này",
-//        "cậu_bé ấy"
-//    };
-//    
-//    public final static String NA2[] = {
-//        "anh",
-//        "chị",
-//        "em",
-//        "bố",
-//        "mẹ",
-//        "cô",
-//        "dì",
-//        "chú",
-//        "bác",
-//        "ông",
-//        "bà",
-//        "thím",
-//        "giám_đốc",
-//        "chủ_tịch",
-//        "trưởng_phòng",
-//        "bệnh_nhân"
-//    };    
-//    // </editor-fold>
 
-//    public static boolean checkNounAnophoric1(String s)
-//    {               
-////        int index = Arrays.binarySearch(NA1, s);
-////        return (index >= 0);
-//        String s1 = s.toLowerCase();
-//        for (int i = 0; i < NA1.length; i++) {
-//            if (s1.equals(NA1[i])) {
-//                return true;
-//            }            
-//        }
-//        return false;
-//    }
-//    
-//    public static boolean checkNounAnophoric2(String s)
-//    {               
-//        String s1 = s.toLowerCase();
-//        for (int i = 0; i < NA2.length; i++) {
-//            if (s1.equals(NA2[i])) {
-//                return true;
-//            }            
-//        }
-//        return false;
-//    }
-//    
-//    public ArrayList<String> getAnophoricList1() {
-//        ArrayList<String> words = new ArrayList<>();
-//        words.addAll(Arrays.asList(NA1));
-//        return words;
-//    }
-//    
-//    public ArrayList<String> getAnophoricList2() {
-//        ArrayList<String> words = new ArrayList<>();
-//        words.addAll(Arrays.asList(NA2));
-//        return words;
-//    }
     /**
      * "anh + ấy"
      */
@@ -145,8 +39,8 @@ public class NounAnaphora {
     }
 
     public NounAnaphora() {
-        listNounAnaphora1 = IOUtil.ReadFile(filename1);
-        listNounAnaphora2 = IOUtil.ReadFile(filename2);
+        listNounAnaphora1 = IOUtil.ReadFileByLine(filename1);
+        listNounAnaphora2 = IOUtil.ReadFileByLine(filename2);
     }
 
     /**
@@ -215,15 +109,15 @@ public class NounAnaphora {
         NounAnaphora na = new NounAnaphora();
         System.out.println(na.isNounAnaphora1("ông_ấy"));
 
-        VNTagger ins = new VNTagger();
+        MyTagger ins = new MyTagger();
         String fileNameSource = "corpus/Plaintext/test.txt";
         String strTest = "Bệnh nhân Lê Cao Thắng dùng thuốc Biseptol. "
                 + "Sau khi uống, anh Dư bị biến chứng nặng.";
 //        String strTest = "Bố Bách mua thuốc về cho Bách uống. Sau khi uống, anh ấy bị đỏ môi.";
         IOUtil.WriteToFile(fileNameSource, strTest);
 
-        List<Datum> datum = null;
-        datum = ins.tagger("test");
+        List<Datum> datum;
+        datum = ins.getData("test");
         ArrayList<Sentence> sens = Sentence.DatumToSentence(datum);
         na.nounAnaphoring(sens);
         System.out.println("\n");

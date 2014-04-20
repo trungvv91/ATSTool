@@ -1,0 +1,52 @@
+Bệnh_nhân	N	B-NP
+Vũ_Dư	Np	I-NP
+được	V	B-VP
+đưa	V	I-VP
+đến	E	B-PP
+bệnh_viện	N	B-NP
+.	.	O
+
+Vũ_Dư	Np	B-NP
+dùng	V	B-VP
+thuốc	N	B-NP
+Biseptol	Np	I-NP
+.	.	O
+
+Anh_ấy	N	B-NP
+bị	V	B-VP
+biến_chứng	V	I-VP
+nặng	A	B-AP
+.	.	O
+
+Anh	N	B-NP
+này	P	I-NP
+hay	C	B-VP
+thật	R	I-VP
+.	.	O
+
+Chúng_nó	N	B-NP
+đã	R	B-VP
+đến	V	I-VP
+đâu	T	I-VP
+!	!	O
+
+Tôi	P	B-NP
+không	R	B-VP
+biết	V	I-VP
+họ	P	B-NP
+.	.	O
+
+Nhưng	C	O
+họ	P	B-NP
+biết	V	B-VP
+cô	N	B-NP
+ta	P	I-NP
+.	.	O
+
+Mẹ	N	B-NP
+của	E	B-PP
+Bách	Np	B-NP
+rất	R	B-AP
+chu_đáo	A	I-AP
+!	!	O
+

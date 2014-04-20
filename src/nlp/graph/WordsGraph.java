@@ -4,6 +4,7 @@
  */
 package nlp.graph;
 
+import nlp.util.QuickSort;
 import nlp.sentenceExtraction.Datum;
 import java.io.*;
 import java.util.List;
@@ -13,20 +14,20 @@ import java.util.Set;
 import nlp.dict.Conjunction;
 import nlp.sentenceExtraction.Sentence;
 import nlp.sentenceExtraction.SentenceExtraction;
-import nlp.sentenceExtraction.VNTagger;
+import nlp.sentenceExtraction.MyTagger;
 import nlp.util.IOUtil;
 import nlp.util.MyStringUtil;
 
 /**
  *
- * @author Manh Tien
+ * @author Trung
  */
 public class WordsGraph {
 
     public String outString = "";
 
     /**
-     * Determine keywords in datums list by set d.importance=true
+     * Determine keywords in data list by set d.importance=true
      *
      * @param sens
      * @param k
@@ -34,26 +35,26 @@ public class WordsGraph {
     public void setWordImportance(ArrayList<Sentence> sens, float k) {
         System.out.println("Start word-importance set...");
         /// construct word graph ???
-        List<Datum> datums = Sentence.SentenceToDatum(sens);
+        List<Datum> data = Sentence.SentenceToDatum(sens);
 
-        int n = datums.size();
+        int n = data.size();
         double values[] = new double[n];
         int indices[] = new int[n];
         for (int i = 0; i < n; i++) {
-            values[i] = datums.get(i).score;
+            values[i] = data.get(i).tf_isf;
             indices[i] = i;
         }
         QuickSort.QuickSort(values, indices, 0, n - 1);
-        int numOfWordImportance = (int) (k * datums.size());
+        int numOfWordImportance = (int) (k * data.size());
         int dem = 0;
         ArrayList<String> checkWordList = new ArrayList<>();
         for (int i = 0; dem < numOfWordImportance; i++) {
-            if (checkWordList.contains(datums.get(indices[i]).word)) {
+            if (checkWordList.contains(data.get(indices[i]).word)) {
             } else {
                 dem++;
-                String dimp = datums.get(indices[i]).word;
+                String dimp = data.get(indices[i]).word;
                 checkWordList.add(dimp);
-                for (Datum d : datums) {
+                for (Datum d : data) {
                     if (d.word.equals(dimp)) {
                         d.importance = true;
                     }
@@ -63,10 +64,10 @@ public class WordsGraph {
         System.out.println("End word-importance set...");
     }
 
-    public void mainWordGraph(String inputNum, List<Datum> dts, int maxWord) throws IOException {
+    public void mainWordGraph(String inputNum, ArrayList<Datum> dts, int maxWord) throws IOException {
 
         SentenceExtraction se = new SentenceExtraction();
-        ArrayList<Sentence> sentences = se.extract(inputNum, dts);
+        ArrayList<Sentence> sentences = se.extract(dts);
 
         //Lay 15% so tu la importance words  ???      
         setWordImportance(sentences, 0.15f);
@@ -419,7 +420,7 @@ public class WordsGraph {
         }   // end of for sens
 
         /// lọc WordMax, Set senExclude lưu chỉ số những câu bị loại
-        /// bỏ các câu score thấp nhất, cho đến khi word < wordMax
+        /// bỏ các câu tf_idf thấp nhất, cho đến khi word < wordMax
         Set<Integer> senExclude = new HashSet<>();
         int count = 0;      /// số câu bị loại
         int words = maxWord + 1;
@@ -479,9 +480,9 @@ public class WordsGraph {
     public static void main(String[] args) {
         try {
             WordsGraph graph = new WordsGraph();
-            VNTagger tagger = new VNTagger();
-            List<Datum> datums = tagger.tagger("1");
-            graph.mainWordGraph("1", datums, 120);
+            MyTagger tagger = new MyTagger();
+            ArrayList<Datum> data = tagger.getData("1");
+            graph.mainWordGraph("1", data, 120);
         } catch (IOException e) {
             e.printStackTrace();
         }
