@@ -1,10 +1,10 @@
 package nlp.textprocess;
 
-import nlp.data.IdfScore;
+import nlp.extradata.IdfScore;
 import java.util.ArrayList;
 import java.util.List;
-import nlp.data.Punctuation;
-import nlp.data.Stopword;
+import nlp.extradata.Punctuation;
+import nlp.extradata.Stopword;
 import nlp.util.CmdCommand;
 import nlp.util.IOUtil;
 import nlp.util.MyStringUtil;
@@ -209,6 +209,6 @@ public class MyTokenizer {
             str += token.toString() + "\n";
             System.out.println(token.toString());
         }
-        IOUtil.WriteToFile("temp/2.chunk.edited.txt", str);
+        IOUtil.WriteToFile("temp/1.chunk.edited.txt", str);
     }
 }

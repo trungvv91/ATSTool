@@ -7,7 +7,7 @@ package nlp.textprocess;
 
 import java.util.ArrayList;
 import java.util.List;
-import nlp.data.Punctuation;
+import nlp.extradata.Punctuation;
 import nlp.util.IOUtil;
 
 /**

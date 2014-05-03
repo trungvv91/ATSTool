@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import nlp.data.NounAnaphora;
+import nlp.extradata.NounAnaphora;
 import nlp.util.QuickSort;
 
 /**

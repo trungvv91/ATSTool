@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
-import nlp.data.Conjunction;
+import nlp.extradata.Conjunction;
 import nlp.textprocess.MySentence;
 import nlp.textprocess.MyExtracter;
 import nlp.textprocess.MyTokenizer;
