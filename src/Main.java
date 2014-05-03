@@ -7,8 +7,8 @@
 import java.io.*;
 import java.util.ArrayList;
 import nlp.graph.WordsGraph;
-import nlp.sentenceExtraction.Datum;
-import nlp.sentenceExtraction.MyTagger;
+import nlp.textprocess.MyToken;
+import nlp.textprocess.MyTokenizer;
 
 /**
  *
@@ -34,8 +34,8 @@ public class Main {
                     String inputNum = file.split("\\.")[0];
                     try {
                         WordsGraph graph = new WordsGraph();
-                        MyTagger tagger = new MyTagger();
-                        ArrayList<Datum> data = tagger.getData(inputNum);
+                        MyTokenizer tokenizer = new MyTokenizer();
+                        ArrayList<MyToken> data = tokenizer.createTokens(inputNum);
                         graph.mainWordGraph(inputNum, data, 120);
                     } catch (IOException e) {
                         System.out.println("Error: " + e);

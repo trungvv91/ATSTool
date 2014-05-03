@@ -19,8 +19,8 @@ import java.util.logging.Logger;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import nlp.graph.WordsGraph;
-import nlp.sentenceExtraction.Datum;
-import nlp.sentenceExtraction.MyTagger;
+import nlp.textprocess.MyToken;
+import nlp.textprocess.MyTokenizer;
 
 /**
  *
@@ -45,10 +45,10 @@ public class TestFrame extends javax.swing.JFrame {
             fr.write(source);
         }
         WordsGraph graph = new WordsGraph();
-        MyTagger tagger = new MyTagger();
-        ArrayList<Datum> data = tagger.getData(inputNum);
+        MyTokenizer tokenizer = new MyTokenizer();
+        ArrayList<MyToken> tokens = tokenizer.createTokens(inputNum);
         try {
-            graph.mainWordGraph(inputNum, data, wordMax);
+            graph.mainWordGraph(inputNum, tokens, wordMax);
         } catch (IOException e) {
             System.out.println("Error: " + e);
         }

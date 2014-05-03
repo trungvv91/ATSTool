@@ -39,18 +39,16 @@ class SyncPipe implements Runnable {
 
 public class CmdCommand {
 
-    String[] command = new String[1];
+    public static final String CHUNKER_MODEL = "chunk.model";
+    public static final String REDUCTION_MODEL = "reduct.model";
+
+    String[] command;
     String fileExt;
 
     public CmdCommand() {
-        String os = System.getProperty("os.name");
-        if (os.startsWith("Windows")) {
-            command[0] = "cmd";
-            fileExt = ".bat";
-        } else {
-            command[0] = "xterm";
-            fileExt = ".sh";
-        }
+        command = new String[1];
+        command[0] = "cmd";
+        fileExt = ".bat";
     }
 
     /**
@@ -78,40 +76,43 @@ public class CmdCommand {
     }
 
     /**
-     * Chạy command line của chương trình VietChunker với file .tagged.txt, đã
-     * được tách dòng
+     * Command line của CRF++. Chẳng hạn với chương trình VietChunker model là
+     * file model.chunk, file input là .tagged.txt, đã được tách dòng
      *
+     * @param model model file
      * @param inputFile each line of the form: Vũ_Dư	Np
      * @param outputFile each line of the form: Vũ_Dư	Np	B-NP
+     * @return xâu command cho đầu vào của hàm runCmd
      */
-    public void crf_test(String inputFile, String outputFile) {
-        String cmd = "crf_test.exe -m model_crf2 < ../" + inputFile + " > ../" + outputFile;
-        runCmd(cmd);
+    public String crf_test(String model, String inputFile, String outputFile) {
+        return "crf_test -m " + model + " ../" + inputFile + " > ../" + outputFile;
     }
 
     /**
-     * Chạy command line của chương trình vnSentDetector, đầu vào là file encode
-     * in UTF-8 without BOM
+     * Command line của chương trình vnSentDetector, đầu vào là file encode in
+     * UTF-8 without BOM
      *
      * @param inputFile
      * @param outputFile
+     * @return xâu command cho đầu vào của hàm runCmd
      */
-    public void vnSentDetector(String inputFile, String outputFile) {
-        String cmd = "vnSentDetector" + fileExt + " -i ../" + inputFile + " -o ../" + outputFile;
-        runCmd(cmd);
+    public String vnSentDetector(String inputFile, String outputFile) {
+        return "vnSentDetector" + fileExt + " -i ../" + inputFile + " -o ../" + outputFile;
     }
 
     /**
+     * Command line của chương trình vnTokenizer
      *
      * @param inputFile file đã được Sentence Detected
      * @param outputFile
+     * @return xâu command cho đầu vào của hàm runCmd
      */
-    public void vnTokenizer(String inputFile, String outputFile) {
+    public String vnTokenizer(String inputFile, String outputFile) {
         String cmd = "vnTokenizer" + fileExt + " -i ../" + inputFile + " -o ../" + outputFile;
         if (outputFile.endsWith(".xml")) {
             cmd += " -xo";
         }
-        runCmd(cmd);
+        return cmd;
     }
 
     /**
@@ -128,13 +129,14 @@ public class CmdCommand {
      * CC - Coordinating conjunction 14. I - Interjection 15. T - Auxiliary,
      * modal words 16. Y - Abbreviation 17. Z - Bound morphemes 18. X - Unknown.
      * 19. Delimiters and punctuations.
+     * @return
      */
-    public void vnTagger(String inputFile, String outputFile) {
+    public String vnTagger(String inputFile, String outputFile) {
         String cmd = "vnTagger" + fileExt + " -i ../" + inputFile + " -o ../" + outputFile;
         if (outputFile.endsWith(".txt")) {
             cmd += " -u -p";
         }
-        runCmd(cmd);
+        return cmd;
     }
 
     /**
@@ -143,19 +145,19 @@ public class CmdCommand {
      * separated by underscores, words are separated by spaces.
      *
      * @param inputFile
+     * @return
      */
-    public void testTaggedFile(String inputFile) {
-        String cmd = "vnTagger" + fileExt + " -t ../" + inputFile;
-        runCmd(cmd);
+    public String testTaggedFile(String inputFile) {
+        return "vnTagger" + fileExt + " -t ../" + inputFile;
     }
 
     public static void main(String[] args) {
         CmdCommand cmdCommand = new CmdCommand();
-//        cmdCommand.vnSentDetector("data/1.txt", "data/1.sd.txt");
-//        cmdCommand.vnTokenizer("data/1.sd.txt", "data/1.tok.xml");
-//        cmdCommand.vnTokenizer("data/1.sd.txt", "data/1.tok.txt");
-//        cmdCommand.vnTagger("data/0.sd.txt", "data/0.tagged.txt");
-//        cmdCommand.crf_test("data/0.tagged.line.txt", "data/0.chunk.txt");
-//        cmdCommand.testTaggedFile("data/1.tagged.txt");
+        cmdCommand.runCmd(cmdCommand.vnTokenizer("temp/1.txt", "temp/1.sd.txt"));
+//        cmdCommand.vnTokenizer("temp/1.sd.txt", "temp/1.tok.xml");
+//        cmdCommand.vnTokenizer("temp/1.sd.txt", "temp/1.tok.txt");
+//        cmdCommand.vnTagger("temp/0.sd.txt", "temp/0.tagged.txt");
+//        cmdCommand.crf_test("temp/0.tagged.line.txt", "temp/0.chunk.txt");
+//        cmdCommand.testTaggedFile("temp/1.tagged.txt");
     }
 }

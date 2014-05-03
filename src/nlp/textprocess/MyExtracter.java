@@ -2,39 +2,76 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package nlp.sentenceExtraction;
+package nlp.textprocess;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import nlp.dict.NounAnaphora;
+import nlp.data.NounAnaphora;
 import nlp.util.QuickSort;
 
 /**
  *
  * @author Trung
  */
-public class SentenceExtraction {
+public class MyExtracter {
+
+    final double REMAIN_RATE = 2.0 / 3;
+    final double THRESHOLD = 0.7;
 
     /**
      * <K, V> = <isenstence, order>
      */
     public Map<Integer, Integer> mapSenOrderByScore = new HashMap<>();
-    public NounAnaphora na = new NounAnaphora();
-    final double REMAIN_RATE = 2.0 / 3;
-    final double THRESHOLD = 0.7;
+    NounAnaphora na = new NounAnaphora();
+    ArrayList<MyToken> data;
+    
+    public static int[] getTopKSentence(ArrayList<MyToken> data, int k) {
+        ArrayList<MySentence> sentences = MySentence.DatumToSentence(data);
+        /// Set mapSenOrderByScore
+        System.out.println("Start of sen-scoring");
+        int nSentences = sentences.size();
+        double[] senScore = new double[nSentences];
+        int[] senIndex = new int[nSentences];
+        for (int i = 0; i < nSentences; i++) {
+            senIndex[i] = i;
+            ArrayList<MyToken> sen_i = sentences.get(i).dataList;
+            double score = 0;
+            int W = 0;
+            for (MyToken dt : sen_i) {
+                if (!dt.stopWord) {
+                    score += dt.tf_isf;
+                    W++;
+                }
+            }
+//            int nPhrases_i = sen_i.get(sen_i.size() - 1).iPhrase + 1;
+            senScore[i] = score / W;
+//            System.out.println("sen " + i + ": " + score + " - " + W);
+        }
+        QuickSort.QuickSort(senScore, senIndex, 0, nSentences - 1);
+
+        // map tf_isf
+        int[] topSenIndex = new int[k];
+        System.arraycopy(senIndex, 0, topSenIndex, 0, k);
+
+        System.out.println("End of sen-scoring...");
+        return topSenIndex;
+    }
+
+    public MyExtracter(ArrayList<MyToken> data) {
+        this.data = data;
+    }
 
     /**
-     * Loại bỏ các câu gần giống nhau. /// cần xem lại tham số là list Datum hay
-     * list Sentence
+     * Loại bỏ các câu gần giống nhau. /// cần xem lại tham số là list Token hay
+ list MySentence
      *
-     * @param data
      */
-    public void redundancing(ArrayList<Datum> data) {
+    void redundancing() {
         System.out.println("Start of redundancy...");
 
-        ArrayList<ArrayList<Datum>> sentenceArray = Datum.DatumToSentence(data);
+        ArrayList<ArrayList<MyToken>> sentenceArray = MyToken.DatumToSentence(data);
         int numOfSen = sentenceArray.size();
         /**
          * Similarity score between two iSentence
@@ -55,18 +92,18 @@ public class SentenceExtraction {
                 senLeg[i][j] = iLeg >= jLeg ? i : j;        /// delete longer iSentence
 
                 topI = topJ = bottomI = bottomJ = 0;
-                for (Datum di : sentenceArray.get(i)) {
+                for (MyToken di : sentenceArray.get(i)) {
                     bottomI += di.idf;
-                    for (Datum dj : sentenceArray.get(j)) {
+                    for (MyToken dj : sentenceArray.get(j)) {
                         if (dj.equals(di)) {        /// StringUtils.contains(iSentence.get(i), dj.word)
                             topI += di.idf;
                             break;
                         }
                     }
                 }
-                for (Datum dj : sentenceArray.get(j)) {
+                for (MyToken dj : sentenceArray.get(j)) {
                     bottomJ += dj.idf;
-                    for (Datum di : sentenceArray.get(j)) {
+                    for (MyToken di : sentenceArray.get(j)) {
                         if (di.equals(dj)) {
                             topJ += dj.idf;
                             break;
@@ -93,11 +130,10 @@ public class SentenceExtraction {
     /**
      * Setup mapSenOrderByScore, keep only 2/3 important sentences
      *
-     * @param data
-     * @return tagged data list
+     * @return list các câu đã được extract
      */
-    public ArrayList<Sentence> extract(ArrayList<Datum> data) {
-        ArrayList<Sentence> sentences = Sentence.DatumToSentence(data);
+    public ArrayList<MySentence> extract() {
+        ArrayList<MySentence> sentences = MySentence.DatumToSentence(data);
 
 //        na.nounAnaphoring(sentences);
 //        redundancing(data);
@@ -109,11 +145,11 @@ public class SentenceExtraction {
         int[] senIndex = new int[nSentences];
         for (int i = 0; i < nSentences; i++) {
             senIndex[i] = i;
-            ArrayList<Datum> sen_i = sentences.get(i).dataList;
+            ArrayList<MyToken> sen_i = sentences.get(i).dataList;
             double score = 0;
             int W = 0;
-            for (Datum dt : sen_i) {
-                if (!dt.stopWord) {
+            for (MyToken dt : sen_i) {
+                if (dt.tf_isf > 0) {
                     score += dt.tf_isf;
                     W++;
                 }
@@ -124,7 +160,7 @@ public class SentenceExtraction {
         QuickSort.QuickSort(senScore, senIndex, 0, nSentences - 1);
         int nremains = (int) (nSentences * REMAIN_RATE) + 1;
 
-        // map tf_idf
+        // map tf_isf
         int[] topSenIndex = new int[nremains];
         int[] topSenIndexTmp = new int[nremains];
         System.arraycopy(senIndex, 0, topSenIndex, 0, nremains);
@@ -157,12 +193,11 @@ public class SentenceExtraction {
     }
 
     public static void main(String[] args) {
-        MyTagger tagger = new MyTagger();
-        ArrayList<Datum> data;
-        data = tagger.getData("corpus/Plaintext/1.txt");
-        SentenceExtraction se = new SentenceExtraction();
-        ArrayList<Sentence> sentences = se.extract(data);
-        for (Sentence sentence : sentences) {
+        MyTokenizer tokenizer = new MyTokenizer();
+        ArrayList<MyToken> tokens = tokenizer.createTokens("corpus/Plaintext/1.txt");
+        MyExtracter se = new MyExtracter(tokens);
+        ArrayList<MySentence> sentences = se.extract();
+        for (MySentence sentence : sentences) {
             System.out.println(sentence.toString());
         }
     }

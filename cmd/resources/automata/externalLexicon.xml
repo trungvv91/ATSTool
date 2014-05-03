@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <corpus id="resources/automata/externalLexicon.xml">
     <body>
-		<w>Hà Nội</w>
-		<w>Hồ Chí Minh</w>
 		<w>Vũ Dư</w>
 		<w>xy lanh</w>
-		<w>lô hàng</w>
+		<w>lô hàng</w>		
+		<w>nghị định</w>
+		<w>khoa học</w>
+		<w>bí thư</w>
     </body>
 </corpus>
+

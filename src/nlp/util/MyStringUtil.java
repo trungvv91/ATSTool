@@ -18,16 +18,23 @@ public class MyStringUtil {
         String separatorRegex = "[" + ArrayToString(separator, "") + "]";
         return str.split(separatorRegex);
     }
+    
+    public static boolean isStartWithANumber(String s) {
+        return !s.isEmpty() && Character.isDigit(s.charAt(0));
+    }
 
     public static boolean isCapitalize(String s) {
-        return Character.isUpperCase(s.charAt(0));
+        return !s.isEmpty() && Character.isUpperCase(s.charAt(0));
     }
 
     public static boolean isUncapitalize(String s) {
-        return Character.isLowerCase(s.charAt(0));
+        return !s.isEmpty() && Character.isLowerCase(s.charAt(0));
     }
 
     public static boolean isUpperWord(String s) {
+        if (s.isEmpty()) {
+            return false;
+        }
         for (int i = 0; i < s.length(); i++) {
             if (!Character.isUpperCase(s.charAt(i))) {
                 return false;
@@ -35,15 +42,15 @@ public class MyStringUtil {
         }
         return true;
     }
-    
+
     public static String capitalize(String s) {
-        return Character.toUpperCase(s.charAt(0)) + s.substring(1);
+        return s.isEmpty() ? "" : Character.toUpperCase(s.charAt(0)) + s.substring(1);
     }
-    
+
     public static String unCapitalize(String s) {
-        return Character.toLowerCase(s.charAt(0)) + s.substring(1);
+        return s.isEmpty() ? "" : Character.toLowerCase(s.charAt(0)) + s.substring(1);
     }
-    
+
     public static void main(String[] args) {
         System.out.println(MyStringUtil.unCapitalize("Ong_ay"));
     }

@@ -3,22 +3,22 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package nlp.sentenceExtraction;
+package nlp.textprocess;
 
 import java.util.ArrayList;
 import java.util.List;
-import nlp.dict.Punctuation;
+import nlp.data.Punctuation;
 import nlp.util.IOUtil;
 
 /**
  *
  * @author TRUNG
  */
-public class Sentence {
+public class MySentence {
 
-    public final ArrayList<Datum> dataList;
+    public final ArrayList<MyToken> dataList;
 
-    public Sentence() {
+    public MySentence() {
         dataList = new ArrayList<>();
     }
 
@@ -55,15 +55,15 @@ public class Sentence {
 
     public ArrayList<String> getNpList() {
         ArrayList<String> npList = new ArrayList<>();
-        
+
         return npList;
     }
-    
+
     public void deletePhrase(int start, int end) {
-        for (int i = 0; i <= end-start; i++) {
+        for (int i = 0; i <= end - start; i++) {
             dataList.remove(start);
         }
-    }    
+    }
 
     /**
      * Convert list of data to list of sentences
@@ -71,24 +71,25 @@ public class Sentence {
      * @param data
      * @return
      */
-    public static ArrayList<Sentence> DatumToSentence(List<Datum> data) {
-        ArrayList<Sentence> sentences = new ArrayList<>();
+    public static ArrayList<MySentence> DatumToSentence(List<MyToken> data) {
+        ArrayList<MySentence> sentences = new ArrayList<>();
 
-        Sentence sen = new Sentence();
-        for (Datum dt : data) {
+        MySentence sen = new MySentence();
+        for (MyToken dt : data) {
             sen.dataList.add(dt);
             if (Punctuation.isEndOfSentence(dt.word)) {
                 sentences.add(sen);
-                sen = new Sentence();
+                sen = new MySentence();
             }
         }
         return sentences;
     }
-    
-    public static ArrayList<Datum> SentenceToDatum(ArrayList<Sentence> sentences) {
-        ArrayList<Datum> data = new ArrayList<>();
-        for (Sentence sentence : sentences) {
-            for (Datum datum : sentence.dataList) {
+
+    public static ArrayList<MyToken> SentenceToDatum(ArrayList<MySentence> sentences) {
+        ArrayList<MyToken> data = new ArrayList<>();
+        for (MySentence sentence : sentences) {
+            for (int i = 0; i < sentence.dataList.size(); i++) {
+                MyToken datum = sentence.dataList.get(i);
                 datum.iSentence = sentences.indexOf(sentence);
                 data.add(datum);
             }
@@ -98,26 +99,25 @@ public class Sentence {
     }
 
     public static void main(String[] args) {
-        MyTagger ins = new MyTagger();
-        String fileNameSource = "corpus/Plaintext/test.txt";
-        String strTest = "Bệnh nhân Vũ Dư dùng thuốc Biseptol. "
-                + "Sau khi uống, anh ấy có biểu hiện dị ứng với các thành phần của thuốc.";
-//        String strTest = "Bố Bách mua thuốc về cho Bách uống. Sau khi uống, anh ấy bị đỏ môi.";
-        IOUtil.WriteToFile(fileNameSource, strTest);
-
-        List<Datum> datum = null;
-        datum = ins.getData("test");
-        ArrayList<Sentence> sens = Sentence.DatumToSentence(datum);
-        System.out.println("\n");
-        System.out.println(strTest);
-        System.out.println("Các chủ ngữ: ");
-        for (Sentence sen : sens) {
-            int[] indices = sen.getSubject();
-            String s = "";
-            for (int i = indices[0]; i <= indices[1]; i++) {
-                s += sen.dataList.get(i).word + " ";
-            }
-            System.out.println(s);
-        }
+//        MyTokenizer tokenizer = new MyTokenizer();
+//        String fileNameSource = "corpus/Plaintext/test.txt";
+//        String strTest = "Bệnh nhân Vũ Dư dùng thuốc Biseptol. "
+//                + "Sau khi uống, anh ấy có biểu hiện dị ứng với các thành phần của thuốc.";
+////        String strTest = "Bố Bách mua thuốc về cho Bách uống. Sau khi uống, anh ấy bị đỏ môi.";
+//        IOUtil.WriteToFile(fileNameSource, strTest);
+//
+//        List<MyToken> tokens = tokenizer.createTokens("test");
+//        ArrayList<MySentence> sens = MySentence.DatumToSentence(tokens);
+//        System.out.println("\n");
+//        System.out.println(strTest);
+//        System.out.println("Các chủ ngữ: ");
+//        for (MySentence sen : sens) {
+//            int[] indices = sen.getSubject();
+//            String s = "";
+//            for (int i = indices[0]; i <= indices[1]; i++) {
+//                s += sen.dataList.get(i).word + " ";
+//            }
+//            System.out.println(s);
+//        }
     }
 }

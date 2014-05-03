@@ -5,16 +5,16 @@
 package nlp.graph;
 
 import nlp.util.QuickSort;
-import nlp.sentenceExtraction.Datum;
+import nlp.textprocess.MyToken;
 import java.io.*;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
-import nlp.dict.Conjunction;
-import nlp.sentenceExtraction.Sentence;
-import nlp.sentenceExtraction.SentenceExtraction;
-import nlp.sentenceExtraction.MyTagger;
+import nlp.data.Conjunction;
+import nlp.textprocess.MySentence;
+import nlp.textprocess.MyExtracter;
+import nlp.textprocess.MyTokenizer;
 import nlp.util.IOUtil;
 import nlp.util.MyStringUtil;
 
@@ -29,13 +29,13 @@ public class WordsGraph {
     /**
      * Determine keywords in data list by set d.importance=true
      *
-     * @param sens
+     * @param sentences
      * @param k
      */
-    public void setWordImportance(ArrayList<Sentence> sens, float k) {
+    public void setWordImportance(ArrayList<MySentence> sentences, float k) {
         System.out.println("Start word-importance set...");
         /// construct word graph ???
-        List<Datum> data = Sentence.SentenceToDatum(sens);
+        List<MyToken> data = MySentence.SentenceToDatum(sentences);
 
         int n = data.size();
         double values[] = new double[n];
@@ -54,7 +54,7 @@ public class WordsGraph {
                 dem++;
                 String dimp = data.get(indices[i]).word;
                 checkWordList.add(dimp);
-                for (Datum d : data) {
+                for (MyToken d : data) {
                     if (d.word.equals(dimp)) {
                         d.importance = true;
                     }
@@ -64,10 +64,10 @@ public class WordsGraph {
         System.out.println("End word-importance set...");
     }
 
-    public void mainWordGraph(String inputNum, ArrayList<Datum> dts, int maxWord) throws IOException {
+    public void mainWordGraph(String inputNum, ArrayList<MyToken> tokens, int maxWord) throws IOException {
 
-        SentenceExtraction se = new SentenceExtraction();
-        ArrayList<Sentence> sentences = se.extract(dts);
+        MyExtracter se = new MyExtracter(tokens);
+        ArrayList<MySentence> sentences = se.extract();
 
         //Lay 15% so tu la importance words  ???      
         setWordImportance(sentences, 0.15f);
@@ -82,9 +82,9 @@ public class WordsGraph {
          List<Datum> senj = sens.get(j);
          tmpList.clear();
          for (int k = 0; k < seni.size(); k++) {
-         Datum dik = seni.get(k);
+         MyToken dik = seni.get(k);
          for (int h = 0; h < senj.size(); h++) {
-         Datum djh = senj.get(h);
+         MyToken djh = senj.get(h);
         
          /// co-ref là N or Np ??? 
          if (dik.equals(djh) && (dik.posTag.equals("N") || dik.posTag.equals("Np"))) {
@@ -136,7 +136,7 @@ public class WordsGraph {
          /// ghép seni và senj
          if (!tmpList.isEmpty() && indexToAdd > -1) {
          senj.addAll(indexToAdd, tmpList);
-         senj.add(indexToAdd + tmpList.size(), new Datum("và", "C"));
+         senj.add(indexToAdd + tmpList.size(), new MyToken("và", "C"));
          sens.remove(i);
          i--;
          }
@@ -149,7 +149,7 @@ public class WordsGraph {
         
          /// tìm subject
          String verbi = "";
-         for (Datum di : seni) {
+         for (MyToken di : seni) {
          if (di.posTag.equals("V")) {
          for (int k = seni.indexOf(di); seni.get(k).iPhrase == di.iPhrase; k++) {
          verbi += seni.get(k).word + " ";
@@ -159,7 +159,7 @@ public class WordsGraph {
          }
         
          String verbj = "";
-         for (Datum dj : senj) {
+         for (MyToken dj : senj) {
          if (dj.posTag.equals("V")) {
          for (int k = senj.indexOf(dj); senj.get(k).iPhrase == dj.iPhrase; k++) {
          verbj += senj.get(k).word + " ";
@@ -171,7 +171,7 @@ public class WordsGraph {
          if (verbi.equals(verbj)) {
          Random r = new Random();
          String[] list = {"và", ","};
-         Datum dt = new Datum(list[r.nextInt(2)], "C");
+         MyToken dt = new MyToken(list[r.nextInt(2)], "C");
          dt.chunk = "C";
          dt.stopWord = true;
          int k;
@@ -193,8 +193,8 @@ public class WordsGraph {
          * start & end of basic phrases
          */
         ArrayList<Integer[]> termIndex = new ArrayList<>();
-        for (Sentence sentence : sentences) {
-            List<Datum> sen = sentence.dataList;
+        for (MySentence sentence : sentences) {
+            List<MyToken> sen = sentence.dataList;
             Integer[] index = new Integer[2];
             int i, j;
             for (i = 0; i < sen.size(); i++) {
@@ -227,8 +227,8 @@ public class WordsGraph {
         // </editor-fold>
 
         /// Bắt đầu xử lý
-        for (Sentence sentence : sentences) {
-            ArrayList<Datum> sen = sentence.dataList;
+        for (MySentence sentence : sentences) {
+            ArrayList<MyToken> sen = sentence.dataList;
             int senIndex = sentences.indexOf(sentence);
             if (termIndex.get(senIndex)[0] != -1 && termIndex.get(senIndex)[1] != -1) {     /// !!! null --> -1
                 int sIndex = termIndex.get(senIndex)[0];
@@ -237,7 +237,7 @@ public class WordsGraph {
                 /// Kiểm tra bắt đầu là 1 VP thì nối NP trước đó vào
                 if (sIndex > 0 && sen.get(sIndex).chunk.equals("B-VP")) {
                     for (int i = sIndex - 1; i >= 0; i--) {
-                        Datum d = sen.get(i);
+                        MyToken d = sen.get(i);
                         if (d.chunk.equals("B-NP")) {
                             sIndex = i;
                             break;
@@ -278,7 +278,7 @@ public class WordsGraph {
                 boolean hasV = false;
                 boolean hasN = false;
                 for (int i = sIndex; i <= eIndex; i++) {
-                    Datum d = sen.get(i);
+                    MyToken d = sen.get(i);
                     if (d != null) {
                         if (d.posTag.equals("V")) {
                             hasV = true;
@@ -352,7 +352,7 @@ public class WordsGraph {
                 int iConj = -1;
                 int jConj;
                 int indexOfConj = -1; //Thu tu conjunction trong mang
-                for (Datum di : sen) {
+                for (MyToken di : sen) {
                     indexOfConj = Conjunction.checkConjunction(di.word);
                     if (indexOfConj > -1) {
                         hasFConj = true;
@@ -388,7 +388,7 @@ public class WordsGraph {
                     } else {        /// chỉ có 1 liên từ
                         boolean hasIptWord = false;
                         for (int i = 0; i <= iConj; i++) {
-                            Datum di = sen.get(i);
+                            MyToken di = sen.get(i);
                             if (di.importance == true) {
                                 hasIptWord = true;
                                 break;
@@ -426,10 +426,10 @@ public class WordsGraph {
         int words = maxWord + 1;
         while (words > maxWord) {
             words = 0;
-            for (Sentence sentence : sentences) {
-                ArrayList<Datum> sen = sentence.dataList;
+            for (MySentence sentence : sentences) {
+                ArrayList<MyToken> sen = sentence.dataList;
                 if (!senExclude.contains(sentences.indexOf(sentence))) {
-                    for (Datum dt : sen) {
+                    for (MyToken dt : sen) {
                         if (!dt.chunk.equals("O")) {
                             words++;
                         }
@@ -446,8 +446,8 @@ public class WordsGraph {
         /// Done, decoration
 //        System.out.println("Decoration");
         int numOfWords = 0;
-        for (Sentence sentence : sentences) {
-            ArrayList<Datum> sen = sentence.dataList;
+        for (MySentence sentence : sentences) {
+            ArrayList<MyToken> sen = sentence.dataList;
             // Capitalize the first word in a sentence
             if (!senExclude.contains(sentences.indexOf(sentence))) {
                 int senIndex = sentences.indexOf(sentence);
@@ -455,7 +455,7 @@ public class WordsGraph {
                 int eIndex = termIndex.get(senIndex)[1];
                 if (sIndex != -1 && eIndex != -1) {
                     sen.get(sIndex).word = MyStringUtil.capitalize(sen.get(sIndex).word);
-                    for (Datum d : sen) {
+                    for (MyToken d : sen) {
                         if (!d.chunk.endsWith("O")) {
                             numOfWords++;
                         }
@@ -480,9 +480,9 @@ public class WordsGraph {
     public static void main(String[] args) {
         try {
             WordsGraph graph = new WordsGraph();
-            MyTagger tagger = new MyTagger();
-            ArrayList<Datum> data = tagger.getData("1");
-            graph.mainWordGraph("1", data, 120);
+            MyTokenizer tokenizer = new MyTokenizer();
+            ArrayList<MyToken> tokens = tokenizer.createTokens("1");
+            graph.mainWordGraph("1", tokens, 120);
         } catch (IOException e) {
             e.printStackTrace();
         }

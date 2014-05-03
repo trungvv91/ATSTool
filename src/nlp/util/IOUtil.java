@@ -30,6 +30,21 @@ public class IOUtil {
         }
     }
 
+    public static void AppendFile(String sourceFile, String desFile) {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(sourceFile), StandardCharsets.UTF_8));
+                BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(desFile, true), StandardCharsets.UTF_8))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                if (!line.isEmpty()) {
+                    bw.write(line);
+                    bw.newLine();
+                }
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(IOUtil.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     /**
      * Ghi text ra file. Ghi đè nếu file đã tồn tại.
      *
@@ -49,8 +64,37 @@ public class IOUtil {
         }
     }
 
+    public static void RawProcess(String filename) {
+        String text = IOUtil.ReadFile(filename);
+        text = text.replaceAll("…|(\\.\\.+)", "...")
+                .replaceAll("[„“”]", "\"")
+                .replaceAll("[‘’]", "'")
+                .replaceAll("\\&", " và ")
+                .replaceAll("\\/", "-")
+                .replaceAll("[–]", "-");
+        WriteToFile(filename, text);
+    }
+
     /**
-     * Đọc các line từ file, lưu vào ArrayList. Loại bỏ BOM nếu có.
+     * Ghi text ra file.
+     *
+     * @param filename
+     * @param text
+     * @param append Ghi đè nếu file đã tồn tại hay không
+     */
+    public static void WriteToFile(String filename, String text, boolean append) {
+        try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(
+                new FileOutputStream(filename, append), StandardCharsets.UTF_8))) {
+//            System.out.println(text);
+            bw.write(text);
+        } catch (IOException ex) {
+            Logger.getLogger(IOUtil.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    /**
+     * Đọc các line từ file, lưu vào ArrayList. Loại bỏ BOM nếu có. Không đọc
+     * dòng empty
      *
      * @param filename
      * @return ArrayList có mỗi phần tử là 1 line
@@ -61,10 +105,10 @@ public class IOUtil {
         try (BufferedReader br = new BufferedReader(new InputStreamReader(
                 new FileInputStream(filename), StandardCharsets.UTF_8))) {
             while ((line = br.readLine()) != null) {
-                if (!"".equals(line)) {
+                if (!line.isEmpty()) {
                     lines.add(line);
                 } else {
-                    lines.add("\n");
+//                    lines.add("\n");
                 }
             }
         } catch (FileNotFoundException ex) {
@@ -86,7 +130,7 @@ public class IOUtil {
      * Đọc các line từ file, lưu vào ArrayList. Loại bỏ BOM nếu có.
      *
      * @param filename
-     * @param readEmptyLine
+     * @param readEmptyLine có đọc empty line không
      * @return ArrayList có mỗi phần tử là 1 line
      */
     public static ArrayList<String> ReadFileByLine(String filename, boolean readEmptyLine) {
@@ -95,7 +139,7 @@ public class IOUtil {
         try (BufferedReader br = new BufferedReader(new InputStreamReader(
                 new FileInputStream(filename), StandardCharsets.UTF_8))) {
             while ((line = br.readLine()) != null) {
-                if (!"".equals(line)) {
+                if (!line.isEmpty()) {
                     lines.add(line);
                 } else if (readEmptyLine) {
                     lines.add("");
@@ -117,7 +161,8 @@ public class IOUtil {
     }
 
     /**
-     * Đọc toàn bộ file text (dung lượng không lớn lắm). Loại bỏ BOM nếu có.
+     * Đọc toàn bộ file text (dung lượng không lớn lắm). Có trim() file. Loại bỏ
+     * BOM nếu có.
      *
      * @param filename
      * @return String chứa text
@@ -128,7 +173,7 @@ public class IOUtil {
                 new FileInputStream(filename), StandardCharsets.UTF_8))) {
             String line;
             while ((line = br.readLine()) != null) {
-                if (!"".equals(line)) {
+                if (!line.isEmpty()) {
                     text += line.trim() + "\n";
                 }
             }
@@ -144,7 +189,46 @@ public class IOUtil {
         return text;
     }
 
-    public static void main(String[] args) {
-        System.out.println((int) '\uFEFF');
+    public static void main(String[] args) throws IOException {
+        File file = new File("corpus/Summary1/");
+//        File file = new File("corpus/Plaintext1/");
+        String[] directories = file.list();
+        int counter = 0;
+        for (String d : directories) {
+            File directory = new File(file.getPath() + "/" + d);
+            if (directory.isFile()) {
+                continue;
+            }
+            File[] files = directory.listFiles();    // Reading directory contents
+            for (int i = 0; i < files.length; i++) {
+                try {
+                    String name = files[i].getName();
+                    String text = IOUtil.ReadFile("corpus/Summary1/" + d + "/" + name);
+                    text = text.replaceAll("\\(.*?\\)", "").replaceAll("(\\s)+", "$1");
+//                    text = text.replaceAll("…|(\\.\\.+)", "...")
+//                            .replaceAll("[„“”]", "\"")
+//                            .replaceAll("[‘’]", "'")
+//                            .replaceAll("\\&", " và ")
+//                            .replaceAll("\\/", "-")
+//                            .replaceAll("[–]", "-")
+//                            .replaceAll("(\\s)+", "$1");
+//                    String[] lines = text.split("\n");
+//                    for (String line : lines) {
+//                        if (line.matches("(.*?)\\.[^\\s\\.\\d\",;](.*)")) {
+//                            System.out.println(name + ": " + line);
+//                        }
+//                    }
+                    System.out.println("corpus/Summary1/" + d + "/" + name + ": \n" + text);
+                    IOUtil.WriteToFile("corpus/Summary1/" + d + "/" + name, text);
+//                    decomposer.createTrainData("corpus/Plaintext/" + d + "/" + name,
+//                            "corpus/Summary/" + d + "/" + name, "data/train.nlp");
+                    counter++;
+                } catch (Exception ex) {
+//                continue;
+                    System.out.println("Failure on file " + files[i].getPath() + "!\n\n");
+                }
+            }
+        }
+        System.out.println("\n" + counter + " văn bản đã được đọc");
     }
 }
