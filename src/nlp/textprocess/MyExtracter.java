@@ -5,189 +5,158 @@
 package nlp.textprocess;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import nlp.extradata.NounAnaphora;
-import nlp.util.QuickSort;
+import java.util.TreeSet;
 
 /**
+ * Lớp trích rút thông tin, xếp hạng theo tf-isf và loại bỏ câu không quan
+ * trọng, câu giống nhau... Xem xét rút gọn câu.
  *
  * @author Trung
  */
 public class MyExtracter {
 
-    final double REMAIN_RATE = 2.0 / 3;
+    final double REMAIN_RATE = 2.0 / 3;     // keep only 2/3 important sentences
     final double THRESHOLD = 0.7;
+    final double TOP_K_KEYWORD = 0.15;
 
-    /**
-     * <K, V> = <isenstence, order>
-     */
-    public Map<Integer, Integer> mapSenOrderByScore = new HashMap<>();
-    NounAnaphora na = new NounAnaphora();
-    ArrayList<MyToken> data;
-    
-    public static int[] getTopKSentence(ArrayList<MyToken> data, int k) {
-        ArrayList<MySentence> sentences = MySentence.DatumToSentence(data);
-        /// Set mapSenOrderByScore
-        System.out.println("Start of sen-scoring");
-        int nSentences = sentences.size();
-        double[] senScore = new double[nSentences];
-        int[] senIndex = new int[nSentences];
-        for (int i = 0; i < nSentences; i++) {
-            senIndex[i] = i;
-            ArrayList<MyToken> sen_i = sentences.get(i).dataList;
-            double score = 0;
-            int W = 0;
-            for (MyToken dt : sen_i) {
-                if (!dt.stopWord) {
-                    score += dt.tf_isf;
-                    W++;
-                }
-            }
-//            int nPhrases_i = sen_i.get(sen_i.size() - 1).iPhrase + 1;
-            senScore[i] = score / W;
-//            System.out.println("sen " + i + ": " + score + " - " + W);
-        }
-        QuickSort.QuickSort(senScore, senIndex, 0, nSentences - 1);
-
-        // map tf_isf
-        int[] topSenIndex = new int[k];
-        System.arraycopy(senIndex, 0, topSenIndex, 0, k);
-
-        System.out.println("End of sen-scoring...");
-        return topSenIndex;
-    }
+//    NounAnaphora na;
+    private final ArrayList<MySentence> sentences;
 
     public MyExtracter(ArrayList<MyToken> data) {
-        this.data = data;
+        sentences = MySentence.DatumToSentence(data);
+//        na = new NounAnaphora();
     }
 
     /**
-     * Loại bỏ các câu gần giống nhau. /// cần xem lại tham số là list Token hay
- list MySentence
+     * Loại bỏ các câu gần giống nhau dựa trên độ đo similarity.
      *
      */
     void redundancing() {
         System.out.println("Start of redundancy...");
-
-        ArrayList<ArrayList<MyToken>> sentenceArray = MyToken.DatumToSentence(data);
-        int numOfSen = sentenceArray.size();
-        /**
-         * Similarity score between two iSentence
-         */
-        double[][] senSim = new double[numOfSen][numOfSen];
-
-        /**
-         * array return whether iSentence have a longer length
-         */
-        int[][] senLeg = new int[numOfSen][numOfSen];
-        String senRedun = "";
-        int iLeg, jLeg;       // length of iSentence i,j
         double topI, bottomI, topJ, bottomJ;
-        for (int i = 0; i < numOfSen - 1; i++) {
-            for (int j = i + 1; j < numOfSen; j++) {
-                iLeg = sentenceArray.get(i).size();
-                jLeg = sentenceArray.get(j).size();
-                senLeg[i][j] = iLeg >= jLeg ? i : j;        /// delete longer iSentence
+        int nSentences = sentences.size();
+        for (int i = 0; i < nSentences - 1; i++) {
+            for (int j = i + 1; j < nSentences; j++) {
+                MySentence sen_i = sentences.get(i);
+                MySentence sen_j = sentences.get(j);
+                if (Math.abs(sen_i.getScore() - sen_j.getScore()) < 0.2) {
+                    topI = topJ = bottomI = bottomJ = 0;
+                    for (MyToken di : sen_i.tokensList) {
+                        bottomI += di.idf;
+                        for (MyToken dj : sen_j.tokensList) {
+                            if (dj.equals(di)) {
+                                topI += di.idf;
+                                break;
+                            }
+                        }
+                    }
+                    for (MyToken dj : sen_j.tokensList) {
+                        bottomJ += dj.idf;
+                        for (MyToken di : sen_i.tokensList) {
+                            if (di.equals(dj)) {
+                                topJ += dj.idf;
+                                break;
+                            }
+                        }
+                    }
 
-                topI = topJ = bottomI = bottomJ = 0;
-                for (MyToken di : sentenceArray.get(i)) {
-                    bottomI += di.idf;
-                    for (MyToken dj : sentenceArray.get(j)) {
-                        if (dj.equals(di)) {        /// StringUtils.contains(iSentence.get(i), dj.word)
-                            topI += di.idf;
-                            break;
+                    double simScore = (topI / bottomI + topJ / bottomJ) / 2;
+                    if (simScore > THRESHOLD) {
+                        // xóa câu dài hơn
+                        if (sen_i.tokensList.size() >= sen_j.tokensList.size()) {
+                            sen_i.isRemove = true;
+                        } else {
+                            sen_j.isRemove = true;
                         }
                     }
-                }
-                for (MyToken dj : sentenceArray.get(j)) {
-                    bottomJ += dj.idf;
-                    for (MyToken di : sentenceArray.get(j)) {
-                        if (di.equals(dj)) {
-                            topJ += dj.idf;
-                            break;
-                        }
-                    }
-                }
-                senSim[i][j] = (topI / bottomI + topJ / bottomJ) / 2.0;
-                if (senSim[i][j] > THRESHOLD) {
-                    senRedun += senLeg[i][j] + ":";
                 }
             }
         }
 
-        if (!senRedun.equals("")) {
-            String[] arrRedun = senRedun.split(":");
-            for (int i = 0; i < arrRedun.length; i++) {
-                sentenceArray.remove(Integer.parseInt(arrRedun[i]) - i);
+        // remove redundant sentences
+        int i = 0;
+        while (i < sentences.size()) {
+            if (sentences.get(i).isRemove) {
+                sentences.remove(i);
+                System.out.println("Remove sentence " + i);
+            } else {
+                i++;
             }
-            System.out.println(arrRedun.length + " sentences are removed");
         }
         System.out.println("End of redundancy...");
     }
 
     /**
-     * Setup mapSenOrderByScore, keep only 2/3 important sentences
+     * Setup mapSenOrderByScore, keep only 2/3 important sentences.
+     */
+    void scoring() {
+        for (MySentence sen_i : sentences) {
+            for (MySentence sen_j : sentences) {
+                if (sen_j.getScore() > sen_i.getScore()) {
+                    sen_i.rank++;       // bao nhiêu câu có score cao hơn sen_i
+                }
+            }
+        }
+
+//        /// print important sentence
+//        for (int i = 0; i < 3; i++) {
+//            for (MySentence sentence : sentences) {
+//                if (sentence.rank == i) {
+//                    System.out.println(sentence.toString());
+//                }
+//            }
+//        }
+    }
+
+    /**
+     * Determine keywords in data list by set d.importance=true
+     *
+     */
+    void setKeywords() {
+        System.out.println("Start word-importance set...");
+        TreeSet<Double> set = new TreeSet<>();
+        int counter = 0;
+        for (MySentence sentence : sentences) {
+            for (MyToken token : sentence.tokensList) {
+                set.add(token.tf_isf);
+                counter++;
+            }
+        }
+
+        final int nKeywords = (int) (TOP_K_KEYWORD * counter);
+        boolean flag = true;
+        counter = 0;
+        while (flag) {
+            Double maxScore = set.pollLast();
+            for (MySentence sentence : sentences) {
+                for (MyToken token : sentence.tokensList) {
+                    if (maxScore == token.tf_isf) {
+                        token.importance = flag;
+                        if (flag) {
+                            System.out.println(token.word);
+                        }
+                        counter++;
+                        if (counter >= nKeywords) {
+                            flag = false;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        System.out.println("End word-importance set...");
+    }
+
+    /**
+     * Phân giải đồng tham chiếu; loại câu trùng lặp, dư thừa; xếp hạng câu.
      *
      * @return list các câu đã được extract
      */
     public ArrayList<MySentence> extract() {
-        ArrayList<MySentence> sentences = MySentence.DatumToSentence(data);
-
 //        na.nounAnaphoring(sentences);
-//        redundancing(data);
-        //
-        /// Set mapSenOrderByScore
-        System.out.println("Start of sen-scoring");
-        int nSentences = sentences.size();
-        double[] senScore = new double[nSentences];
-        int[] senIndex = new int[nSentences];
-        for (int i = 0; i < nSentences; i++) {
-            senIndex[i] = i;
-            ArrayList<MyToken> sen_i = sentences.get(i).dataList;
-            double score = 0;
-            int W = 0;
-            for (MyToken dt : sen_i) {
-                if (dt.tf_isf > 0) {
-                    score += dt.tf_isf;
-                    W++;
-                }
-            }
-//            int nPhrases_i = sen_i.get(sen_i.size() - 1).iPhrase + 1;
-            senScore[i] = score / W;
-        }
-        QuickSort.QuickSort(senScore, senIndex, 0, nSentences - 1);
-        int nremains = (int) (nSentences * REMAIN_RATE) + 1;
-
-        // map tf_isf
-        int[] topSenIndex = new int[nremains];
-        int[] topSenIndexTmp = new int[nremains];
-        System.arraycopy(senIndex, 0, topSenIndex, 0, nremains);
-        System.arraycopy(topSenIndex, 0, topSenIndexTmp, 0, nremains);
-        Arrays.sort(topSenIndexTmp, 0, nremains);
-        for (int i = 0; i < topSenIndexTmp.length; i++) {
-            for (int j = 0; j < topSenIndex.length; j++) {
-                if (topSenIndexTmp[i] == topSenIndex[j]) {
-                    topSenIndex[j] = i;     /// update sentence index after removing
-                }
-            }
-        }
-        for (int i = 0; i < topSenIndex.length; i++) {
-//            mapSenOrderByScore.put(topSenIndex[i], i);
-            mapSenOrderByScore.put(i, topSenIndex[i]);
-        }
-
-        // Remove unimportant sentences
-        Arrays.sort(senIndex, nremains, senIndex.length);
-        for (int i = senIndex.length - 1; i >= nremains; i--) {
-            sentences.remove(senIndex[i]);
-            System.out.println("remove sentence " + senIndex[i]);
-        }
-        System.out.println(nremains + " sentences remained");
-
-        System.out.println(mapSenOrderByScore.toString());
-        System.out.println("End of sen-scoring...");
+        redundancing();
+        setKeywords();
+        scoring();
 
         return sentences;
     }
@@ -196,9 +165,17 @@ public class MyExtracter {
         MyTokenizer tokenizer = new MyTokenizer();
         ArrayList<MyToken> tokens = tokenizer.createTokens("corpus/Plaintext/1.txt");
         MyExtracter se = new MyExtracter(tokens);
-        ArrayList<MySentence> sentences = se.extract();
-        for (MySentence sentence : sentences) {
-            System.out.println(sentence.toString());
-        }
+//        se.setKeywords();
+        se.scoring();
+//        ArrayList<MySentence> sentences = se.extract();
+//        for (MySentence sentence : sentences) {
+//            System.out.println(sentence.toString());
+//        }
+//        
+//        Set<Integer> set = new TreeSet<>();
+//        set.add(3);
+//        set.add(1);
+//        set.add(2);
+//        System.out.println(set);
     }
 }

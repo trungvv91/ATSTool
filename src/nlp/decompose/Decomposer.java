@@ -5,15 +5,12 @@
  */
 package nlp.decompose;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 import java.util.TreeSet;
 import nlp.textprocess.MyToken;
 import nlp.textprocess.MyTokenizer;
-import nlp.textprocess.MyExtracter;
+import nlp.textprocess.MySentence;
 import nlp.util.CmdCommand;
 import nlp.util.IOUtil;
 
@@ -33,15 +30,6 @@ class Position {
      */
     public int p;
 
-//        /**
-//         * Vị trí câu trong summary
-//         */
-//        public int s_sum;
-//
-//        /**
-//         * Vị trí trong câu summary
-//         */
-//        public int p_sum;
     public Position(int s, int p) {
         this.s = s;
         this.p = p;
@@ -81,6 +69,12 @@ class DecomposeNode {
 
 }
 
+/**
+ * Lớp phân tích dựa trên văn bản tóm tắt và văn bản nguồn. Sử dụng mô hình
+ * Markov ẩn.
+ *
+ * @author TRUNG
+ */
 public class Decomposer {
 
     MyTokenizer tokenizer;
@@ -91,6 +85,13 @@ public class Decomposer {
         cmd = new CmdCommand();
     }
 
+    /**
+     * Trọng số đường đi.
+     *
+     * @param p1
+     * @param p2
+     * @return
+     */
     double getLogProb(Position p1, Position p2) {
         double d = 0.0;
         if (p2.s == p1.s) {
@@ -118,6 +119,8 @@ public class Decomposer {
     }
 
     /**
+     * Thực hiện phân tích so sánh văn bản tóm tắt và văn bản gốc. Tìm các cụm
+     * từ trong câu gốc giống với trong câu tóm tắt nhất (bằng HMM).
      *
      * @param data Văn bản gốc
      * @param sumDoc Tên văn bản tóm tắt
@@ -133,7 +136,7 @@ public class Decomposer {
         tokenizer.tokenize(sumDoc, tempSum);
         ArrayList<String> sumLines = IOUtil.ReadFileByLine(tempSum);
         ArrayList<DecomposeNode> hmmNodes = new ArrayList<>();      // Hidden Markov Model
-        Map<String, ArrayList<Position>> map = new HashMap<>();     // map lưu vị trí của word trong source
+        HashMap<String, ArrayList<Position>> map = new HashMap<>();     // map lưu vị trí của word trong source
         for (int s_sum = 0; s_sum < sumLines.size(); s_sum++) {
             String[] words = sumLines.get(s_sum).split("\\s+");
             for (int p_sum = 0; p_sum < words.length; p_sum++) {
@@ -275,18 +278,25 @@ public class Decomposer {
         return positions;
     }
 
+    /**
+     * Tạo dữ liệu train cho reduction dựa trên bộ decomposer.
+     *
+     * @param sourceFile
+     * @param sumFile
+     * @param outFile
+     */
     public void createTrainData(String sourceFile, String sumFile, String outFile) {
         ArrayList<TrainData> trainList = new ArrayList<>();
         ArrayList<MyToken> data = tokenizer.createTokens(sourceFile);
         ArrayList<Position> positions = decompose(data, sumFile);
-        Set<Integer> selectedSentence = new TreeSet();
+        TreeSet<Integer> selectedSentence = new TreeSet<>();
         for (Position position : positions) {
             selectedSentence.add(position.s);
         }
 
         // setup các từ trong top K câu
-        int[] topKSentence = MyExtracter.getTopKSentence(data, (int) (MyToken.getNumberOfSentences(data) / 5.0));
-        Set<String> wordInTopKSentence = new TreeSet();
+        int[] topKSentence = MySentence.getTopKSentence(data, (int) (MyToken.getNumberOfSentences(data) / 5.0));
+        TreeSet<String> wordInTopKSentence = new TreeSet<>();
         for (MyToken datum : data) {
             for (int j = 0; j < topKSentence.length; j++) {
                 if (datum.word.length() > 3 && !datum.semiStopWord
@@ -367,12 +377,18 @@ public class Decomposer {
         IOUtil.WriteToFile(outFile, str, true);
     }
 
+    /**
+     * Tạo dữ liệu đầu vào cho crf++ reduction.
+     *
+     * @param data
+     * @param outFile
+     */
     public void createTestData(ArrayList<MyToken> data, String outFile) {
 //        ArrayList<Datum> data = tokenizer.createTokens(sourceFile);
 
         // setup các từ trong top K câu
-        int[] topKSentence = MyExtracter.getTopKSentence(data, (int) (MyToken.getNumberOfSentences(data) / 5.0));
-        Set<String> wordInTopKSentence = new TreeSet();
+        int[] topKSentence = MySentence.getTopKSentence(data, (int) (MyToken.getNumberOfSentences(data) / 5.0));
+        TreeSet<String> wordInTopKSentence = new TreeSet<>();
         for (MyToken datum : data) {
             for (int j = 0; j < topKSentence.length; j++) {
                 if (datum.word.length() > 3 && !datum.semiStopWord

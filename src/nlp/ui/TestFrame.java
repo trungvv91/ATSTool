@@ -30,7 +30,7 @@ public class TestFrame extends javax.swing.JFrame {
 
     public String sourceText;
     public String sumText;
-    
+
     /**
      * @param source
      * @param wordMax
@@ -38,23 +38,14 @@ public class TestFrame extends javax.swing.JFrame {
      * @throws java.io.IOException
      */
     public static String summarize(String source, int wordMax) throws IOException {
-//        System.out.println(source);
         String displayFile = "corpus/Plaintext/displayFile.txt";
-        String inputNum = "displayFile";
         try (FileWriter fr = new FileWriter(new File(displayFile))) {
+//        System.out.println(source);
             fr.write(source);
         }
-        WordsGraph graph = new WordsGraph();
-        MyTokenizer tokenizer = new MyTokenizer();
-        ArrayList<MyToken> tokens = tokenizer.createTokens(inputNum);
-        try {
-            graph.mainWordGraph(inputNum, tokens, wordMax);
-        } catch (IOException e) {
-            System.out.println("Error: " + e);
-        }
-        String out = graph.outString;
-//        System.out.println(out);
-        return out;
+        String result = WordsGraph.graphing(displayFile, wordMax);
+//        System.out.printlnresultout);
+        return result;
     }
 
     public void setSourceText(String sourceText) {

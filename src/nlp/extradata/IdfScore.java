@@ -7,7 +7,6 @@ package nlp.extradata;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 import nlp.textprocess.MyToken;
 import nlp.util.IOUtil;
 
@@ -17,32 +16,17 @@ import nlp.util.IOUtil;
  */
 public class IdfScore {
 
-    final String filename = "data/idf_final.txt";
-    Map<String, Double> idf_index;
+    private final String filename = "data/idf_final.txt";
+    private final HashMap<String, Double> idfScoreMap;
 
     public IdfScore() {
-        idf_index = new HashMap<>();
+        idfScoreMap = new HashMap<>();
         ArrayList<String> lines = IOUtil.ReadFileByLine(filename);
         for (String line : lines) {
             String[] tokens = line.split(" ");
             double idf = Double.parseDouble(tokens[1]);
-            idf_index.put(tokens[0], idf);
+            idfScoreMap.put(tokens[0], idf);
         }
-    }
-
-    private Map<String, Double> getIdfScoreMap(ArrayList<MyToken> tokens) {
-        Map<String, Double> map = new HashMap<>();
-        for (MyToken token : tokens) {
-            String word = token.word;
-            double idf;
-            if (idf_index.containsKey(word)) {
-                idf = (double) idf_index.get(word);
-            } else {
-                idf = Math.log(21628.0);        /// !!!
-            }
-            map.put(word, idf);
-        }
-        return map;
     }
 
     /**
@@ -53,7 +37,7 @@ public class IdfScore {
     public void tf_isf(ArrayList<MyToken> tokens) {
         System.out.println("Start of isf-scoring...");
         int S = tokens.get(tokens.size() - 1).iSentence + 1;      // the total number of sentences in the document
-        Map<String, int[]> tf_map = new HashMap<>();       // map có key là từ, value là mảng S+1 giá trị, với giá trị cuối lưu sum(arr)
+        HashMap<String, int[]> tf_map = new HashMap<>();       // map có key là từ, value là mảng S+1 giá trị, với giá trị cuối lưu sum(arr)
         for (int i = 0; i < tokens.size(); i++) {
             MyToken di = tokens.get(i);
             int[] arr_tf;
@@ -68,49 +52,51 @@ public class IdfScore {
             arr_tf[S]++;
             tf_map.put(key, arr_tf);
         }
-        for (MyToken datum : tokens) {
-            if (datum.word.length() <= 5 || datum.punctuation || datum.stopWord) {
+        for (MyToken token : tokens) {
+            if (token.word.length() <= 5 || token.punctuation || token.stopWord || token.semiStopWord) {
                 continue;
             }
-            int[] arr_tf = tf_map.get(datum.word + "#" + datum.posTag);
-            int tf = arr_tf[datum.iSentence];
+            int[] arr_tf = tf_map.get(token.word + "#" + token.posTag);
+            int tf = arr_tf[token.iSentence];
             double isf = Math.log10(S / (arr_tf[S] + 0.0));
-            datum.tf_isf = tf * isf;
+            token.tf_isf = tf * isf;
         }
         System.out.println("End of isf-scoring...\n");
 
-        System.out.println("Start of idf-scoring...");        
-        Map<String, Double> maps = getIdfScoreMap(tokens);
-        for (MyToken di : tokens) {
-            if (di.punctuation || di.stopWord) {
+        //////////////////////////////////////////////////////////////////////////
+        System.out.println("Start of idf-scoring...");
+        for (MyToken ti : tokens) {
+            if (ti.punctuation || ti.stopWord || ti.semiStopWord) {
                 continue;
             }
-            if (di.tf == 0) {
+            if (ti.tf == 0) {
                 int count = 1;
-                int i = tokens.indexOf(di);
+                int i = tokens.indexOf(ti);
                 for (int j = i + 1; j < tokens.size(); j++) {
-                    MyToken dj = tokens.get(j);
-                    if (di.equals(dj)) {
+                    MyToken tj = tokens.get(j);
+                    if (ti.equals(tj)) {
                         count++;
-                        dj.tf = -i;     /// lưu lại chỉ số của thằng giống nó đã tính ở trước
+                        tj.tf = -i;     /// lưu lại chỉ số của thằng giống nó đã tính ở trước
                     }
                 }
-                di.tf = count;
-            } else if (di.tf < 0) {
-                di.tf = tokens.get(-di.tf).tf;      /// chỉ số được lưu dùng ở đây
+                ti.tf = count;
+            } else if (ti.tf < 0) {
+                ti.tf = tokens.get(-ti.tf).tf;      /// chỉ số được lưu dùng ở đây
             }
-            di.idf = maps.get(di.word);
-            di.tf_idf = di.idf * di.tf;
+
+            if (idfScoreMap.containsKey(ti.word)) {
+                ti.idf = idfScoreMap.get(ti.word);
+            } else {
+                ti.idf = Math.log(21628.0);        /// !!!
+            }
+
+            ti.tf_idf = ti.idf * ti.tf;
         }
         System.out.println("End of idf-scoring...\n");
     }
 
     public static void main(String[] args) throws IOException {
-//        IdfScore is = new IdfScore();
-//        ArrayList<String> list = new ArrayList<>();
-//        list.add("hello");
-//        Map m;
-//        m = is.getIdfScoreMap(list);
-//        System.out.println(m.toString());
+        IdfScore is = new IdfScore();
+        System.out.println(is.idfScoreMap.get("không"));
     }
 }

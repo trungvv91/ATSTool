@@ -35,8 +35,8 @@ public class MyToken {
     /**
      * tf-idf và tf-isf
      */
-    public int tf;
-    public double idf;
+    public int tf;                  // tần suất xuất hiện trong cả document
+    public double idf;              // tần suất nghịch đảo document (không phải tf-isf)
     public double tf_idf;
     public double tf_isf;
 
@@ -60,7 +60,7 @@ public class MyToken {
         importance = false;
     }
 
-    public static int getNumberOfSentences(List<MyToken> data) {
+    public static int getNumberOfSentences(ArrayList<MyToken> data) {
         return data.get(data.size() - 1).iSentence + 1;
     }
 

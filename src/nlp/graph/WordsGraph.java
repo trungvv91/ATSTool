@@ -4,13 +4,9 @@
  */
 package nlp.graph;
 
-import nlp.util.QuickSort;
 import nlp.textprocess.MyToken;
-import java.io.*;
-import java.util.List;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Set;
 import nlp.extradata.Conjunction;
 import nlp.textprocess.MySentence;
 import nlp.textprocess.MyExtracter;
@@ -24,53 +20,11 @@ import nlp.util.MyStringUtil;
  */
 public class WordsGraph {
 
-    public String outString = "";
-
-    /**
-     * Determine keywords in data list by set d.importance=true
-     *
-     * @param sentences
-     * @param k
-     */
-    public void setWordImportance(ArrayList<MySentence> sentences, float k) {
-        System.out.println("Start word-importance set...");
-        /// construct word graph ???
-        List<MyToken> data = MySentence.SentenceToDatum(sentences);
-
-        int n = data.size();
-        double values[] = new double[n];
-        int indices[] = new int[n];
-        for (int i = 0; i < n; i++) {
-            values[i] = data.get(i).tf_isf;
-            indices[i] = i;
-        }
-        QuickSort.QuickSort(values, indices, 0, n - 1);
-        int numOfWordImportance = (int) (k * data.size());
-        int dem = 0;
-        ArrayList<String> checkWordList = new ArrayList<>();
-        for (int i = 0; dem < numOfWordImportance; i++) {
-            if (checkWordList.contains(data.get(indices[i]).word)) {
-            } else {
-                dem++;
-                String dimp = data.get(indices[i]).word;
-                checkWordList.add(dimp);
-                for (MyToken d : data) {
-                    if (d.word.equals(dimp)) {
-                        d.importance = true;
-                    }
-                }
-            }
-        }
-        System.out.println("End word-importance set...");
-    }
-
-    public void mainWordGraph(String inputNum, ArrayList<MyToken> tokens, int maxWord) throws IOException {
-
+    public static String graphing(String filename, int maxWord) {
+        MyTokenizer tokenizer = new MyTokenizer();
+        ArrayList<MyToken> tokens = tokenizer.createTokens(filename);
         MyExtracter se = new MyExtracter(tokens);
         ArrayList<MySentence> sentences = se.extract();
-
-        //Lay 15% so tu la importance words  ???      
-        setWordImportance(sentences, 0.15f);
 
         // <editor-fold defaultstate="collapsed" desc="xét 2 câu liên tiếp --> trùng subject hoặc verb thì ghép">
 /*
@@ -186,26 +140,23 @@ public class WordsGraph {
          }   /// end for
          */
         // </editor-fold>
+        //        
         // <editor-fold defaultstate="collapsed" desc="find essential fragments">
         System.out.println("----------");
-
-        /**
-         * start & end of basic phrases
-         */
-        ArrayList<Integer[]> termIndex = new ArrayList<>();
+        ArrayList<Integer[]> termIndex = new ArrayList<>();     // lưu start & end of unsplitable phrases
         for (MySentence sentence : sentences) {
-            List<MyToken> sen = sentence.dataList;
+            ArrayList<MyToken> sen = sentence.tokensList;
             Integer[] index = new Integer[2];
             int i, j;
             for (i = 0; i < sen.size(); i++) {
-                if (sen.get(i).importance == true) {
-                    break;
+                if (sen.get(i).importance) {
+                    break;              // tìm first important token
                 }
             }
             index[0] = (i == sen.size()) ? -1 : i;
             for (j = sen.size() - 1; j > -1; j--) {
-                if (sen.get(j).importance == true) {
-                    break;
+                if (sen.get(j).importance) {
+                    break;              // tìm last important token
                 }
             }
             index[1] = j;
@@ -228,7 +179,7 @@ public class WordsGraph {
 
         /// Bắt đầu xử lý
         for (MySentence sentence : sentences) {
-            ArrayList<MyToken> sen = sentence.dataList;
+            ArrayList<MyToken> sen = sentence.tokensList;
             int senIndex = sentences.indexOf(sentence);
             if (termIndex.get(senIndex)[0] != -1 && termIndex.get(senIndex)[1] != -1) {     /// !!! null --> -1
                 int sIndex = termIndex.get(senIndex)[0];
@@ -421,13 +372,13 @@ public class WordsGraph {
 
         /// lọc WordMax, Set senExclude lưu chỉ số những câu bị loại
         /// bỏ các câu tf_idf thấp nhất, cho đến khi word < wordMax
-        Set<Integer> senExclude = new HashSet<>();
+        HashSet<Integer> senExclude = new HashSet<>();
         int count = 0;      /// số câu bị loại
         int words = maxWord + 1;
         while (words > maxWord) {
             words = 0;
             for (MySentence sentence : sentences) {
-                ArrayList<MyToken> sen = sentence.dataList;
+                ArrayList<MyToken> sen = sentence.tokensList;
                 if (!senExclude.contains(sentences.indexOf(sentence))) {
                     for (MyToken dt : sen) {
                         if (!dt.chunk.equals("O")) {
@@ -439,15 +390,16 @@ public class WordsGraph {
             if (words > maxWord) {
                 count++;
                 /// lấy thằng thấp nhất
-                senExclude.add(se.mapSenOrderByScore.get(sentences.size() - count));
+///???                senExclude.add(se.mapSenOrderByScore.get(sentences.size() - count));
             }
         }
 
         /// Done, decoration
 //        System.out.println("Decoration");
         int numOfWords = 0;
+        String outString = "";
         for (MySentence sentence : sentences) {
-            ArrayList<MyToken> sen = sentence.dataList;
+            ArrayList<MyToken> sen = sentence.tokensList;
             // Capitalize the first word in a sentence
             if (!senExclude.contains(sentences.indexOf(sentence))) {
                 int senIndex = sentences.indexOf(sentence);
@@ -471,20 +423,14 @@ public class WordsGraph {
                 }
             }
         }
-
         System.out.println("Number of words: " + numOfWords);
-        String outputFilename = "corpus/AutoSummary/" + inputNum + ".txt";
-        IOUtil.WriteToFile(outputFilename, outString);
+
+//        String outputFilename = "temp/autosum.txt";
+//        IOUtil.WriteToFile(outputFilename, outString);
+        return outString;
     }
 
     public static void main(String[] args) {
-        try {
-            WordsGraph graph = new WordsGraph();
-            MyTokenizer tokenizer = new MyTokenizer();
-            ArrayList<MyToken> tokens = tokenizer.createTokens("1");
-            graph.mainWordGraph("1", tokens, 120);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        WordsGraph.graphing("corpus/Plaintext/1.txt", 120);
     }
 }

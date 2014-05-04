@@ -3,7 +3,6 @@
  * and open the template in the editor.
  */
 
-
 import java.io.*;
 import java.util.ArrayList;
 import nlp.graph.WordsGraph;
@@ -31,15 +30,7 @@ public class Main {
             if (listOfFile.isFile()) {
                 file = listOfFile.getName();
                 if (file.endsWith(".txt")) {
-                    String inputNum = file.split("\\.")[0];
-                    try {
-                        WordsGraph graph = new WordsGraph();
-                        MyTokenizer tokenizer = new MyTokenizer();
-                        ArrayList<MyToken> data = tokenizer.createTokens(inputNum);
-                        graph.mainWordGraph(inputNum, data, 120);
-                    } catch (IOException e) {
-                        System.out.println("Error: " + e);
-                    }
+                    WordsGraph.graphing(file, 120);
                 }
             }
         }

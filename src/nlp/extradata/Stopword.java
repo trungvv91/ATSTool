@@ -6,7 +6,6 @@ package nlp.extradata;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Set;
 import nlp.util.IOUtil;
 
 /**
@@ -15,7 +14,7 @@ import nlp.util.IOUtil;
  */
 public class Stopword {
 
-    private final Set<String> stopwords;
+    private final HashSet<String> stopwords;
     private final String filename = "data/VNstopwords.txt";
 
     public Stopword() {

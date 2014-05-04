@@ -9,15 +9,21 @@ import nlp.util.CmdCommand;
 import nlp.util.IOUtil;
 import nlp.util.MyStringUtil;
 
+/**
+ * Lớp xử lý đầu tiên, đọc văn bản nguồn và tách thành các token sử dụng thư viện tách
+ * từ của anh Lê Hồng Phương. Các token được gán thuộc tính tương ứng và tính tf_idf.
+ *
+ * @author TRUNG
+ */
 public class MyTokenizer {
 
     public final Stopword stopword;
-    CmdCommand cmd;
-    IdfScore idfScore;
+    public final CmdCommand cmd;
+    public final IdfScore idfScore;
 
     public MyTokenizer() {
-        stopword = new Stopword();
         cmd = new CmdCommand();
+        stopword = new Stopword();
         idfScore = new IdfScore();
     }
 
@@ -41,8 +47,8 @@ public class MyTokenizer {
     }
 
     /**
-     * Tiền xử lý cho MyTokenizer. Thay các từ viết hoa thành viết thường để
-     * tag được.
+     * Tiền xử lý cho MyTokenizer. Thay các từ viết hoa thành viết thường để tag
+     * được.
      *
      * @param inputFile - file .sd
      * @param outputFile - file .sd.edited
@@ -89,8 +95,9 @@ public class MyTokenizer {
 
     /**
      * Chạy vnTokenizer (được gọi bởi bộ decomposer)
+     *
      * @param inputFile
-     * @param outputFile 
+     * @param outputFile
      */
     public void tokenize(String inputFile, String outputFile) {
         String editFile = outputFile + ".edit";
@@ -107,9 +114,9 @@ public class MyTokenizer {
 
     /**
      * Tạo các đối tượng token từ văn bản ban đầu. Xác định POS, vị trí câu,
-     * tính tf-idf, ...
+     * tính tf-idf, tf-isf...
      *
-     * @param inputFile corpus/Plaintext/1.txt
+     * @param inputFile e.g. corpus/Plaintext/1.txt
      * @return
      */
     public ArrayList<MyToken> createTokens(String inputFile) {
@@ -136,7 +143,7 @@ public class MyTokenizer {
 
         List<String> lines = IOUtil.ReadFileByLine(outputFileChunker, true);           // each line of the form: Vũ_Dư	Np	B-NP
         ArrayList<MyToken> tokens = new ArrayList<>();
-        
+
         // gán thuộc tính cho các Token
         int nLines = lines.size();
         int sentenceCounter = 0;

@@ -6,9 +6,6 @@
 package nlp.textprocess;
 
 import java.util.ArrayList;
-import java.util.List;
-import nlp.extradata.Punctuation;
-import nlp.util.IOUtil;
 
 /**
  *
@@ -16,15 +13,28 @@ import nlp.util.IOUtil;
  */
 public class MySentence {
 
-    public final ArrayList<MyToken> dataList;
+    public final ArrayList<MyToken> tokensList;
+    public boolean isRemove;
+    public int rank;
+    private double score;
 
+    /**
+     * Khởi tạo 1 câu rỗng.
+     */
     public MySentence() {
-        dataList = new ArrayList<>();
+        tokensList = new ArrayList<>();
+        score = 0;
+        rank = 0;
+        isRemove = false;
     }
 
     @Override
     public String toString() {
-        return dataList.toString(); //To change body of generated methods, choose Tools | Templates.
+        String str = "";
+        for (MyToken token : tokensList) {
+            str += token.word + " ";
+        }
+        return str + "\n";
     }
 
     /**
@@ -34,8 +44,8 @@ public class MySentence {
      * @return vị trí dấu phẩy hoặc -1 nếu không tìm thấy
      */
     private int getAdverbClause() {
-        for (int i = 0; i < dataList.size() - 2; i++) {
-            if (dataList.get(i).word.equals(",") && dataList.get(i + 1).chunk.endsWith("NP")) {
+        for (int i = 0; i < tokensList.size() - 2; i++) {
+            if (tokensList.get(i).word.equals(",") && tokensList.get(i + 1).chunk.endsWith("NP")) {
                 return i;
             }
         }
@@ -45,7 +55,7 @@ public class MySentence {
     public int[] getSubject() {
         int start = getAdverbClause() + 1;
         int end = start;
-        while (dataList.get(end).iPhrase == dataList.get(start).iPhrase) {
+        while (tokensList.get(end).iPhrase == tokensList.get(start).iPhrase) {
             end++;
         }
 
@@ -53,15 +63,34 @@ public class MySentence {
         return indices;
     }
 
-    public ArrayList<String> getNpList() {
-        ArrayList<String> npList = new ArrayList<>();
-
-        return npList;
+    /**
+     * Tính điểm tf-isf trung bình trên cả câu.
+     *
+     * @return
+     */
+    public double getScore() {
+        if (score <= 0) {
+            int counter = 0;
+            for (MyToken token : tokensList) {
+                if (token.tf_isf > 0) {
+                    score += token.tf_isf;
+                    counter++;
+                }
+            }
+            score /= counter;
+        }
+        return score;
     }
 
+    /**
+     * Xóa cụm token từ start đến hết end
+     *
+     * @param start
+     * @param end
+     */
     public void deletePhrase(int start, int end) {
         for (int i = 0; i <= end - start; i++) {
-            dataList.remove(start);
+            tokensList.remove(start);
         }
     }
 
@@ -71,31 +100,65 @@ public class MySentence {
      * @param data
      * @return
      */
-    public static ArrayList<MySentence> DatumToSentence(List<MyToken> data) {
+    public static ArrayList<MySentence> DatumToSentence(ArrayList<MyToken> data) {
         ArrayList<MySentence> sentences = new ArrayList<>();
 
-        MySentence sen = new MySentence();
+        MySentence sentence = new MySentence();
         for (MyToken dt : data) {
-            sen.dataList.add(dt);
-            if (Punctuation.isEndOfSentence(dt.word)) {
-                sentences.add(sen);
-                sen = new MySentence();
+            sentence.tokensList.add(dt);
+            if (dt.endOfSentence) {
+                sentences.add(sentence);
+                sentence = new MySentence();
             }
         }
+
         return sentences;
     }
 
     public static ArrayList<MyToken> SentenceToDatum(ArrayList<MySentence> sentences) {
         ArrayList<MyToken> data = new ArrayList<>();
         for (MySentence sentence : sentences) {
-            for (int i = 0; i < sentence.dataList.size(); i++) {
-                MyToken datum = sentence.dataList.get(i);
+            for (int i = 0; i < sentence.tokensList.size(); i++) {
+                MyToken datum = sentence.tokensList.get(i);
                 datum.iSentence = sentences.indexOf(sentence);
                 data.add(datum);
             }
         }
 
         return data;
+    }
+
+    /**
+     * Lấy ra K câu có score cao nhất
+     *
+     * @param tokens list toàn bộ các tokens của các câu
+     * @param k
+     * @return mảng các chỉ số của K câu
+     */
+    public static int[] getTopKSentence(ArrayList<MyToken> tokens, int k) {
+        ArrayList<MySentence> sentences = MySentence.DatumToSentence(tokens);
+        for (MySentence sen_i : sentences) {
+            for (MySentence sen_j : sentences) {
+                if (sen_j.getScore() > sen_i.getScore()) {
+                    sen_i.rank++;       // bao nhiêu câu có score cao hơn sen_i
+                }
+            }
+        }
+        int[] topSenIndex = new int[k];
+        int counter = 0;
+        int rank = 0;
+        while (counter < k) {
+            for (int i = 0; i < sentences.size(); i++) {
+                if (sentences.get(i).rank == rank) {
+                    topSenIndex[counter++] = i;
+                    if (counter >= k) {
+                        break;
+                    }
+                }
+            }
+            rank++;
+        }
+        return topSenIndex;
     }
 
     public static void main(String[] args) {
@@ -106,8 +169,8 @@ public class MySentence {
 ////        String strTest = "Bố Bách mua thuốc về cho Bách uống. Sau khi uống, anh ấy bị đỏ môi.";
 //        IOUtil.WriteToFile(fileNameSource, strTest);
 //
-//        List<MyToken> tokens = tokenizer.createTokens("test");
-//        ArrayList<MySentence> sens = MySentence.DatumToSentence(tokens);
+//        List<MyToken> tokensList = tokenizer.createTokens("test");
+//        ArrayList<MySentence> sens = MySentence.DatumToSentence(tokensList);
 //        System.out.println("\n");
 //        System.out.println(strTest);
 //        System.out.println("Các chủ ngữ: ");
@@ -115,7 +178,7 @@ public class MySentence {
 //            int[] indices = sen.getSubject();
 //            String s = "";
 //            for (int i = indices[0]; i <= indices[1]; i++) {
-//                s += sen.dataList.get(i).word + " ";
+//                s += sen.tokensList.get(i).word + " ";
 //            }
 //            System.out.println(s);
 //        }
