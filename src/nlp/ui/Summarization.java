@@ -4,7 +4,7 @@
  */
 
 /*
- * TestFrame.java
+ * Summarization.java
  *
  * Created on Aug 31, 2013, 2:02:21 PM
  */
@@ -13,20 +13,17 @@ package nlp.ui;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import nlp.graph.WordsGraph;
-import nlp.textprocess.MyToken;
-import nlp.textprocess.MyTokenizer;
 
 /**
  *
  * @author Trung
  */
-public class TestFrame extends javax.swing.JFrame {
+public class Summarization extends javax.swing.JFrame {
 
     public String sourceText;
     public String sumText;
@@ -67,7 +64,7 @@ public class TestFrame extends javax.swing.JFrame {
     /**
      * Creates new form TestFrame
      */
-    public TestFrame() {
+    public Summarization() {
         initComponents();
     }
 
@@ -202,7 +199,7 @@ public class TestFrame extends javax.swing.JFrame {
             try {
                 out = summarize(sourceTextArea.getText(), wordMax);
             } catch (IOException ex) {
-                Logger.getLogger(TestFrame.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Summarization.class.getName()).log(Level.SEVERE, null, ex);
             }
             sumTextArea.setText(out);
         }
@@ -225,7 +222,7 @@ public class TestFrame extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(TestFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Summarization.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
@@ -234,7 +231,7 @@ public class TestFrame extends javax.swing.JFrame {
 
             @Override
             public void run() {
-                new TestFrame().setVisible(true);
+                new Summarization().setVisible(true);
             }
         });
     }

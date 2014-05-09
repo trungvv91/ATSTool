@@ -83,6 +83,21 @@ public class MySentence {
     }
 
     /**
+     * Cập nhật điểm tf-isf trung bình trên cả câu sau khi reduction.
+     *
+     */
+    public void updateScore() {
+        int counter = 0;
+        for (MyToken token : tokensList) {
+            if (token.tf_isf > 0) {
+                score += token.tf_isf;
+                counter++;
+            }
+        }
+        score /= counter;        
+    }
+
+    /**
      * Xóa cụm token từ start đến hết end
      *
      * @param start
@@ -131,12 +146,12 @@ public class MySentence {
     /**
      * Lấy ra K câu có score cao nhất
      *
-     * @param tokens list toàn bộ các tokens của các câu
+     * @param sentences
      * @param k
      * @return mảng các chỉ số của K câu
      */
-    public static int[] getTopKSentence(ArrayList<MyToken> tokens, int k) {
-        ArrayList<MySentence> sentences = MySentence.DatumToSentence(tokens);
+    public static int[] getTopKSentence(ArrayList<MySentence> sentences, int k) {
+//        ArrayList<MySentence> sentences = MySentence.DatumToSentence(tokens);
         for (MySentence sen_i : sentences) {
             for (MySentence sen_j : sentences) {
                 if (sen_j.getScore() > sen_i.getScore()) {

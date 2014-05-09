@@ -6,7 +6,7 @@ và	CC
 màn_hình	N
 máy_vi_tính	N
 song	C
-khi	N
+khi	E
 hải_quan	N
 kiểm_tra	V
 thì	C
@@ -14,11 +14,10 @@ phát_hiện	V
 hàng	R
 trăm	M
 mô_tô	N
-phân_khối	V
+phân_khối	N
 lớn	A
 ,	,
-trong	E
-đó	P
+trong_đó	C
 nhiều	A
 xe	N
 có	V
@@ -52,7 +51,7 @@ lô_hàng	N
 gồm	V
 xe	N
 mô_tô	N
-phân_khối	V
+phân_khối	N
 lớn	A
 và	CC
 hàng	N
@@ -235,7 +234,7 @@ giữ	V
 169	M
 xe	N
 mô_tô	N
-phân_khối	V
+phân_khối	N
 lớn	A
 ,	,
 11425	M

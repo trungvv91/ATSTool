@@ -11,7 +11,7 @@ import java.util.TreeSet;
 import nlp.textprocess.MyToken;
 import nlp.textprocess.MyTokenizer;
 import nlp.textprocess.MySentence;
-import nlp.util.CmdCommand;
+import nlp.util.CmdUtil;
 import nlp.util.IOUtil;
 
 /**
@@ -77,12 +77,13 @@ class DecomposeNode {
  */
 public class Decomposer {
 
+    public static final double TOP_K_SENTENCES = 0.2;
     MyTokenizer tokenizer;
-    CmdCommand cmd;
+    CmdUtil cmd;
 
     public Decomposer() {
         tokenizer = new MyTokenizer();
-        cmd = new CmdCommand();
+        cmd = new CmdUtil();
     }
 
     /**
@@ -122,12 +123,12 @@ public class Decomposer {
      * Thực hiện phân tích so sánh văn bản tóm tắt và văn bản gốc. Tìm các cụm
      * từ trong câu gốc giống với trong câu tóm tắt nhất (bằng HMM).
      *
-     * @param data Văn bản gốc
+     * @param tokens Văn bản gốc
      * @param sumDoc Tên văn bản tóm tắt
      * @return Danh sách vị trí các từ được giữ lại (trong tất cả các câu) của
      * văn bản gốc.
      */
-    ArrayList<Position> decompose(ArrayList<MyToken> data, String sumDoc) {
+    ArrayList<Position> decompose(ArrayList<MyToken> tokens, String sumDoc) {
         String tempSum;
         String[] fileParts = sumDoc.split("/");
         String fName = fileParts[fileParts.length - 1].split("\\.")[0];
@@ -150,7 +151,7 @@ public class Decomposer {
                 if (list == null) {
 //                    System.out.print(word + " : ");
                     list = new ArrayList<>();
-                    for (MyToken datum : data) {
+                    for (MyToken datum : tokens) {
                         if (datum.word.toLowerCase().equals(word.toLowerCase())) {
                             list.add(new Position(datum.iSentence, datum.iPosition));
 //                                System.out.print(s + "," + p + "  ;  ");
@@ -237,7 +238,8 @@ public class Decomposer {
                 }
             } else {
                 // s chứa nhiều hơn 1 từ và không phải là từ dừng
-                if (phrase.contains(" ") && !tokenizer.stopword.isStopWord(phrase.replaceAll(" ", "_"))) {
+//                if (phrase.contains(" ") && !tokenizer.stopword.isStopWord(phrase.replaceAll(" ", "_"))) {
+                if (phrase.contains(" ")) {
                     phrase += "  (S" + position_result[i - 1].s + ")\n";
 //                    System.out.println(s);
                     rs += phrase;
@@ -287,37 +289,37 @@ public class Decomposer {
      */
     public void createTrainData(String sourceFile, String sumFile, String outFile) {
         ArrayList<TrainData> trainList = new ArrayList<>();
-        ArrayList<MyToken> data = tokenizer.createTokens(sourceFile);
-        ArrayList<Position> positions = decompose(data, sumFile);
+        ArrayList<MyToken> tokens = tokenizer.createTokens(sourceFile);
+        ArrayList<Position> positions = decompose(tokens, sumFile);
         TreeSet<Integer> selectedSentence = new TreeSet<>();
         for (Position position : positions) {
             selectedSentence.add(position.s);
         }
 
         // setup các từ trong top K câu
-        int[] topKSentence = MySentence.getTopKSentence(data, (int) (MyToken.getNumberOfSentences(data) / 5.0));
+        int[] topKSentence = MySentence.getTopKSentence(MySentence.DatumToSentence(tokens), (int) (MyToken.getNumberOfSentences(tokens) / 5.0));
         TreeSet<String> wordInTopKSentence = new TreeSet<>();
-        for (MyToken datum : data) {
+        for (MyToken token : tokens) {
             for (int j = 0; j < topKSentence.length; j++) {
-                if (datum.word.length() > 3 && !datum.semiStopWord
-                        && !datum.stopWord && topKSentence[j] == datum.iSentence) {
-                    wordInTopKSentence.add(datum.word);
+                if (token.word.length() > 3 && !token.semiStopWord
+                        && !token.stopWord && topKSentence[j] == token.iSentence) {
+                    wordInTopKSentence.add(token.word);
                 }
             }
         }
-        for (MyToken datum : data) {
-            if (selectedSentence.contains(datum.iSentence)) {
+        for (MyToken token : tokens) {
+            if (selectedSentence.contains(token.iSentence)) {
                 TrainData trainData = null;
                 for (Position position : positions) {
-                    if (datum.iSentence == position.s && datum.iPosition == position.p) {
-                        trainData = new TrainData(datum, TrainData.yVALUE.RETAIN);
+                    if (token.iSentence == position.s && token.iPosition == position.p) {
+                        trainData = new TrainData(token, TrainData.yVALUE.RETAIN);
                     }
                 }
                 if (trainData == null) {
-                    if (datum.endOfSentence) {
-                        trainData = new TrainData(datum, TrainData.yVALUE.RETAIN);
+                    if (token.endOfSentence) {
+                        trainData = new TrainData(token, TrainData.yVALUE.RETAIN);
                     } else {
-                        trainData = new TrainData(datum, TrainData.yVALUE.REMOVE);
+                        trainData = new TrainData(token, TrainData.yVALUE.REMOVE);
                     }
                 }
                 trainData.isInTopKSens = wordInTopKSentence.contains(trainData.word);
@@ -328,7 +330,7 @@ public class Decomposer {
             return;
         }
 
-        int nSentence = data.get(data.size() - 1).iSentence + 1;
+        int nSentence = tokens.get(tokens.size() - 1).iSentence + 1;
         int[] nWords = new int[nSentence];  // number of words in each sentence
         int pCounter = 1;       // position counter
         for (int j = 1; j < trainList.size(); j++) {
@@ -353,7 +355,7 @@ public class Decomposer {
         String strSentence = trainList.get(0).toString() + "\n";
         int removeCounter = (trainList.get(0).y == TrainData.yVALUE.REMOVE) ? 1 : 0;
         int wordCounter = 1;
-        TrainData tempLast = new TrainData(data.get(0));    // tạm thôi (trick)
+        TrainData tempLast = new TrainData(tokens.get(0));    // tạm thôi (trick)
         tempLast.iSentence = -1;
         trainList.add(tempLast);
         for (int j = 1; j < trainList.size(); j++) {
@@ -380,34 +382,34 @@ public class Decomposer {
     /**
      * Tạo dữ liệu đầu vào cho crf++ reduction.
      *
-     * @param data
+     * @param tokens
      * @param outFile
      */
-    public void createTestData(ArrayList<MyToken> data, String outFile) {
+    public void createTestData(ArrayList<MyToken> tokens, String outFile) {
 //        ArrayList<Datum> data = tokenizer.createTokens(sourceFile);
 
         // setup các từ trong top K câu
-        int[] topKSentence = MySentence.getTopKSentence(data, (int) (MyToken.getNumberOfSentences(data) / 5.0));
+        int[] topKSentence = MySentence.getTopKSentence(MySentence.DatumToSentence(tokens), (int) (MyToken.getNumberOfSentences(tokens) * TOP_K_SENTENCES));
         TreeSet<String> wordInTopKSentence = new TreeSet<>();
-        for (MyToken datum : data) {
+        for (MyToken token : tokens) {
             for (int j = 0; j < topKSentence.length; j++) {
-                if (datum.word.length() > 3 && !datum.semiStopWord
-                        && !datum.stopWord && topKSentence[j] == datum.iSentence) {
-                    wordInTopKSentence.add(datum.word);
+                if (token.word.length() > 3 && !token.semiStopWord
+                        && !token.stopWord && topKSentence[j] == token.iSentence) {
+                    wordInTopKSentence.add(token.word);
                 }
             }
         }
 
         // setup train data list
         ArrayList<TrainData> trainList = new ArrayList<>();
-        for (MyToken datum : data) {
-            TrainData trainData = new TrainData(datum);
+        for (MyToken token : tokens) {
+            TrainData trainData = new TrainData(token);
             trainData.isInTopKSens = wordInTopKSentence.contains(trainData.word);
             trainList.add(trainData);
         }
 
         // 
-        int nSentence = data.get(data.size() - 1).iSentence + 1;
+        int nSentence = tokens.get(tokens.size() - 1).iSentence + 1;
         int[] nWords = new int[nSentence];  // number of words in each sentence
         int pCounter = 1;       // position counter
         for (int j = 1; j < trainList.size(); j++) {
@@ -443,13 +445,13 @@ public class Decomposer {
         String testFile = "temp/temp.test";
         String resultFile = "temp/temp.result";
         createTestData(data, testFile);
-        cmd.runCmd(cmd.crf_test(CmdCommand.REDUCTION_MODEL, testFile, resultFile));
+        cmd.runCmd(cmd.crf_test(CmdUtil.REDUCTION_MODEL, testFile, resultFile));
         ArrayList<String> lines = IOUtil.ReadFileByLine(resultFile);
         String str = "";
         for (int i = 0, j = 0; i < lines.size() && j < data.size(); i++) {
             String[] features = lines.get(i).split("\\s");
             if (features[0].equals(data.get(j).word)) {
-                if (features[features.length - 1].equals("REMOVE") && !data.get(j).endOfSentence) {
+                if (features[features.length - 1].equals(TrainData.yVALUE.REMOVE.toString()) && !data.get(j).endOfSentence) {
                     data.remove(j);
                 } else {
                     str += features[0];
@@ -469,8 +471,9 @@ public class Decomposer {
         Decomposer decomposer = new Decomposer();
 //        IOUtil.DeleteFile("temp/train_1.txt");
 //        decomposer.createTrainData("corpus/Plaintext/1.txt", "corpus/Summary/1.txt", "temp/train_1.txt");
-        ArrayList<MyToken> data = decomposer.tokenizer.createTokens("corpus/Plaintext/2.txt");
-        decomposer.reduction(data);
+        ArrayList<MyToken> data = decomposer.tokenizer.createTokens("corpus/Plaintext/1.txt");
+        decomposer.createTestData(data, "temp/1.test");
+//        decomposer.reduction(data);
 //        IOUtil.DeleteFile("temp/train.nlp");
 //        File file = new File("corpus/Plaintext1/");
 //        String[] directories = file.list();

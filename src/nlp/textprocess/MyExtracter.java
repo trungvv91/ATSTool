@@ -15,7 +15,7 @@ import java.util.TreeSet;
  */
 public class MyExtracter {
 
-    final double REMAIN_RATE = 2.0 / 3;     // keep only 2/3 important sentences
+    final double REMAIN_RATE = 0.7;     // keep only 2/3 important sentences
     final double THRESHOLD = 0.7;
     final double TOP_K_KEYWORD = 0.15;
 
@@ -78,7 +78,7 @@ public class MyExtracter {
         while (i < sentences.size()) {
             if (sentences.get(i).isRemove) {
                 sentences.remove(i);
-                System.out.println("Remove sentence " + i);
+                System.out.println("\nRemove sentence " + i);
             } else {
                 i++;
             }
@@ -98,51 +98,86 @@ public class MyExtracter {
             }
         }
 
-//        /// print important sentence
-//        for (int i = 0; i < 3; i++) {
-//            for (MySentence sentence : sentences) {
-//                if (sentence.rank == i) {
-//                    System.out.println(sentence.toString());
-//                }
-//            }
-//        }
+        /// keep only important sentences
+        int limRank = (int) (sentences.size() * REMAIN_RATE);
+        for (int i = 0; i < sentences.size();) {
+            if (sentences.get(i).rank < limRank) {
+//                System.out.println(sentences.get(i).toString());
+                i++;
+            } else {
+                System.out.println("\nRemove sentence " + i + ": " + sentences.get(i).toString());
+                sentences.remove(i);
+            }
+        }
+
+        // update iSentence
+        for (int i = 0; i < sentences.size(); i++) {
+            for (MyToken token : sentences.get(i).tokensList) {
+                token.iSentence = i;
+            }
+        }
     }
 
     /**
-     * Determine keywords in data list by set d.importance=true
+     * Determine keywords in data list by set d.keyword=true
      *
      */
     void setKeywords() {
         System.out.println("Start word-importance set...");
         TreeSet<Double> set = new TreeSet<>();
         int counter = 0;
+
+        double maxTfIsf = 0;
+        double maxTfIdf = 0;
         for (MySentence sentence : sentences) {
             for (MyToken token : sentence.tokensList) {
-                set.add(token.tf_isf);
-                counter++;
+                if (token.tf_isf > maxTfIsf) {
+                    maxTfIsf = token.tf_isf;
+                }
+                if (token.tf_idf > maxTfIdf) {
+                    maxTfIdf = token.tf_idf;
+                }
+            }
+        }
+
+        for (MySentence sentence : sentences) {
+            for (MyToken token : sentence.tokensList) {
+                if (token.tf_isf > 0) {
+                    double score = (token.tf_isf / maxTfIsf + token.tf_idf / maxTfIdf) / 2;
+                    set.add(score);
+                    counter++;
+                }
             }
         }
 
         final int nKeywords = (int) (TOP_K_KEYWORD * counter);
         boolean flag = true;
         counter = 0;
+        String keys = "";
         while (flag) {
             Double maxScore = set.pollLast();
             for (MySentence sentence : sentences) {
                 for (MyToken token : sentence.tokensList) {
-                    if (maxScore == token.tf_isf) {
-                        token.importance = flag;
-                        if (flag) {
+                    double score = (token.tf_isf / maxTfIsf + token.tf_idf / maxTfIdf) / 2;
+                    if (maxScore == score) {
+//                        token.keyword = flag;
+                        token.keyword = true;
+//                        if (flag) {
+//                            System.out.println(token.word);
+//                        }
+                        if (!keys.contains(token.word)) {
                             System.out.println(token.word);
+                            keys += "#" + token.word + "#";
+                            counter++;
                         }
-                        counter++;
-                        if (counter >= nKeywords) {
-                            flag = false;
-                            break;
-                        }
+//                        if (counter >= nKeywords) {
+//                            flag = false;
+//                            break;
+//                        }
                     }
                 }
             }
+            flag = counter < nKeywords;
         }
         System.out.println("End word-importance set...");
     }
@@ -161,21 +196,19 @@ public class MyExtracter {
         return sentences;
     }
 
+    public void reduct() {
+
+    }
+
     public static void main(String[] args) {
         MyTokenizer tokenizer = new MyTokenizer();
         ArrayList<MyToken> tokens = tokenizer.createTokens("corpus/Plaintext/1.txt");
         MyExtracter se = new MyExtracter(tokens);
-//        se.setKeywords();
-        se.scoring();
+        se.setKeywords();
+//        se.scoring();
 //        ArrayList<MySentence> sentences = se.extract();
 //        for (MySentence sentence : sentences) {
 //            System.out.println(sentence.toString());
 //        }
-//        
-//        Set<Integer> set = new TreeSet<>();
-//        set.add(3);
-//        set.add(1);
-//        set.add(2);
-//        System.out.println(set);
     }
 }

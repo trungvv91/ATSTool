@@ -14,30 +14,33 @@ Chương trình Abstractive Text Summarization:
 	- /yworks-uml-doclet-3.0_02-jdk1.5: thư viện sinh javadoc
 
 2. Source Code:
-	- nlp.data Package:
+Package:
+	- nlp.default:
+		- - Main.java: File chạy chương trình. Input: /corpus/Plaintext. Output: /corpus/AutoSummary
+	- nlp.decompose
+		- Decomposer.java: bộ tách và tạo dữ liệu train cho reduction
+		- TrainData.java: model training
+	- nlp.extradata :
 		- Conjunction.java: Các conjunction dùng cho bước cắt tỉa theo cấu trúc diễn ngôn
+		- IdfScore.java: Đọc độ đo idf từ file idf_index_test.txt hoặc idf_final.txt
 		- NounAnophoric: Luật Phân giải đồng tham chiếu
+		- Punction.java: Dấu câu
 		- StopWords.java: Mảng Stop-Words
 		- Synonym.java: Đọc danh sách từ đồng nghĩa
-		- Idf_index.java: Tính idf của các từ trong corpus (Corpus tính idf là corpus văn bản của báo mới - khoảng hơn 20000 văn bản đã tách từ)
-		- Idf_normalize.java: Correct tách từ sai từ corpus
-		***Hai file Idf chạy riêng và độc lập với chương trình Summary
-	- nlp.display Package: Chương trình giao diện
 	- nlp.graph:
-		- Edge.java: Edge entity
-		- Vertex.java: Vertex entity
-		- Main.java: File chạy chương trình. Input: /corpus/Plaintext. Output: /corpus/AutoSummary
-		- WordsGraph.java: Chương trình chính chạy các luật
-		- Evaluation.java: tính độ ROUGE 
-	- nlp.sentenceExtraction: trích rút câu
-		- Datum.java: mỗi từ sẽ coi là một Datum với các thuộc tính của nó
-		- SentenceExtration.java: File thực hiện trích rút câu
-		- SentenceRedundancy.java: Tính độ đo tương đồng giữa 2 câu và loại bỏ câu dư thừa
-		- idf_score.java: đọc độ đo idf từ file idf_index_test.txt hoặc idf_final.txt
+		- WordsGraph.java: Chương trình chính chạy tóm tắt
+	- nlp.textprocess: 
+		- MyToken.java: model cho 1 token (1 từ)
+		- MySentence.java: model cho 1 câu
+		- MyTokenizer.java: chạy thư viện tách, tag từ...
+		- MyExtracter.java: extraction
+		- MyReduction.java: reduction
+	- nlp.ui : 
+		- Summarization.java: Chương trình giao diện
+	- nlp.util:
+		- CmdUtil.java: chạy command line từ Windows
+		- IOUtil.java: đọc/ghi file
+		- MyStringUtil.java: xử lý string
 		
-	- nlp.tool.vnTextPro
-		- VNPreprocessing.java: tiền xử lý văn bản: loại bỏ các từ trong dấu ( ) ...
-		- VNSentenceSegmenter.java: tách câu
-		- VNTokenizer.java: tách từ
-		- VNTagger.java: postager
+	
 		

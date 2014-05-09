@@ -28,8 +28,8 @@ public class TrainData {
     public double tf_idf;
     public boolean stopWord;
     public boolean semiStopWord;
-    boolean isInTopKSens;
-    yVALUE y;
+    public boolean isInTopKSens;
+    public yVALUE y;
 
     public TrainData(MyToken datum) {
         this.word = datum.word;
@@ -65,4 +65,7 @@ public class TrainData {
                 + (isInTopKSens ? "1" : "0") + ((y == yVALUE.NONE) ? "" : ("\t" + y));
     }
 
+    public static void main(String[] args) {
+        System.out.println("REMOVE".equals(yVALUE.REMOVE.toString()));
+    }
 }

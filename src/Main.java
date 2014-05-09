@@ -4,10 +4,7 @@
  */
 
 import java.io.*;
-import java.util.ArrayList;
 import nlp.graph.WordsGraph;
-import nlp.textprocess.MyToken;
-import nlp.textprocess.MyTokenizer;
 
 /**
  *

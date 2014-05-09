@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import nlp.extradata.Punctuation;
 import nlp.extradata.Stopword;
-import nlp.util.CmdCommand;
+import nlp.util.CmdUtil;
 import nlp.util.IOUtil;
 import nlp.util.MyStringUtil;
 
@@ -17,12 +17,12 @@ import nlp.util.MyStringUtil;
  */
 public class MyTokenizer {
 
-    public final Stopword stopword;
-    public final CmdCommand cmd;
-    public final IdfScore idfScore;
+    final Stopword stopword;
+    final CmdUtil cmd;
+    final IdfScore idfScore;
 
     public MyTokenizer() {
-        cmd = new CmdCommand();
+        cmd = new CmdUtil();
         stopword = new Stopword();
         idfScore = new IdfScore();
     }
@@ -82,7 +82,10 @@ public class MyTokenizer {
      */
     private void postprocess(String inputFile, String outputFile) {
         String text = IOUtil.ReadFile(inputFile);
-        text = text.replaceAll("([\\(\\)])/[MA]", "$1/$1")
+        text = text.replaceAll("trong_đó/A", "trong_đó/C")
+                .replaceAll("khi/N", "khi/E")
+                .replaceAll("phân_khối/V", "phân_khối/N")
+                .replaceAll("([\\(\\)])/[MA]", "$1/$1")
                 .replaceAll("\n", "\n\n")
                 .replaceAll(" ", "\n")
                 .replaceAll("/", "\t");
@@ -139,7 +142,7 @@ public class MyTokenizer {
         String vnTagger = cmd.vnTagger(outputFileSDEdited, outputFileTagger);
         cmd.runCmd(vnTokenizer, vnTagger);
         postprocess(outputFileTagger, outputFileTaggerSD);
-        cmd.runCmd(cmd.crf_test(CmdCommand.CHUNKER_MODEL, outputFileTaggerSD, outputFileChunker));
+        cmd.runCmd(cmd.crf_test(CmdUtil.CHUNKER_MODEL, outputFileTaggerSD, outputFileChunker));
 
         List<String> lines = IOUtil.ReadFileByLine(outputFileChunker, true);           // each line of the form: Vũ_Dư	Np	B-NP
         ArrayList<MyToken> tokens = new ArrayList<>();
@@ -176,6 +179,13 @@ public class MyTokenizer {
 
             if (token.chunk.startsWith("B-")) {
                 phraseCounter++;
+                if (token.chunk.equals("B-PP")) {
+                    for (int index = lineCounter + 1; lines.get(index).endsWith("NP"); index++) {
+                        String nextLine = lines.get(index);
+                        nextLine = nextLine.substring(0, nextLine.length() - 4) + "I-PP";
+                        lines.set(index, nextLine);
+                    }
+                }
             }
             token.iPosition = tokenCounter++;
             token.iPhrase = phraseCounter;
@@ -215,6 +225,10 @@ public class MyTokenizer {
         for (MyToken token : tokens) {
             str += token.toString() + "\n";
             System.out.println(token.toString());
+            if (token.endOfSentence) {
+                str += "\n";
+                System.out.println("");
+            }
         }
         IOUtil.WriteToFile("temp/1.chunk.edited.txt", str);
     }

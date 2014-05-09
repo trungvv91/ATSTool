@@ -20,15 +20,15 @@ public class MyToken {
     public String chunk;
 
     /**
-     * the position of sentence containing MyToken
+     * the position of sentence
      */
     public int iSentence;
     /**
-     * the position of phrase in sentence containing MyToken
+     * the position of phrase in sentence
      */
     public int iPhrase;
     /**
-     * the position of phrase in sentence containing MyToken
+     * the position of token in sentence
      */
     public int iPosition;
 
@@ -44,7 +44,7 @@ public class MyToken {
     public boolean semiStopWord;
     public boolean punctuation;
     public boolean endOfSentence;
-    public boolean importance;
+    public boolean keyword;
 
     public MyToken(String word, String posTag, String chunk) {
         this.word = word;
@@ -57,7 +57,7 @@ public class MyToken {
         semiStopWord = false;
         punctuation = false;
         endOfSentence = false;
-        importance = false;
+        keyword = false;
     }
 
     public static int getNumberOfSentences(ArrayList<MyToken> data) {

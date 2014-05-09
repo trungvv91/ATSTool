@@ -37,7 +37,7 @@ class SyncPipe implements Runnable {
     private final InputStream istrm_;
 }
 
-public class CmdCommand {
+public class CmdUtil {
 
     public static final String CHUNKER_MODEL = "chunk.model";
     public static final String REDUCTION_MODEL = "reduct.model";
@@ -45,7 +45,7 @@ public class CmdCommand {
     String[] command;
     String fileExt;
 
-    public CmdCommand() {
+    public CmdUtil() {
         command = new String[1];
         command[0] = "cmd";
         fileExt = ".bat";
@@ -71,7 +71,7 @@ public class CmdCommand {
             }
             System.out.println("Return code = " + p.waitFor());
         } catch (IOException | InterruptedException ex) {
-            Logger.getLogger(CmdCommand.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CmdUtil.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -152,7 +152,7 @@ public class CmdCommand {
     }
 
     public static void main(String[] args) {
-        CmdCommand cmdCommand = new CmdCommand();
+        CmdUtil cmdCommand = new CmdUtil();
         cmdCommand.runCmd(cmdCommand.vnTokenizer("temp/1.txt", "temp/1.sd.txt"));
 //        cmdCommand.vnTokenizer("temp/1.sd.txt", "temp/1.tok.xml");
 //        cmdCommand.vnTokenizer("temp/1.sd.txt", "temp/1.tok.txt");
