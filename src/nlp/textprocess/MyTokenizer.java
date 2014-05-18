@@ -3,6 +3,7 @@ package nlp.textprocess;
 import nlp.extradata.IdfScore;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeSet;
 import nlp.extradata.Punctuation;
 import nlp.extradata.Stopword;
 import nlp.util.CmdUtil;
@@ -10,8 +11,9 @@ import nlp.util.IOUtil;
 import nlp.util.MyStringUtil;
 
 /**
- * Lớp xử lý đầu tiên, đọc văn bản nguồn và tách thành các token sử dụng thư viện tách
- * từ của anh Lê Hồng Phương. Các token được gán thuộc tính tương ứng và tính tf_idf.
+ * Lớp xử lý đầu tiên, đọc văn bản nguồn và tách thành các token sử dụng thư
+ * viện tách từ của anh Lê Hồng Phương. Các token được gán thuộc tính tương ứng
+ * và tính tf_idf.
  *
  * @author TRUNG
  */
@@ -29,7 +31,7 @@ public class MyTokenizer {
 
     /**
      * Tiền xử lý cho Sentence Detection. Thay các dấu câu là ký tự lạ. Bỏ phần
-     * phụ trong ngoặc đơn.
+     * phụ trong ngoặc đơn, nháy kép.
      *
      * @param inputFile - file original source .txt
      * @param outputFile - file .edit
@@ -42,7 +44,9 @@ public class MyTokenizer {
 //                .replaceAll("\\&", " và ")
 //                .replaceAll("\\/", "-")
 //                .replaceAll("[–]", "-");
-        text = text.replaceAll("\\(.*?\\)", "");       // bỏ phần trong ngoặc
+        text = text.replaceAll("\\(.*?\\)", "") // bỏ phần trong ngoặc
+                .replaceAll("[\"']", "") // bỏ dấu nháy
+                .replaceAll(";", ".");       // thay chấm phẩy bằng dấu chấm
         IOUtil.WriteToFile(outputFile, text);
     }
 
@@ -56,7 +60,7 @@ public class MyTokenizer {
     private void midprocess(String inputFile, String outputFile) {
         ArrayList<String> lines = IOUtil.ReadFileByLine(inputFile);
         String text = "";
-        String[] nounPrefixes = {"Bộ", "Cục", "Đội", "Viện", "Vụ"};
+        String[] nounPrefixes = {"Bộ", "Cục", "Đội", "Viện", "Vụ", "Hội", "Quỹ", "Thứ", "Trưởng", "Tổng"};
         for (String line : lines) {
             String newLine = "";
             String[] tokens = line.split("\\s+");
@@ -82,8 +86,10 @@ public class MyTokenizer {
      */
     private void postprocess(String inputFile, String outputFile) {
         String text = IOUtil.ReadFile(inputFile);
-        text = text.replaceAll("trong_đó/A", "trong_đó/C")
+        text = text.replaceAll("trong_đó/[AN]", "trong_đó/C")
                 .replaceAll("khi/N", "khi/E")
+                .replaceAll("thuộc/V", "thuộc/E")
+                .replaceAll("tuy_vậy/N", "tuy_vậy/C")
                 .replaceAll("phân_khối/V", "phân_khối/N")
                 .replaceAll("([\\(\\)])/[MA]", "$1/$1")
                 .replaceAll("\n", "\n\n")
@@ -122,13 +128,13 @@ public class MyTokenizer {
      * @param inputFile e.g. corpus/Plaintext/1.txt
      * @return
      */
-    public ArrayList<MyToken> createTokens(String inputFile) {
-        String[] fileParts = inputFile.split("/");
+    public ArrayList<MySentence> createTokens(String inputFile) {
+        String[] fileParts = inputFile.split("[/\\\\]");
         String fName = fileParts[fileParts.length - 1].split("\\.")[0];
         String inputFilePreprocessed = "temp/" + fName + ".edit.txt";
         String outputFileSD = "temp/" + fName + ".sd.txt";
         String outputFileSDEdited = "temp/" + fName + ".sd.edit.txt";
-        String outputFileToken = "temp/" + fName + ".tok.txt";
+//        String outputFileToken = "temp/" + fName + ".tok.txt";
         String outputFileTagger = "temp/" + fName + ".tagged.txt";
         String outputFileTaggerSD = "temp/" + fName + ".tagged.line.txt";
         String outputFileChunker = "temp/" + fName + ".chunk.txt";
@@ -138,9 +144,10 @@ public class MyTokenizer {
         String vnSentDetector = cmd.vnSentDetector(inputFilePreprocessed, outputFileSD);
         cmd.runCmd(vnSentDetector);
         midprocess(outputFileSD, outputFileSDEdited);
-        String vnTokenizer = cmd.vnTokenizer(outputFileSDEdited, outputFileToken);
+//        String vnTokenizer = cmd.vnTokenizer(outputFileSDEdited, outputFileToken);
+//        cmd.runCmd(vnTokenizer);
         String vnTagger = cmd.vnTagger(outputFileSDEdited, outputFileTagger);
-        cmd.runCmd(vnTokenizer, vnTagger);
+        cmd.runCmd(vnTagger);
         postprocess(outputFileTagger, outputFileTaggerSD);
         cmd.runCmd(cmd.crf_test(CmdUtil.CHUNKER_MODEL, outputFileTaggerSD, outputFileChunker));
 
@@ -169,14 +176,24 @@ public class MyTokenizer {
             }
             if (!token.posTag.equals("Np")) {
                 token.word = token.word.toLowerCase();
+            } else if (token.word.contains("_")) {
+                String[] s = token.word.split("_");
+                if (MyStringUtil.isUncapitalize(s[1])) {
+                    token.word = token.word.toLowerCase();
+                    token.posTag = "N";
+                }
             }
             if (token.posTag.equals("X")) {
                 token.posTag = "N";
             }
+
+            if (token.chunk.equals("I-NP") && token.posTag.equals("V")) {
+                token.posTag = "N";
+            }
+
 //            if (d.chunk.equals("O") && !Punctuation.isPuctuation(d.word)) {
 //                d.chunk = "B-" + d.posTag;
 //            }
-
             if (token.chunk.startsWith("B-")) {
                 phraseCounter++;
                 if (token.chunk.equals("B-PP")) {
@@ -212,24 +229,83 @@ public class MyTokenizer {
             tokens.add(token);
         }
 
+        return setKeywords(tokens);
+    }
+
+    /**
+     * Determine keywords in data list by set d.keyword=true
+     *
+     */
+    ArrayList<MySentence> setKeywords(ArrayList<MyToken> tokens) {
+        final double TOP_K_KEYWORD = 0.15;
+
         /// Calculate tf-isf tf-idf
         idfScore.tf_isf(tokens);
 
-        return tokens;
+        // set top K keywords
+        ArrayList<MySentence> sentences = MySentence.DatumToSentence(tokens);
+        System.out.println("Start word-importance set...");
+        TreeSet<Double> set = new TreeSet<>();
+        int counter = 0;
+
+        double maxTfIsf = 0;
+        double maxTfIdf = 0;
+        for (MySentence sentence : sentences) {
+            for (MyToken token : sentence.tokensList) {
+                if (token.tf_isf > maxTfIsf) {
+                    maxTfIsf = token.tf_isf;
+                }
+                if (token.tf_idf > maxTfIdf) {
+                    maxTfIdf = token.tf_idf;
+                }
+            }
+        }
+
+        for (MySentence sentence : sentences) {
+            for (MyToken token : sentence.tokensList) {
+                if (token.tf_isf > 0) {
+                    double score = (token.tf_isf / maxTfIsf + token.tf_idf / maxTfIdf) / 2;
+                    set.add(score);
+                    counter++;
+                }
+            }
+        }
+
+        final int nKeywords = (int) (TOP_K_KEYWORD * counter);
+        boolean flag = true;
+        counter = 0;
+        String keys = "";
+        while (flag) {
+            Double maxScore = set.pollLast();
+            for (MySentence sentence : sentences) {
+                for (MyToken token : sentence.tokensList) {
+                    double score = (token.tf_isf / maxTfIsf + token.tf_idf / maxTfIdf) / 2;
+                    if (maxScore == score) {
+//                        token.keyword = flag;
+                        token.keyword = true;
+//                        if (flag) {
+//                            System.out.println(token.word);
+//                        }
+                        if (!keys.contains(token.word)) {
+//                            System.out.println(token.word);
+                            keys += "#" + token.word + "#";
+                            counter++;
+                        }
+//                        if (counter >= nKeywords) {
+//                            flag = false;
+//                            break;
+//                        }
+                    }
+                }
+            }
+            flag = counter < nKeywords;
+        }
+        System.out.println("End word-importance set...");
+
+        return sentences;
     }
 
     public static void main(String[] args) {
-        MyTokenizer tokenizer = new MyTokenizer();
-        ArrayList<MyToken> tokens = tokenizer.createTokens("corpus/Plaintext/1.txt");
-        String str = "";
-        for (MyToken token : tokens) {
-            str += token.toString() + "\n";
-            System.out.println(token.toString());
-            if (token.endOfSentence) {
-                str += "\n";
-                System.out.println("");
-            }
-        }
-        IOUtil.WriteToFile("temp/1.chunk.edited.txt", str);
+        System.out.println("".split("\\s+").length);
     }
 }

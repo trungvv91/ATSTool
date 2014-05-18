@@ -34,7 +34,8 @@ public class MySentence {
         for (MyToken token : tokensList) {
             str += token.word + " ";
         }
-        return str + "\n";
+//        return str + "\n";
+        return str;
     }
 
     /**
@@ -87,14 +88,8 @@ public class MySentence {
      *
      */
     public void updateScore() {
-        int counter = 0;
-        for (MyToken token : tokensList) {
-            if (token.tf_isf > 0) {
-                score += token.tf_isf;
-                counter++;
-            }
-        }
-        score /= counter;        
+        score = -1;
+        getScore();
     }
 
     /**
@@ -132,10 +127,10 @@ public class MySentence {
 
     public static ArrayList<MyToken> SentenceToDatum(ArrayList<MySentence> sentences) {
         ArrayList<MyToken> data = new ArrayList<>();
-        for (MySentence sentence : sentences) {
-            for (int i = 0; i < sentence.tokensList.size(); i++) {
-                MyToken datum = sentence.tokensList.get(i);
-                datum.iSentence = sentences.indexOf(sentence);
+        for (int i = 0; i < sentences.size(); i++) {
+            ArrayList<MyToken> list = sentences.get(i).tokensList;
+            for (MyToken datum : list) {
+                datum.iSentence = i;
                 data.add(datum);
             }
         }

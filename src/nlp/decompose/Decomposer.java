@@ -5,12 +5,13 @@
  */
 package nlp.decompose;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.TreeSet;
+import nlp.textprocess.MySentence;
 import nlp.textprocess.MyToken;
 import nlp.textprocess.MyTokenizer;
-import nlp.textprocess.MySentence;
 import nlp.util.CmdUtil;
 import nlp.util.IOUtil;
 
@@ -77,7 +78,43 @@ class DecomposeNode {
  */
 public class Decomposer {
 
-    public static final double TOP_K_SENTENCES = 0.2;
+    public static final float TOP_K_SENTENCES = 0.1f;
+
+    static final String[] startCuePhrases = {
+        ",",
+        //        "-",
+        "(",
+        "cách",
+        "cùng",
+        "do",
+        "để",
+        "gồm",
+        "mà",
+        "như",
+        "nhưng",
+        "ở",
+        "sau",
+        "sau_khi",
+        "qua",
+        "tại",
+        "thay_vì",
+        "theo",
+        "thuộc",
+        "trong",
+        "trong_đó",
+        "trong_khi",
+        "tuy_vậy",
+        "về",
+        "vì",
+        "với"
+    };
+    static final String[] endCuePhrases = {
+        ",",
+        ")",
+        ":",
+        "."
+    };
+
     MyTokenizer tokenizer;
     CmdUtil cmd;
 
@@ -128,7 +165,7 @@ public class Decomposer {
      * @return Danh sách vị trí các từ được giữ lại (trong tất cả các câu) của
      * văn bản gốc.
      */
-    ArrayList<Position> decompose(ArrayList<MyToken> tokens, String sumDoc) {
+    ArrayList<Position> decompose(ArrayList<MySentence> sentences, String sumDoc) {
         String tempSum;
         String[] fileParts = sumDoc.split("/");
         String fName = fileParts[fileParts.length - 1].split("\\.")[0];
@@ -151,10 +188,12 @@ public class Decomposer {
                 if (list == null) {
 //                    System.out.print(word + " : ");
                     list = new ArrayList<>();
-                    for (MyToken datum : tokens) {
-                        if (datum.word.toLowerCase().equals(word.toLowerCase())) {
-                            list.add(new Position(datum.iSentence, datum.iPosition));
+                    for (MySentence sentence : sentences) {
+                        for (MyToken token : sentence.tokensList) {
+                            if (token.word.toLowerCase().equals(word.toLowerCase())) {
+                                list.add(new Position(token.iSentence, token.iPosition));
 //                                System.out.print(s + "," + p + "  ;  ");
+                            }
                         }
                     }
                     map.put(word, list);
@@ -289,15 +328,18 @@ public class Decomposer {
      */
     public void createTrainData(String sourceFile, String sumFile, String outFile) {
         ArrayList<TrainData> trainList = new ArrayList<>();
-        ArrayList<MyToken> tokens = tokenizer.createTokens(sourceFile);
-        ArrayList<Position> positions = decompose(tokens, sumFile);
+        ArrayList<MySentence> sentences = tokenizer.createTokens(sourceFile);
+        ArrayList<MyToken> tokens = MySentence.SentenceToDatum(sentences);
+        int nSentence = sentences.size();
+
+        ArrayList<Position> positions = decompose(sentences, sumFile);
         TreeSet<Integer> selectedSentence = new TreeSet<>();
         for (Position position : positions) {
             selectedSentence.add(position.s);
         }
 
         // setup các từ trong top K câu
-        int[] topKSentence = MySentence.getTopKSentence(MySentence.DatumToSentence(tokens), (int) (MyToken.getNumberOfSentences(tokens) / 5.0));
+        int[] topKSentence = MySentence.getTopKSentence(sentences, Math.round(nSentence * TOP_K_SENTENCES));
         TreeSet<String> wordInTopKSentence = new TreeSet<>();
         for (MyToken token : tokens) {
             for (int j = 0; j < topKSentence.length; j++) {
@@ -307,6 +349,8 @@ public class Decomposer {
                 }
             }
         }
+
+        // setup train list
         for (MyToken token : tokens) {
             if (selectedSentence.contains(token.iSentence)) {
                 TrainData trainData = null;
@@ -330,7 +374,52 @@ public class Decomposer {
             return;
         }
 
-        int nSentence = tokens.get(tokens.size() - 1).iSentence + 1;
+        // xác định in cue phrase
+        for (int i = 0; i < trainList.size(); i++) {
+            boolean sFlag = false;
+            TrainData trainData = trainList.get(i);
+            int j = i;
+            while (!sFlag && j >= 0 && j > i - 7
+                    && trainList.get(j).iSentence == trainData.iSentence) {
+                for (String phr : startCuePhrases) {
+                    if (phr.equals(trainList.get(j).word)) {
+                        sFlag = true;
+                        break;
+                    }
+                }
+                if (!sFlag) {
+                    j--;
+                }
+            }
+            if (j == -1 || trainList.get(j).iSentence != trainData.iSentence
+                    || (i > 0 && trainList.get(i - 1).isInCuePhrase)) {
+                sFlag = true;
+            }
+            boolean eFlag = false;
+            if (j == i) {
+                eFlag = true;
+            } else {
+                j = i + 1;
+                while (!eFlag && j < trainList.size() && j < i + 7
+                        && trainList.get(j).iSentence == trainData.iSentence) {
+                    for (String phr : endCuePhrases) {
+                        if (phr.equals(trainList.get(j).word)) {
+                            eFlag = true;
+                            break;
+                        }
+                    }
+                    j++;
+                }
+                if (j == trainList.size() || trainList.get(j).iSentence != trainData.iSentence) {
+                    eFlag = true;
+                }
+            }
+            if (sFlag && eFlag && !trainData.endOfSentence) {
+                trainData.isInCuePhrase = true;
+            }
+        }
+
+        // căn lại vị trí tương đối
         int[] nWords = new int[nSentence];  // number of words in each sentence
         int pCounter = 1;       // position counter
         for (int j = 1; j < trainList.size(); j++) {
@@ -343,8 +432,6 @@ public class Decomposer {
             }
         }
         nWords[(int) trainList.get(trainList.size() - 1).iSentence] = pCounter;
-
-        // căn lại vị trí tương đối
         for (TrainData trainData : trainList) {
             trainData.iPosition /= ((double) nWords[(int) trainData.iSentence]);
             trainData.iSentence /= ((double) nSentence);
@@ -355,14 +442,14 @@ public class Decomposer {
         String strSentence = trainList.get(0).toString() + "\n";
         int removeCounter = (trainList.get(0).y == TrainData.yVALUE.REMOVE) ? 1 : 0;
         int wordCounter = 1;
-        TrainData tempLast = new TrainData(tokens.get(0));    // tạm thôi (trick)
+        TrainData tempLast = new TrainData(tokens.get(0));    // dùng làm data tạm thôi (trick)
         tempLast.iSentence = -1;
         trainList.add(tempLast);
         for (int j = 1; j < trainList.size(); j++) {
             TrainData trainData = trainList.get(j);
             if (trainData.iSentence != trainList.get(j - 1).iSentence) {
-//                if (removeCounter < wordCounter / 2) {
-                if (removeCounter < 10) {
+                if (removeCounter < wordCounter / 2 && removeCounter > 1) {
+//                if (removeCounter < 10) {
                     str += strSentence + "\n";        // các câu cách nhau bởi dòng trống
                 }
                 strSentence = "";
@@ -387,9 +474,11 @@ public class Decomposer {
      */
     public void createTestData(ArrayList<MyToken> tokens, String outFile) {
 //        ArrayList<Datum> data = tokenizer.createTokens(sourceFile);
+        ArrayList<MySentence> sentences = MySentence.DatumToSentence(tokens);
+        int nSentence = sentences.size();
 
         // setup các từ trong top K câu
-        int[] topKSentence = MySentence.getTopKSentence(MySentence.DatumToSentence(tokens), (int) (MyToken.getNumberOfSentences(tokens) * TOP_K_SENTENCES));
+        int[] topKSentence = MySentence.getTopKSentence(sentences, Math.round(nSentence * TOP_K_SENTENCES));
         TreeSet<String> wordInTopKSentence = new TreeSet<>();
         for (MyToken token : tokens) {
             for (int j = 0; j < topKSentence.length; j++) {
@@ -408,8 +497,51 @@ public class Decomposer {
             trainList.add(trainData);
         }
 
-        // 
-        int nSentence = tokens.get(tokens.size() - 1).iSentence + 1;
+        // xác định in cue phrase
+        for (int i = 0; i < trainList.size(); i++) {
+            boolean sFlag = false;
+            TrainData trainData = trainList.get(i);
+            int j = i;
+            while (!sFlag && j >= 0 && j > i - 5
+                    && trainList.get(j).iSentence == trainData.iSentence) {
+                for (String phr : startCuePhrases) {
+                    if (phr.equals(trainList.get(j).word)) {
+                        sFlag = true;
+                        break;
+                    }
+                }
+                if (!sFlag) {
+                    j--;
+                }
+            }
+            if (j == -1 || trainList.get(j).iSentence != trainData.iSentence) {
+                sFlag = true;
+            }
+            boolean eFlag = false;
+            if (j == i) {
+                eFlag = true;
+            } else {
+                j = i + 1;
+                while (!eFlag && j < trainList.size() && j < i + 5
+                        && trainList.get(j).iSentence == trainData.iSentence) {
+                    for (String phr : endCuePhrases) {
+                        if (phr.equals(trainList.get(j).word)) {
+                            eFlag = true;
+                            break;
+                        }
+                    }
+                    j++;
+                }
+                if (j == trainList.size() || trainList.get(j).iSentence != trainData.iSentence) {
+                    eFlag = true;
+                }
+            }
+            if (sFlag && eFlag && !trainData.endOfSentence) {
+                trainData.isInCuePhrase = true;
+            }
+        }
+
+        // căn lại vị trí tương đối
         int[] nWords = new int[nSentence];  // number of words in each sentence
         int pCounter = 1;       // position counter
         for (int j = 1; j < trainList.size(); j++) {
@@ -422,8 +554,6 @@ public class Decomposer {
             }
         }
         nWords[(int) trainList.get(trainList.size() - 1).iSentence] = pCounter;
-
-        // căn lại vị trí tương đối
         for (TrainData trainData : trainList) {
             trainData.iPosition /= ((double) nWords[(int) trainData.iSentence]);
             trainData.iSentence /= ((double) nSentence);
@@ -438,7 +568,7 @@ public class Decomposer {
             }
             str += trainData.toString() + "\n";
         }
-        IOUtil.WriteToFile(outFile, str + "\n");
+        IOUtil.WriteToFile(outFile, str + "\n", true);
     }
 
     public void reduction(ArrayList<MyToken> data) {
@@ -469,33 +599,40 @@ public class Decomposer {
 
     public static void main(String[] args) {
         Decomposer decomposer = new Decomposer();
-//        IOUtil.DeleteFile("temp/train_1.txt");
-//        decomposer.createTrainData("corpus/Plaintext/1.txt", "corpus/Summary/1.txt", "temp/train_1.txt");
-        ArrayList<MyToken> data = decomposer.tokenizer.createTokens("corpus/Plaintext/1.txt");
-        decomposer.createTestData(data, "temp/1.test");
+//        IOUtil.DeleteFile("temp/test.txt");
+//        decomposer.createTrainData("corpus/Plaintext/vanhoa/VH01.txt", "corpus/Summary/vanhoa/VH01.txt", "temp/train_1.txt");
+//        ArrayList<MyToken> data = decomposer.tokenizer.createTokens("corpus/Plaintext/xahoi/XH01.txt");
+//        decomposer.createTestData(data, "temp/train_1.txt");
 //        decomposer.reduction(data);
 //        IOUtil.DeleteFile("temp/train.nlp");
-//        File file = new File("corpus/Plaintext1/");
-//        String[] directories = file.list();
-//        int counter = 0;
-//        for (String d : directories) {
-//            File directory = new File(file.getPath() + "/" + d);
-//            if (directory.isFile()) {
-//                continue;
-//            }
-//            File[] files = directory.listFiles();    // Reading directory contents
-//            for (int i = 0; i < files.length; i++) {
+        File file = new File("corpus/Plaintext/");
+        String[] directories = file.list();
+        int counter = 0;
+        for (String d : directories) {
+            File directory = new File(file.getPath() + "/" + d);
+            if (directory.isFile()) {
+                continue;
+            }
+            File[] files = directory.listFiles();    // Reading directory contents
+
+//            ArrayList<MyToken> data = decomposer.tokenizer.createTokens(directory.getPath() + "/" + files[0].getName());
+//            decomposer.createTestData(data, "temp/train_1.txt");
+            decomposer.createTrainData("corpus/Plaintext/" + d + "/" + files[0].getName(),
+                    "corpus/Summary/" + d + "/" + files[0].getName(), "temp/test.txt");
+            decomposer.createTrainData("corpus/Plaintext/" + d + "/" + files[1].getName(),
+                    "corpus/Summary/" + d + "/" + files[1].getName(), "temp/test.txt");
+//            for (int i = 2; i < files.length; i++) {
 //                try {
 //                    String name = files[i].getName();
-//                    decomposer.createTrainData("corpus/Plaintext1/" + d + "/" + name,
-//                            "corpus/Summary1/" + d + "/" + name, "temp/train.nlp");
+//                    decomposer.createTrainData("corpus/Plaintext/" + d + "/" + name,
+//                            "corpus/Summary/" + d + "/" + name, "temp/train.nlp");
 //                    counter++;
 //                } catch (Exception ex) {
 ////                continue;
 //                    System.out.println("Failure on file " + files[i].getPath() + "!\n\n");
 //                }
 //            }
-//        }
-//        System.out.println("\n" + counter + " văn bản đã được đọc");
+        }
+        System.out.println("\n" + counter + " văn bản đã được đọc");
     }
 }

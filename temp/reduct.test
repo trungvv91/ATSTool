@@ -1,147 +1,495 @@
-khai_báo	V	B-VP	0	0	65	11	0	0
-là	V	I-VP	0	0	0	0	0	0
-xe_máy	N	B-NP	0	0	65	6	0	0
-LX125	Np	I-NP	0	0	0	19	0	0
-và	CC	I-NP	0	1	0	0	1	0
-màn_hình	N	I-NP	0	1	47	11	0	0
-máy_vi_tính	N	I-NP	0	1	65	11	0	0
-song	C	B-PP	0	1	0	0	1	0
-khi	E	I-PP	0	2	0	0	1	0
-hải_quan	N	B-NP	0	2	95	4	0	0
-kiểm_tra	V	I-NP	0	2	95	2	0	0
-thì	C	B-VP	0	3	0	0	1	0
-phát_hiện	V	I-VP	0	3	35	9	0	0
-hàng	R	B-NP	0	3	0	0	1	0
-trăm	M	I-NP	0	3	0	0	1	0
-mô_tô	N	I-NP	0	4	0	17	0	0
-phân_khối	N	I-NP	0	4	70	27	0	0
-lớn	A	I-NP	0	4	0	3	0	0
-,	,	O	0	5	0	0	0	0
-trong_đó	C	O	0	5	0	0	1	0
-nhiều	A	B-NP	0	5	0	1	0	0
-xe	N	I-NP	0	5	0	8	0	0
-có	V	B-VP	0	6	0	0	0	0
-dung_tích	N	B-NP	0	6	95	5	0	0
-xy_lanh	V	B-VP	0	6	95	9	0	0
-lên	R	I-VP	0	6	0	0	1	0
-tới	E	B-PP	0	7	0	0	1	0
-1800	M	I-PP	0	7	0	0	1	0
-phân_khối	N	I-PP	0	7	70	27	0	0
-,	,	I-PP	0	8	0	0	0	0
-thuộc	V	B-VP	0	8	0	6	0	0
-danh_mục	N	B-NP	0	8	65	8	0	0
-hàng_hóa	N	I-NP	0	8	65	6	0	0
-cấm	V	B-VP	0	9	0	10	0	0
-nhập_khẩu	V	I-VP	0	9	65	6	0	0
-.	.	O	0	9	0	0	0	0
+nhà_báo	N	B-NP	0	0	69	18	0	0	0	0
+Lothar	Np	I-NP	0	2	100	19	0	0	0	0
+A	Np	I-NP	0	5	0	19	0	0	0	0
+.	.	O	0	7	0	0	0	0	0	2
 
-qua	E	B-PP	1	0	0	0	1	0
-công_tác	N	I-PP	1	0	95	2	0	0
-trinh_sát	N	I-PP	1	0	95	4	0	0
-,	,	O	1	0	0	0	0	0
-nắm	V	B-VP	1	1	0	2	0	0
-tình_hình	N	B-NP	1	1	95	2	0	0
-,	,	O	1	1	0	0	0	0
-đội	N	B-NP	1	1	0	4	0	0
-Kiểm_Soát_Hải_Quan	Np	I-NP	1	2	65	19	0	0
-thuộc	V	B-VP	1	2	0	6	0	0
-cục	N	B-NP	1	2	0	12	0	0
-Hải_Quan_Hải_Phòng	Np	I-NP	1	3	35	39	0	0
-đã	R	B-VP	1	3	0	0	1	0
-phát_hiện	V	I-VP	1	3	35	9	0	0
-3	M	B-NP	1	3	0	0	1	0
-lô_hàng	N	I-NP	1	4	47	29	0	0
-khai_báo	V	I-NP	1	4	65	11	0	0
-là	V	B-VP	1	4	0	0	0	0
-xe_máy	N	B-NP	1	5	65	6	0	0
-LX125	Np	I-NP	1	5	0	19	0	0
-và	CC	I-NP	1	5	0	0	1	0
-màn_hình	N	I-NP	1	5	47	11	0	0
-máy_vi_tính	N	I-NP	1	6	65	11	0	0
-được	V	B-VP	1	6	0	0	0	0
-đóng	V	I-VP	1	6	0	8	0	0
-trong	E	B-PP	1	6	0	0	1	0
-6	M	I-PP	1	7	0	0	1	0
-container	N	I-PP	1	7	35	22	0	0
-có	V	B-VP	1	7	0	0	0	0
-dấu_hiệu	N	B-NP	1	8	95	3	0	0
-vi_phạm	V	B-VP	1	8	95	3	0	0
-chính_sách	N	B-NP	1	8	95	2	0	0
-xuất_nhập_khẩu	V	I-NP	1	8	95	4	0	0
-của	E	B-PP	1	9	0	0	1	0
-nhà_nước	N	I-PP	1	9	95	2	0	0
-.	.	O	1	9	0	0	0	0
+Baltrusch	Np	B-NP	0	0	18	129	0	1	0	0
+đã	R	B-VP	0	0	0	0	1	0	0	0
+đi	V	I-VP	0	0	0	4	0	0	0	0
+xe_máy	N	B-NP	0	1	100	6	0	0	0	0
+từ	E	B-PP	0	1	0	0	0	0	0	0
+Đức	Np	I-PP	0	2	0	89	0	0	0	0
+sang	V	B-VP	0	2	0	1	0	0	0	0
+Việt_Nam	Np	B-NP	0	3	60	59	0	0	0	0
+với	E	B-PP	0	3	0	0	1	0	0	0
+hành_trình	N	I-PP	0	4	82	12	0	0	0	0
+dài	A	B-AP	0	4	0	6	0	0	0	0
+15.000	M	B-NP	0	5	0	0	0	0	0	0
+km	Nu	I-NP	0	5	0	6	0	0	0	0
+để	E	B-PP	0	5	0	0	0	0	0	0
+gặp	V	B-VP	0	6	0	3	0	0	0	0
+một	M	B-NP	0	6	0	0	0	0	0	0
+bé	N	I-NP	0	7	0	8	0	0	0	0
+gái	N	I-NP	0	7	0	7	0	0	0	0
+nghèo	A	B-AP	0	8	0	13	0	1	0	0
+tỉnh	N	B-NP	0	8	0	5	0	0	0	0
+Quảng_Trị	Np	I-NP	0	9	60	49	0	0	0	0
+.	.	O	0	9	0	0	0	0	0	2
 
-những	L	B-NP	3	0	0	0	1	0
-lô_hàng	N	I-NP	3	0	47	29	0	0
-này	P	I-NP	3	1	0	1	0	0
-xuất_phát	V	B-VP	3	1	95	3	0	0
-từ	E	B-PP	3	2	0	0	1	0
-Hongkong	Np	I-PP	3	2	95	9	0	0
-theo	E	B-PP	3	3	0	0	1	0
-tàu_biển	N	I-PP	3	4	95	6	0	0
-nhập_cảnh	V	B-VP	3	4	47	18	0	1
-vào	E	B-PP	3	5	0	0	1	0
-khu_vực	N	I-PP	3	5	65	3	0	0
-cảng	N	I-PP	3	6	0	8	0	0
-Hải_Phòng	Np	I-PP	3	7	47	29	0	0
-vào	E	B-PP	3	7	0	0	1	0
-ngày	N	I-PP	3	8	0	0	0	0
-19-6	M	I-PP	3	8	0	0	1	0
-.	.	O	3	9	0	0	0	0
+ngày	N	B-NP	1	0	0	3	0	1	0	0
+9-7	M	I-NP	1	1	0	0	0	0	0	0
+,	,	O	1	2	0	0	0	0	0	1
+ông	N	B-NP	1	4	0	9	0	0	0	0
+Lothar	Np	I-NP	1	5	100	19	0	0	0	0
+A	Np	I-NP	1	7	0	19	0	0	0	0
+.	.	O	1	8	0	0	0	0	0	2
 
-trên	E	B-PP	5	0	0	0	1	0
-chứng_từ	N	I-PP	5	0	95	5	0	1
-nhập_cảnh	V	I-PP	5	1	47	18	0	1
-,	,	O	5	2	0	0	0	0
-công_ty	N	B-NP	5	2	95	1	0	1
-TNHH	Np	I-NP	5	3	0	9	0	1
-vận_tải	V	B-VP	5	4	95	3	0	1
-thương_mại	N	B-NP	5	4	95	2	0	1
-dịch_vụ	N	I-NP	5	5	95	2	0	1
-Tầm_Nhìn_Xa	Np	I-NP	5	6	95	9	0	1
-là	V	B-VP	5	6	0	0	0	0
-người	N	B-NP	5	7	0	0	0	1
-nhận	V	I-NP	5	8	0	1	0	1
-hàng	R	I-NP	5	8	0	0	1	0
-.	.	O	5	9	0	0	0	0
+Baltrusch	Np	B-NP	1	0	18	129	0	1	0	0
+-	-	O	1	0	0	0	0	0	0	1
+một	M	B-NP	1	1	0	0	0	0	0	0
+nhà_báo	N	I-NP	1	2	69	13	0	0	0	0
+Đức	Np	I-NP	1	2	0	89	0	0	0	0
+-	-	O	1	3	0	0	0	0	0	1
+sẽ	R	B-VP	1	4	0	0	1	0	0	0
+tới	V	I-VP	1	4	0	4	0	0	0	0
+Việt_Nam	Np	B-NP	1	5	60	59	0	0	0	0
+sau	E	B-PP	1	6	0	0	0	0	0	0
+hành_trình	N	I-PP	1	6	82	12	0	0	0	0
+dài	A	I-PP	1	7	0	6	0	0	0	0
+15.000	M	I-PP	1	8	0	0	0	0	0	0
+km	Nu	I-PP	1	8	0	6	0	0	0	0
+.	.	O	1	9	0	0	0	0	0	2
 
-đây	P	B-NP	6	0	0	0	0	0
-là	V	B-VP	6	0	0	0	0	0
-các	L	B-NP	6	1	0	0	1	0
-loại	Nc	I-NP	6	1	0	1	0	0
-hàng	N	I-NP	6	2	0	3	0	0
-thuộc	V	B-VP	6	2	0	6	0	0
-danh_mục	N	B-NP	6	3	65	8	0	0
-hàng_hóa	N	I-NP	6	3	65	6	0	0
-cấm	V	B-VP	6	4	0	10	0	0
-nhập_khẩu	V	I-VP	6	4	65	6	0	0
-theo	E	B-PP	6	5	0	0	1	0
-quy_định	N	I-PP	6	5	95	2	0	0
-tại	E	B-PP	6	6	0	0	1	0
-nghị_định	N	I-PP	6	6	95	4	0	0
-số	N	I-PP	6	7	0	2	0	0
-12-2006	M	I-PP	6	7	0	0	1	0
-của	E	B-PP	6	8	0	0	1	0
-chính_phủ	N	I-PP	6	8	95	2	0	0
-.	.	O	6	9	0	0	0	0
+nơi	N	B-NP	2	0	0	3	0	0	0	0
+đầu_tiên	A	B-AP	2	0	130	1	0	0	0	0
+ông	N	B-NP	2	1	0	9	0	0	0	0
+Baltrusch	Np	I-NP	2	1	18	129	0	1	0	0
+muốn	V	B-VP	2	2	0	1	0	0	0	0
+đến	V	I-VP	2	2	0	0	0	0	0	0
+là	V	I-VP	2	3	0	1	0	0	0	0
+huyện	N	B-NP	2	3	0	4	0	0	0	0
+Triệu_Phong	Np	I-NP	2	4	82	29	0	0	0	0
+,	,	I-NP	2	5	0	0	0	0	0	1
+tỉnh	N	I-NP	2	5	0	5	0	0	0	0
+Quảng_Trị	Np	I-NP	2	6	60	49	0	0	0	0
+để	V	B-VP	2	6	0	0	0	0	0	0
+thăm	V	I-VP	2	7	0	9	0	0	0	0
+một	M	B-NP	2	7	0	0	0	0	0	0
+bé	N	I-NP	2	8	0	8	0	0	0	0
+gái	N	I-NP	2	8	0	7	0	0	0	0
+.	.	O	2	9	0	0	0	0	0	2
 
-hiện_tại	N	B-NP	8	0	95	2	0	0
-cục	N	I-NP	8	0	0	12	0	0
-Hải_Quan_Hải_Phòng	Np	I-NP	8	1	35	39	0	0
-đã	R	B-VP	8	1	0	0	1	0
-ra	V	I-VP	8	2	0	0	1	0
-quyết_định	V	I-VP	8	2	65	3	0	0
-tạm	A	I-VP	8	3	0	8	0	0
-giữ	V	I-VP	8	3	0	5	0	0
-toàn_bộ	L	B-NP	8	4	95	2	0	0
-số	N	I-NP	8	5	0	2	0	0
-hàng	N	I-NP	8	5	0	3	0	0
-cấm	V	I-NP	8	6	0	10	0	0
-này	P	I-NP	8	6	0	1	0	0
-để	E	B-PP	8	7	0	0	1	0
-điều_tra	V	B-VP	8	7	95	2	0	0
-làm	V	I-VP	8	8	0	0	0	0
-rõ	A	B-AP	8	8	0	1	0	0
-.	.	O	8	9	0	0	0	0
+ông	Nc	B-NP	2	0	0	9	0	0	0	0
+Baltrusch	Np	I-NP	2	0	18	129	0	1	0	0
+xuất_phát	V	B-VP	2	0	130	3	0	0	0	0
+từ	E	B-PP	2	0	0	0	0	0	0	0
+thành_phố	N	I-PP	2	0	130	1	0	0	0	0
+Schwerte	Np	I-PP	2	1	130	9	0	0	0	0
+thuộc	E	B-PP	2	1	0	0	0	0	0	0
+vùng	N	I-PP	2	1	0	2	0	0	0	0
+Ruhr	Np	I-PP	2	1	0	9	0	0	0	0
+tại	E	B-PP	2	2	0	0	1	0	0	0
+Đức	Np	I-PP	2	2	0	89	0	0	0	0
+từ	E	B-PP	2	2	0	0	0	0	0	0
+ngày	N	I-PP	2	2	0	3	0	1	0	0
+17-5	M	I-PP	2	3	0	0	0	0	0	0
+và	CC	I-PP	2	3	0	0	1	0	0	0
+đã	R	B-VP	2	3	0	0	1	0	0	0
+mất	V	I-VP	2	3	0	1	0	0	0	0
+hơn	R	B-NP	2	4	0	0	0	0	0	0
+1	M	I-NP	2	4	0	0	0	0	0	0
+tháng	N	I-NP	2	4	0	2	0	0	0	0
+ròng	A	I-NP	2	4	0	9	0	0	0	0
+đi	V	B-VP	2	5	0	4	0	0	0	0
+qua	E	B-PP	2	5	0	0	0	0	0	0
+các	L	I-PP	2	5	0	0	1	0	0	0
+nước	N	I-PP	2	5	0	1	0	0	0	0
+Ba_Lan	Np	I-PP	2	6	130	9	0	0	0	0
+,	,	I-PP	2	6	0	0	0	0	0	1
+Latvia	Np	I-PP	2	6	130	9	0	0	0	0
+,	,	I-PP	2	6	0	0	0	0	0	1
+Nga	Np	I-PP	2	7	0	9	0	0	0	0
+,	,	I-PP	2	7	0	0	0	0	0	1
+Mông_Cổ	Np	I-PP	2	7	130	9	0	0	0	0
+,	,	I-PP	2	7	0	0	0	0	0	1
+Trung_Quốc	Np	I-PP	2	8	130	9	0	0	0	0
+và	CC	I-PP	2	8	0	0	1	0	0	0
+Lào	Np	I-PP	2	8	0	9	0	0	0	0
+trước	E	B-PP	2	8	0	0	1	0	0	0
+khi	E	I-PP	2	9	0	0	0	0	0	0
+tới	V	B-VP	2	9	0	4	0	0	0	0
+Việt_Nam	Np	B-NP	2	9	60	59	0	0	0	0
+.	.	O	2	9	0	0	0	0	0	2
+
+chuyến	N	B-NP	3	0	69	11	0	0	0	0
+đi	N	I-NP	3	0	0	0	0	0	0	0
+của	E	B-PP	3	0	0	0	1	0	0	0
+nhà_báo	N	I-PP	3	0	69	13	0	0	0	0
+Đức	Np	I-PP	3	1	0	89	0	0	0	0
+mang	V	B-VP	3	1	0	1	0	0	0	0
+tên	N	B-NP	3	1	0	1	0	0	0	0
+Way	Np	I-NP	3	2	0	19	0	0	0	0
+to	A	I-NP	3	2	0	6	0	0	0	0
+Huyen	Np	I-NP	3	2	0	19	0	0	0	0
+với	E	B-PP	3	2	0	0	1	0	0	0
+mục_đích	N	I-PP	3	3	130	2	0	0	0	0
+lớn	A	I-PP	3	3	0	1	0	0	0	0
+nhất_là	N	B-VP	3	3	130	2	0	0	0	0
+kêu_gọi	V	I-VP	3	4	130	3	0	0	0	0
+hỗ_trợ	V	I-VP	3	4	130	2	0	0	0	0
+cho	E	B-PP	3	4	0	0	0	0	0	0
+các	L	I-PP	3	5	0	0	1	0	0	0
+em	N	I-PP	3	5	0	7	0	0	0	0
+nghèo	A	B-AP	3	5	0	13	0	1	0	0
+tỉnh	N	B-NP	3	5	0	5	0	0	0	0
+Quảng_Trị	Np	I-NP	3	6	60	49	0	0	0	0
+,	,	O	3	6	0	0	0	0	0	1
+trong_đó	C	O	3	6	0	0	0	0	0	0
+bé	N	B-NP	3	7	0	8	0	0	0	0
+Phạm_Thị_Thảo_Huyền	Np	I-NP	3	7	130	9	0	0	0	0
+và	CC	I-NP	3	7	0	0	1	0	0	0
+gia_đình	N	I-NP	3	7	82	5	0	0	0	0
+em	N	I-NP	3	8	0	7	0	0	0	0
+là	V	B-VP	3	8	0	1	0	0	0	0
+một	M	B-NP	3	8	0	0	0	0	0	0
+đại_diện	N	I-NP	3	9	130	2	0	0	0	0
+tiêu_biểu	A	I-NP	3	9	130	4	0	0	0	0
+.	.	O	3	9	0	0	0	0	0	2
+
+cha_mẹ	N	B-NP	3	0	130	4	0	0	0	0
+Huyền	Np	I-NP	3	0	0	59	0	0	0	0
+đều	R	B-VP	3	1	0	0	0	0	0	0
+là	V	I-VP	3	1	0	1	0	0	0	0
+nông_dân	N	B-NP	3	2	130	3	0	0	0	0
+nghèo	A	I-NP	3	2	0	13	0	1	0	0
+,	,	O	3	3	0	0	0	0	0	1
+họ	P	B-NP	3	3	0	1	0	0	0	0
+đang	R	B-VP	3	4	0	0	1	0	0	0
+tham_gia	V	I-VP	3	4	82	5	0	0	0	0
+các	L	B-NP	3	5	0	0	1	0	0	0
+hoạt_động	N	I-NP	3	5	100	3	0	1	0	0
+phát_triển	N	I-NP	3	6	130	1	0	1	0	0
+kinh_tế	N	I-NP	3	6	130	1	0	0	0	0
+do	E	O	3	7	0	0	1	0	0	0
+World_Vision	Np	B-NP	3	7	60	49	0	1	0	0
+thực_hiện	V	B-VP	3	8	100	2	0	0	0	0
+tại	E	B-PP	3	8	0	0	1	0	0	0
+địa_phương	N	I-PP	3	9	130	2	0	0	0	0
+.	.	O	3	9	0	0	0	0	0	2
+
+bốn	M	B-NP	4	0	0	0	0	0	0	0
+năm	N	I-NP	4	0	0	1	0	0	0	0
+trước	A	I-NP	4	0	0	0	1	0	0	0
+,	,	O	4	1	0	0	0	0	0	1
+tổ_chức	V	B-VP	4	1	100	2	0	1	0	0
+World_Vision	Np	B-NP	4	2	60	49	0	1	0	0
+đã	R	B-VP	4	2	0	0	1	0	0	0
+giới_thiệu	V	I-VP	4	2	100	5	0	0	0	0
+hoàn_cảnh	N	B-NP	4	3	100	7	0	1	0	0
+của	E	B-PP	4	3	0	0	1	0	0	0
+Huyền	Np	I-PP	4	4	0	59	0	0	0	0
+cho	E	B-PP	4	4	0	0	0	0	0	0
+nhà_báo	N	I-PP	4	5	69	13	0	0	0	0
+Baltrusch	Np	I-PP	4	5	18	129	0	1	0	0
+để	E	B-PP	4	5	0	0	0	0	0	0
+mời	V	B-VP	4	6	0	2	0	0	0	0
+ông	N	B-NP	4	6	0	9	0	0	0	0
+tham_gia	V	B-VP	4	7	82	5	0	0	0	0
+là	V	I-VP	4	7	0	1	0	0	0	0
+người	N	B-NP	4	7	0	2	0	1	0	0
+bảo_trợ	V	B-VP	4	8	100	11	0	0	0	0
+cho	E	B-PP	4	8	0	0	0	0	0	0
+Huyền	Np	I-PP	4	9	0	59	0	0	0	0
+.	.	O	4	9	0	0	0	0	0	2
+
+ngày	N	B-NP	4	0	0	3	0	1	0	0
+17-5-2013	M	I-NP	4	0	0	0	0	0	0	0
+,	,	O	4	0	0	0	0	0	0	1
+ông	Nc	B-NP	4	1	0	9	0	0	0	0
+Baltrusch	Np	I-NP	4	1	18	129	0	1	0	0
+đã	R	B-VP	4	2	0	0	1	0	0	0
+quyết_định	V	I-VP	4	2	130	1	0	0	0	0
+lên_đường	V	I-VP	4	3	100	9	0	0	0	0
+tới	V	I-VP	4	3	0	4	0	0	0	0
+Việt_Nam	Np	B-NP	4	4	60	59	0	0	0	0
+bằng	E	B-PP	4	4	0	0	1	0	0	0
+xe_máy	N	I-PP	4	5	100	6	0	0	0	0
+,	,	O	4	5	0	0	0	0	0	1
+thực_hiện	V	B-VP	4	6	100	2	0	0	0	0
+kế_hoạch	N	B-NP	4	6	130	2	0	0	0	0
+Way	Np	I-NP	4	7	0	19	0	0	0	0
+to	A	I-NP	4	7	0	6	0	0	0	0
+Huyen	Np	I-NP	4	8	0	19	0	0	0	0
+của	E	B-PP	4	8	0	0	1	0	0	0
+mình	P	I-PP	4	9	0	2	0	0	0	0
+.	.	O	4	9	0	0	0	0	0	2
+
+sau	E	B-PP	5	0	0	0	0	0	0	0
+hành_trình	N	I-PP	5	0	82	12	0	0	0	0
+dài	A	B-AP	5	0	0	6	0	0	0	0
+hơn	R	B-NP	5	1	0	0	0	0	0	0
+1	M	I-NP	5	1	0	0	0	0	0	0
+tháng	N	I-NP	5	1	0	2	0	0	0	0
+ròng	A	B-AP	5	2	0	9	0	0	0	0
+qua	E	B-PP	5	2	0	0	0	0	0	0
+6	M	I-PP	5	2	0	0	0	0	0	0
+quốc_gia	N	I-PP	5	3	130	2	0	0	0	0
+,	,	O	5	3	0	0	0	0	0	1
+ông	N	B-NP	5	3	0	9	0	0	0	0
+Baltrusch	Np	I-NP	5	4	18	129	0	1	0	0
+sẽ	R	B-VP	5	4	0	0	1	0	0	0
+lưu	V	I-VP	5	4	0	4	0	0	0	0
+lại	R	I-VP	5	5	0	0	0	0	0	0
+Triệu_Phong	Np	B-NP	5	5	82	29	0	0	0	0
+-	-	O	5	5	0	0	0	0	0	1
+Quảng_Trị	Np	B-NP	5	6	60	49	0	0	0	0
+từ	E	B-PP	5	6	0	0	0	0	0	0
+ngày	N	I-PP	5	6	0	3	0	1	0	0
+9-7	M	I-PP	5	7	0	0	0	0	0	0
+để	E	B-PP	5	7	0	0	0	0	0	0
+thăm	V	B-VP	5	7	0	9	0	0	0	0
+Huyền	Np	B-NP	5	8	0	59	0	0	0	0
+và	CC	I-NP	5	8	0	0	1	0	0	0
+gia_đình	N	I-NP	5	8	82	5	0	0	0	0
+em	N	I-NP	5	9	0	7	0	0	0	0
+.	.	O	5	9	0	0	0	0	0	2
+
+ngoài_ra	C	O	5	0	0	0	0	0	0	0
+,	,	O	5	0	0	0	0	0	0	1
+ông	N	B-NP	5	0	0	9	0	0	0	0
+Baltrusch	Np	I-NP	5	1	18	129	0	1	0	0
+sẽ	R	B-VP	5	1	0	0	1	0	0	0
+tới	V	I-VP	5	1	0	4	0	0	0	0
+thăm	V	I-VP	5	2	0	9	0	0	0	0
+học_sinh	N	B-NP	5	2	130	3	0	0	0	0
+tại	E	B-PP	5	2	0	0	1	0	0	0
+trường_mầm_non	N	I-PP	5	3	130	5	0	0	0	0
+,	,	I-PP	5	3	0	0	0	0	0	1
+trung_học_cơ_sở	N	I-PP	5	4	130	6	0	0	0	0
+,	,	I-PP	5	4	0	0	0	0	0	1
+trẻ	N	I-PP	5	4	0	2	0	0	0	0
+khuyết_tật	N	I-PP	5	5	130	5	0	0	0	0
+và	CC	I-PP	5	5	0	0	1	0	0	0
+một_số	L	I-PP	5	5	130	1	0	0	0	0
+hộ	N	I-PP	5	6	0	3	0	0	0	0
+gia_đình	N	I-PP	5	6	82	5	0	0	0	0
+hiện	N	I-PP	5	7	0	3	0	0	0	0
+đang	R	B-VP	5	7	0	0	1	0	0	0
+tham_gia	V	I-VP	5	7	82	5	0	0	0	0
+các	L	B-NP	5	8	0	0	1	0	0	0
+hoạt_động	N	I-NP	5	8	100	3	0	1	0	0
+của	E	B-PP	5	8	0	0	1	0	0	0
+World_Vision	Np	I-PP	5	9	60	49	0	1	0	0
+.	.	O	5	9	0	0	0	0	0	2
+
+trên	E	B-PP	6	0	0	0	1	0	0	0
+trang_web	N	I-PP	6	0	130	4	0	0	0	0
+cá_nhân	N	I-PP	6	0	100	5	0	0	0	0
+của	E	B-PP	6	0	0	0	1	0	0	0
+mình	P	I-PP	6	0	0	2	0	0	0	0
+,	,	O	6	0	0	0	0	0	0	1
+ông	Nc	B-NP	6	1	0	9	0	0	0	0
+Baltrusch	Np	I-NP	6	1	18	129	0	1	0	0
+viết	V	B-VP	6	1	0	2	0	0	0	0
+:	:	O	6	1	0	0	0	0	0	1
+toàn_bộ	N	B-NP	6	1	130	2	0	0	0	0
+số	N	I-NP	6	2	0	1	0	0	0	0
+tiền	N	I-NP	6	2	0	1	0	0	0	0
+mà	C	O	6	2	0	0	0	0	0	0
+tôi	P	B-NP	6	2	0	0	1	0	0	0
+quyên_góp	V	B-VP	6	2	100	10	0	0	0	0
+cho	E	B-PP	6	3	0	0	0	0	0	0
+chuyến	N	I-PP	6	3	69	11	0	0	0	0
+đi	V	I-PP	6	3	0	4	0	0	0	0
+sẽ	R	B-VP	6	3	0	0	1	0	0	0
+được	V	I-VP	6	3	0	0	0	0	0	0
+chuyển	V	I-VP	6	4	130	2	0	0	0	0
+đến	E	B-PP	6	4	0	0	0	0	0	0
+tổ_chức	N	I-PP	6	4	100	2	0	1	0	0
+World_Vision	Np	I-PP	6	4	60	49	0	1	0	0
+-	-	O	6	4	0	0	0	0	0	1
+tổ_chức	V	B-PP	6	5	100	2	0	1	0	0
+mà	C	I-PP	6	5	0	0	0	0	0	0
+4	M	I-PP	6	5	0	0	0	0	0	0
+năm	N	I-PP	6	5	0	1	0	0	0	0
+trước	A	I-PP	6	5	0	0	1	0	0	0
+đã	R	B-VP	6	5	0	0	1	0	0	0
+giới_thiệu	V	I-VP	6	6	100	5	0	0	0	0
+tôi	P	B-NP	6	6	0	0	1	0	0	0
+làm	V	B-VP	6	6	0	0	0	0	0	0
+người	N	B-NP	6	6	0	2	0	1	0	0
+bảo_trợ	V	B-VP	6	6	100	11	0	0	0	0
+cho	E	B-PP	6	7	0	0	0	0	0	0
+Huyền	Np	I-PP	6	7	0	59	0	0	0	0
+-	-	O	6	7	0	0	0	0	0	1
+để	E	B-PP	6	7	0	0	0	0	0	0
+xây_dựng	V	B-VP	6	7	130	1	0	0	0	0
+một	M	B-NP	6	8	0	0	0	0	0	0
+trường_học	N	I-NP	6	8	130	3	0	0	0	0
+ở	E	B-PP	6	8	0	0	0	0	0	0
+huyện	N	I-PP	6	8	0	4	0	0	0	0
+Triệu_Phong	Np	I-PP	6	8	82	29	0	0	0	0
+-	-	O	6	9	0	0	0	0	0	1
+nơi	N	B-PP	6	9	0	3	0	0	0	0
+Huyền	Np	I-PP	6	9	0	59	0	0	0	0
+sinh_sống	V	B-VP	6	9	130	4	0	0	0	0
+.	.	O	6	9	0	0	0	0	0	2
+
+chi_phí	N	B-NP	6	0	130	2	0	0	0	0
+cho	E	B-PP	6	1	0	0	0	0	0	0
+chuyến	N	I-PP	6	2	69	11	0	0	0	0
+đi	V	B-VP	6	3	0	4	0	0	0	0
+hoàn_toàn	A	I-VP	6	4	130	2	0	0	0	0
+là	V	I-VP	6	5	0	1	0	0	0	0
+tiền_của	N	B-NP	6	6	130	4	0	0	0	0
+cá_nhân	N	I-NP	6	7	100	5	0	0	0	0
+tôi	P	I-NP	6	8	0	0	1	0	0	0
+.	.	O	6	9	0	0	0	0	0	2
+
+ông	Nc	B-NP	7	0	0	9	0	0	0	0
+Baltrusch	Np	I-NP	7	0	18	129	0	1	0	0
+cho_biết	V	B-VP	7	1	130	1	0	0	0	0
+đã	R	I-VP	7	2	0	0	1	0	0	0
+quyên_góp	V	I-VP	7	3	100	10	0	0	0	0
+được	R	I-VP	7	4	0	0	0	0	0	0
+trên	E	B-PP	7	5	0	0	1	0	0	0
+16.000	M	I-PP	7	5	0	0	0	0	0	0
+euro	Nu	I-PP	7	6	0	7	0	1	0	0
+tại	E	B-PP	7	7	0	0	1	0	0	0
+Đức	Np	I-PP	7	8	0	89	0	0	0	0
+.	.	O	7	9	0	0	0	0	0	2
+
+ngày	N	B-NP	7	0	0	3	0	1	0	0
+8-5	M	I-NP	7	0	0	0	0	0	0	0
+tại	E	B-PP	7	0	0	0	1	0	0	0
+Reichtag	Np	I-PP	7	0	130	9	0	1	0	0
+-	-	O	7	1	0	0	0	0	0	1
+trụ_sở	N	B-PP	7	1	130	3	0	1	0	0
+quốc_hội	N	I-PP	7	1	260	6	0	1	0	0
+CHLB	Np	I-PP	7	2	0	9	0	1	0	0
+Đức	Np	I-PP	7	2	0	89	0	0	0	0
+ở	E	B-PP	7	2	0	0	0	0	0	0
+Berlin	Np	I-PP	7	3	130	9	0	1	0	0
+-	-	O	7	3	0	0	0	0	0	1
+ông	Nc	B-PP	7	3	0	9	0	0	0	0
+Baltrusch	Np	I-PP	7	3	18	129	0	1	0	0
+đã	R	B-VP	7	4	0	0	1	0	0	0
+nhận	V	I-VP	7	4	0	1	0	1	0	0
+tấm	N	B-NP	7	4	0	0	1	0	0	0
+séc	N	I-NP	7	5	0	5	0	0	0	0
+tượng_trưng	V	B-VP	7	5	130	5	0	1	0	0
+trị_giá	V	I-VP	7	5	130	3	0	1	0	0
+4.000	M	B-NP	7	6	0	0	0	0	0	0
+euro	Nu	I-NP	7	6	0	7	0	1	0	0
+do	E	O	7	6	0	0	1	0	0	0
+ông	Nc	B-NP	7	6	0	9	0	0	0	0
+Wolfgang_Thierse	Np	I-NP	7	7	130	9	0	1	0	0
+,	,	I-NP	7	7	0	0	0	0	0	1
+phó	Z	I-NP	7	7	0	3	0	0	0	0
+chủ	N	I-NP	7	8	0	2	0	0	0	0
+tịch	N	I-NP	7	8	0	3	0	1	0	0
+quốc_hội	N	I-NP	7	8	260	6	0	1	0	0
+Đức	Np	I-NP	7	9	0	89	0	0	0	0
+trao	V	B-VP	7	9	0	3	0	1	0	0
+.	.	O	7	9	0	0	0	0	0	2
+
+cùng	A	B-AP	8	0	0	0	1	0	0	0
+ngày	N	B-NP	8	0	0	3	0	1	0	0
+,	,	I-NP	8	0	0	0	0	0	0	1
+tham_tán	N	I-NP	8	1	130	7	0	0	0	0
+công_sứ	N	I-NP	8	1	130	8	0	0	0	0
+Việt_Nam	Np	I-NP	8	1	120	59	0	0	0	0
+tại	E	B-PP	8	2	0	0	1	0	0	0
+Đức	Np	I-PP	8	2	0	89	0	0	0	0
+-	-	O	8	2	0	0	0	0	0	1
+ông	Nc	B-PP	8	3	0	9	0	0	0	0
+Bùi_Ngọc_Toàn	Np	I-PP	8	3	130	9	0	0	0	0
+,	,	O	8	4	0	0	0	0	0	1
+cũng	R	B-VP	8	4	0	0	1	0	0	0
+có	V	I-VP	8	4	0	0	0	0	0	0
+cuộc	N	B-NP	8	5	0	0	1	0	0	0
+gặp_gỡ	N	I-NP	8	5	130	4	0	0	0	0
+ông	N	I-NP	8	5	0	9	0	0	0	0
+Baltrusch	Np	I-NP	8	6	18	129	0	1	0	0
+trước	E	B-PP	8	6	0	0	1	0	0	0
+khi	E	I-PP	8	7	0	0	0	0	0	0
+ông	N	B-NP	8	7	0	9	0	0	0	0
+lên_đường	V	B-VP	8	7	100	9	0	0	0	0
+tới	V	I-VP	8	8	0	4	0	0	0	0
+Quảng_Trị	Np	B-NP	8	8	60	49	0	0	0	0
+,	,	I-NP	8	8	0	0	0	0	0	1
+Việt_Nam	Np	I-NP	8	9	120	59	0	0	0	0
+.	.	O	8	9	0	0	0	0	0	2
+
+ông	Nc	B-NP	8	0	0	9	0	0	0	0
+Baltrusch	Np	I-NP	8	0	18	129	0	1	0	0
+sinh	V	B-VP	8	1	0	2	0	0	0	0
+năm	N	B-NP	8	1	0	1	0	0	0	0
+1962	M	I-NP	8	2	0	0	0	0	0	0
+,	,	O	8	2	0	0	0	0	0	1
+hiện	N	B-NP	8	3	0	3	0	0	0	0
+là	V	B-VP	8	4	0	1	0	0	0	0
+phóng_viên	N	B-NP	8	4	130	3	0	0	0	0
+và	CC	I-NP	8	5	0	0	1	0	0	0
+biên_tập_viên	N	I-NP	8	5	130	6	0	0	0	0
+tại	E	B-PP	8	6	0	0	1	0	0	0
+đài_phát_thanh	N	I-PP	8	7	130	6	0	0	0	0
+Antenne_Unna	Np	I-PP	8	7	130	9	0	0	0	0
+tại	E	B-PP	8	8	0	0	1	0	0	0
+Đức	Np	I-PP	8	8	0	89	0	0	0	0
+.	.	O	8	9	0	0	0	0	0	2
+
+hai	M	B-NP	9	0	0	0	0	0	0	0
+người	N	I-NP	9	0	0	2	0	1	0	0
+bạn	N	I-NP	9	0	0	1	0	0	0	0
+đồng_hành	V	B-VP	9	1	130	4	0	0	0	0
+với	E	B-PP	9	1	0	0	1	0	0	0
+ông	N	I-PP	9	2	0	9	0	0	0	0
+là	V	B-VP	9	2	0	1	0	0	0	0
+Andreas_Huelsmann	Np	B-NP	9	3	130	9	0	0	0	0
+và	CC	I-NP	9	3	0	0	1	0	0	0
+Hans_Jurgen_Weigt	Np	I-NP	9	3	130	9	0	0	0	0
+đều	R	B-VP	9	4	0	0	0	0	0	0
+là	V	I-VP	9	4	0	1	0	0	0	0
+những	L	B-NP	9	5	0	0	1	0	0	0
+người	N	I-NP	9	5	0	2	0	1	0	0
+có	V	B-VP	9	6	0	0	0	0	0	0
+cùng	A	B-AP	9	6	0	0	1	0	0	0
+niềm	N	B-NP	9	6	0	3	0	0	0	0
+say_mê	V	B-VP	9	7	130	5	0	0	0	0
+với	E	B-PP	9	7	0	0	1	0	0	0
+các	L	I-PP	9	8	0	0	1	0	0	0
+chuyến	N	I-PP	9	8	69	11	0	0	0	0
+đi	V	I-PP	9	9	0	4	0	0	0	0
+.	.	O	9	9	0	0	0	0	0	2
+
+World_Vision	Np	B-NP	9	0	60	49	0	1	0	0
+là	V	B-VP	9	0	0	1	0	0	0	0
+một	M	B-NP	9	0	0	0	0	0	0	0
+tổ_chức	N	I-NP	9	0	100	2	0	1	0	0
+nhân_đạo	A	I-NP	9	1	130	5	0	1	0	0
+Cơ	Np	I-NP	9	1	0	9	0	0	0	0
+đốc	V	B-VP	9	1	0	3	0	0	0	0
+giáo	N	B-NP	9	1	0	4	0	1	0	0
+,	,	I-NP	9	2	0	0	0	0	0	1
+phi	N	I-NP	9	2	0	3	0	0	0	0
+lợi_nhuận	N	I-NP	9	2	130	2	0	1	0	0
+,	,	O	9	2	0	0	0	0	0	1
+hoạt_động	V	B-VP	9	3	130	1	0	1	0	0
+thông_qua	V	I-VP	9	3	130	2	0	1	0	0
+các	L	B-NP	9	3	0	0	1	0	0	0
+chương_trình	N	I-NP	9	3	130	2	0	1	0	0
+cứu_trợ	N	I-NP	9	4	130	4	0	1	0	0
+và	CC	I-NP	9	4	0	0	1	0	0	0
+phát_triển	V	B-VP	9	4	130	1	0	1	0	0
+nhằm	V	I-VP	9	4	0	1	0	1	0	0
+cải_thiện	V	I-VP	9	5	130	3	0	1	0	0
+chất_lượng	N	B-NP	9	5	130	2	0	1	0	0
+cuộc_sống	N	I-NP	9	5	130	2	0	1	0	0
+của	E	B-PP	9	5	0	0	1	0	0	0
+cộng_đồng	N	I-PP	9	6	130	3	0	1	0	0
+,	,	I-PP	9	6	0	0	0	0	0	1
+đặc_biệt	A	B-AP	9	6	130	1	0	1	0	0
+là	C	I-AP	9	6	0	0	0	0	0	0
+trợ_giúp	V	B-VP	9	7	130	4	0	1	0	0
+trẻ_em	N	B-NP	9	7	130	3	0	1	0	0
+,	,	I-NP	9	7	0	0	0	0	0	1
+người	N	I-NP	9	7	0	2	0	1	0	0
+nghèo	A	I-NP	9	8	0	13	0	1	0	0
+và	CC	I-NP	9	8	0	0	1	0	0	0
+người	N	I-NP	9	8	0	2	0	1	0	0
+gặp	V	B-VP	9	8	0	3	0	0	0	0
+hoàn_cảnh	N	B-NP	9	9	100	7	0	1	0	0
+khó_khăn	A	I-NP	9	9	130	1	0	1	0	0
+.	.	O	9	9	0	0	0	0	0	2
 

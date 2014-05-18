@@ -26,9 +26,12 @@ public class TrainData {
     public double iPosition;
     public double tf_isf;
     public double tf_idf;
+    public int punctuation;
     public boolean stopWord;
     public boolean semiStopWord;
     public boolean isInTopKSens;
+    public boolean isInCuePhrase;
+    public boolean endOfSentence;
     public yVALUE y;
 
     public TrainData(MyToken datum) {
@@ -38,14 +41,25 @@ public class TrainData {
         this.iSentence = datum.iSentence;
 //        this.iPhrase = datum.iPhrase;
         this.iPosition = datum.iPosition;
+        if (datum.punctuation) {
+            if (datum.endOfSentence) {
+                this.punctuation = 2;
+            } else {
+                this.punctuation = 1;
+            }
+        } else {
+            this.punctuation = 0;
+        }
         this.stopWord = datum.stopWord;
         this.semiStopWord = datum.semiStopWord;
+        this.endOfSentence = datum.endOfSentence;
         this.tf_isf = datum.tf_isf;
         this.tf_idf = datum.tf_idf;
         this.isInTopKSens = false;
+        this.isInCuePhrase = false;
         this.y = yVALUE.NONE;
     }
-    
+
     public TrainData(MyToken datum, yVALUE y) {
         this(datum);
         this.y = y;
@@ -61,8 +75,9 @@ public class TrainData {
         int _tf_isf = (int) (tf_isf * 100);
         int _tf_idf = (int) (tf_idf);
         return word + "\t" + posTag + "\t" + chunk + "\t" + _iSentence + "\t" + _iPosition + "\t"
-                + _tf_isf + "\t" +  _tf_idf + "\t" + ((stopWord || semiStopWord) ? "1" : "0") + "\t"
-                + (isInTopKSens ? "1" : "0") + ((y == yVALUE.NONE) ? "" : ("\t" + y));
+                + _tf_isf + "\t" + _tf_idf + "\t" + ((stopWord) ? "1" : "0") + "\t"
+                + (isInTopKSens ? "1" : "0") + "\t" + (isInCuePhrase ? "1" : "0") + "\t"
+                + punctuation + ((y == yVALUE.NONE) ? "" : ("\t" + y));
     }
 
     public static void main(String[] args) {

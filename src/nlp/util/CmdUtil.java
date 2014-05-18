@@ -8,6 +8,7 @@ package nlp.util;
  *
  * @author Trung
  */
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -30,7 +31,6 @@ class SyncPipe implements Runnable {
                 ostrm_.write(buffer, 0, length);
             }
         } catch (IOException e) {
-            e.printStackTrace();
         }
     }
     private final OutputStream ostrm_;
@@ -153,11 +153,36 @@ public class CmdUtil {
 
     public static void main(String[] args) {
         CmdUtil cmdCommand = new CmdUtil();
-        cmdCommand.runCmd(cmdCommand.vnTokenizer("temp/1.txt", "temp/1.sd.txt"));
+//        cmdCommand.runCmd(cmdCommand.vnTokenizer("temp/1.txt", "temp/1.sd.txt"));
+        cmdCommand.runCmd(cmdCommand.vnTagger("temp/1.txt", "temp/1.sd.txt"));
 //        cmdCommand.vnTokenizer("temp/1.sd.txt", "temp/1.tok.xml");
 //        cmdCommand.vnTokenizer("temp/1.sd.txt", "temp/1.tok.txt");
 //        cmdCommand.vnTagger("temp/0.sd.txt", "temp/0.tagged.txt");
 //        cmdCommand.crf_test("temp/0.tagged.line.txt", "temp/0.chunk.txt");
 //        cmdCommand.testTaggedFile("temp/1.tagged.txt");
+
+//        File dir = new File("corpus/Summary1/");
+//        String[] directories = dir.list();
+//        int counter = 0;
+//        for (String d : directories) {
+//            File directory = new File(dir.getPath() + "/" + d);
+//            if (directory.isFile()) {
+//                continue;
+//            }
+//            File[] files = directory.listFiles();    // Reading directory contents
+//            for (File file1 : files) {
+//                try {
+//                    String name = file1.getName();
+//                    String cmd = cmdCommand.vnSentDetector("corpus/Summary1/" + d + "/" + name,
+//                            "temp/Summary1/" + d + "/" + name);
+//                    cmdCommand.runCmd(cmd);
+//                    counter++;
+//                } catch (Exception ex) {
+////                continue;
+//                    System.out.println("Failure on file " + file1.getPath() + "!\n\n");
+//                }
+//            }
+//        }
+//        System.out.println("\n" + counter + " văn bản đã được đọc");
     }
 }

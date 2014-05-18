@@ -15,6 +15,8 @@ public class Conjunction {
      */
     public final static String DECLARE_WORDS[] = {
         "cho_biết",
+        "khẳng_định",
+        "lưu_ý",
         "nêu_rõ",
         "nhấn_mạnh",
         "phát_biểu",

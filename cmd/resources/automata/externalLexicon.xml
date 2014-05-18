@@ -1,13 +1,21 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <corpus id="resources/automata/externalLexicon.xml">
     <body>
-		<w>Vũ Dư</w>
-		<w>xy lanh</w>
+		<w>bí thư</w>
+		<w>bắc bộ</w>
+		<w>chỉ đạo</w>
+		<w>đại dương</w>
+		<w>gốm sứ</w>
+		<w>hộ tịch</w>
+		<w>khoa học</w>
+		<w>liên hiệp</w>		
 		<w>lô hàng</w>		
 		<w>nghị định</w>
-		<w>khoa học</w>
-		<w>bí thư</w>
+		<w>sau đó</w>
+		<w>tầm ngắm</w>
 		<w>trong đó</w>
+		<w>tuyên giáo</w>
+		<w>xy lanh</w>
     </body>
 </corpus>
 

@@ -190,21 +190,48 @@ public class IOUtil {
     }
 
     public static void main(String[] args) throws IOException {
-        File file = new File("corpus/Summary1/");
+        File dir = new File("corpus/Plaintext/");
 //        File file = new File("corpus/Plaintext1/");
-        String[] directories = file.list();
+        String[] directories = dir.list();
         int counter = 0;
         for (String d : directories) {
-            File directory = new File(file.getPath() + "/" + d);
+            File directory = new File(dir.getPath() + "/" + d);
             if (directory.isFile()) {
                 continue;
             }
             File[] files = directory.listFiles();    // Reading directory contents
-            for (int i = 0; i < files.length; i++) {
+            for (File file : files) {
                 try {
-                    String name = files[i].getName();
-                    String text = IOUtil.ReadFile("corpus/Summary1/" + d + "/" + name);
-                    text = text.replaceAll("\\(.*?\\)", "").replaceAll("(\\s)+", "$1");
+                    String name = file.getName();
+//                    ArrayList<String> lines = IOUtil.ReadFileByLine(directory.getPath() + "/" + name);
+//                    String text = "";
+//                    for (int i = 1; i < lines.size(); i++) {
+//                        text += lines.get(i) + "\n";
+//                    }
+                    String text = IOUtil.ReadFile(directory.getPath() + "/" + name);
+                    text = text.replaceAll("Luật Hộ", "luật hộ")
+                            .replaceAll("Giám đốc", "giám đốc")
+                            .replaceAll("Trung Tâm", "Trung tâm")
+                            .replaceAll("hội Nghị", "hội nghị")
+                            .replaceAll("Quốc Gia", "quốc gia");
+//                    text = text.replaceAll("Tổng Bí", "Tổng bí")
+//                            .replaceAll("Bộ Công", "Bộ công")
+//                            .replaceAll("Trường Đại", "Trường đại")
+//                            .replaceAll("Đại học", "đại học")
+//                            .replaceAll("Hội Liên", "Hội liên")
+//                            .replaceAll("UBThường", "UB Thường")
+//                            .replaceAll("Hội Phụ nữ", "Hội phụ nữ")
+//                            .replaceAll("Chung Việt Nam", "chung Việt Nam")
+//                            .replaceAll("Quỹ Tín", "Quỹ tín")
+//                            .replaceAll("Quỹ TínQuỹ Tín", "Quỹ tín")
+//                            .replaceAll("[\\s\\.]hực tế", "Thực tế")
+//                            .replaceAll("Bộ Trưởng", "Bộ trưởng")
+//                            .replaceAll("Thứ Trưởng", "Thứ trưởng")
+//                            .replaceAll("Bắc Ninh Nguyễn Tiến Nhường", "Bắc Ninh, ông Nguyễn Tiến Nhường,")
+//                            .replaceAll("Trưởng Tiểu", "Trưởng tiểu")
+//                            .replaceAll("Trưởng Ban", "Trưởng ban");
+//                    text = text.replaceAll("\\(.*?\\)", "").replaceAll("(\\s)+", "$1");
+//                    text = text.replaceAll("[\"']", " ").replaceAll("(\\s)+", "$1");
 //                    text = text.replaceAll("…|(\\.\\.+)", "...")
 //                            .replaceAll("[„“”]", "\"")
 //                            .replaceAll("[‘’]", "'")
@@ -218,14 +245,15 @@ public class IOUtil {
 //                            System.out.println(name + ": " + line);
 //                        }
 //                    }
-                    System.out.println("corpus/Summary1/" + d + "/" + name + ": \n" + text);
-                    IOUtil.WriteToFile("corpus/Summary1/" + d + "/" + name, text);
+//                    System.out.println("corpus/Summary1/" + d + "/" + name + ": \n" + text);
+                    IOUtil.WriteToFile("corpus/Plaintext/" + d + "/" + name, text);
 //                    decomposer.createTrainData("corpus/Plaintext/" + d + "/" + name,
 //                            "corpus/Summary/" + d + "/" + name, "data/train.nlp");
                     counter++;
                 } catch (Exception ex) {
 //                continue;
-                    System.out.println("Failure on file " + files[i].getPath() + "!\n\n");
+                    System.out.println("Failure on file " + file.getPath() + "!\n\n");
+//                    counter--;
                 }
             }
         }

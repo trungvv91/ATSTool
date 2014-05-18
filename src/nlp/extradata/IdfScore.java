@@ -37,19 +37,22 @@ public class IdfScore {
     public void tf_isf(ArrayList<MyToken> tokens) {
         System.out.println("Start of isf-scoring...");
         int S = tokens.get(tokens.size() - 1).iSentence + 1;      // the total number of sentences in the document
-        HashMap<String, int[]> tf_map = new HashMap<>();       // map có key là từ, value là mảng S+1 giá trị, với giá trị cuối lưu sum(arr)
+        HashMap<String, int[]> tf_map = new HashMap<>();       // map có key là từ, value là mảng S+1 giá trị, với giá trị cuối lưu số phần tử khác 0 của arr, hay số câu chứa w
         for (int i = 0; i < tokens.size(); i++) {
             MyToken di = tokens.get(i);
             int[] arr_tf;
             String key = di.word + "#" + di.posTag;
             if (tf_map.containsKey(key)) {
                 arr_tf = tf_map.get(key);
+                if (arr_tf[di.iSentence] == 0) {
+                    arr_tf[S]++;
+                }
                 arr_tf[di.iSentence]++;
             } else {
                 arr_tf = new int[S + 1];
                 arr_tf[di.iSentence] = 1;
+                arr_tf[S] = 1;
             }
-            arr_tf[S]++;
             tf_map.put(key, arr_tf);
         }
         for (MyToken token : tokens) {
@@ -65,13 +68,13 @@ public class IdfScore {
 
         //////////////////////////////////////////////////////////////////////////
         System.out.println("Start of idf-scoring...");
-        for (MyToken ti : tokens) {
+        for (int i = 0; i < tokens.size(); i++) {
+            MyToken ti = tokens.get(i);
             if (ti.punctuation || ti.stopWord || ti.semiStopWord) {
                 continue;
             }
             if (ti.tf == 0) {
                 int count = 1;
-                int i = tokens.indexOf(ti);
                 for (int j = i + 1; j < tokens.size(); j++) {
                     MyToken tj = tokens.get(j);
                     if (ti.equals(tj)) {
