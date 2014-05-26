@@ -5,7 +5,7 @@
 package nlp.textprocess;
 
 import java.util.ArrayList;
-import nlp.graph.WordsGraph;
+import nlp.extradata.Synonym;
 
 /**
  * Lớp trích rút thông tin, xếp hạng theo tf-isf và loại bỏ câu không quan
@@ -27,6 +27,14 @@ public class MyExtracter {
      * udpate remove redundant sentences
      */
     void remove() {
+//        System.out.println("Remove: ");
+//        for (int i = 0; i < sentences.size(); i++) {
+//            if (sentences.get(i).isRemove) {
+//                System.out.print(i + " ");
+//            }
+//        }
+//        System.out.println("------");
+
         int i = 0;
         while (i < sentences.size()) {
             if (sentences.get(i).isRemove) {
@@ -43,43 +51,50 @@ public class MyExtracter {
      *
      */
     void redundancing() {
-        final double SIM_THRESHOLD = 0.7;
+        final double SIM_THRESHOLD = 0.4;
 
         System.out.println("Start of redundancy...");
-        double topI, bottomI, topJ, bottomJ;
+        double sim_i, all_i, sim_j, all_j;
         int nSentences = sentences.size();
         for (int i = 0; i < nSentences - 1; i++) {
             for (int j = i + 1; j < nSentences; j++) {
                 MySentence sen_i = sentences.get(i);
                 MySentence sen_j = sentences.get(j);
                 if (Math.abs(sen_i.getScore() - sen_j.getScore()) < 0.2) {
-                    topI = topJ = bottomI = bottomJ = 0;
+                    sim_i = sim_j = all_i = all_j = 0;
                     for (MyToken di : sen_i.tokensList) {
-                        bottomI += di.idf;
+                        all_i += di.tf_isf;
                         for (MyToken dj : sen_j.tokensList) {
-                            if (dj.equals(di)) {
-                                topI += di.idf;
+                            if (dj.equals(di) || dj.isSimilarTo(di)) {
+                                sim_i += di.tf_isf;
                                 break;
                             }
                         }
                     }
                     for (MyToken dj : sen_j.tokensList) {
-                        bottomJ += dj.idf;
+                        all_j += dj.tf_isf;
                         for (MyToken di : sen_i.tokensList) {
-                            if (di.equals(dj)) {
-                                topJ += dj.idf;
+                            if (di.equals(dj) || di.isSimilarTo(dj)) {
+                                sim_j += dj.tf_isf;
                                 break;
                             }
                         }
                     }
 
-                    double simScore = (topI / bottomI + topJ / bottomJ) / 2;
+                    double simScore = (sim_i / all_i + sim_j / all_j) / 2;
                     if (simScore > SIM_THRESHOLD) {
-//                        if (sen_i.tokensList.size() >= sen_j.tokensList.size()) { // xóa câu dài hơn
-                        if (sen_i.getScore() < sen_j.getScore()) { // xóa câu rank thấp hơn
+                        // xóa câu rank thấp hơn; rank bằng nhau thì xóa câu dài hơn
+//                        System.out.println(simScore + " và " + i + " và " + j);
+                        if (sen_i.getScore() < sen_j.getScore()) {
                             sen_i.isRemove = true;
-                        } else {
+                        } else if (sen_i.getScore() > sen_j.getScore()) {
                             sen_j.isRemove = true;
+                        } else {
+                            if (sen_i.tokensList.size() > sen_j.tokensList.size()) { // xóa câu dài hơn
+                                sen_i.isRemove = true;
+                            } else {
+                                sen_j.isRemove = true;
+                            }
                         }
                     }
                 }
@@ -106,7 +121,8 @@ public class MyExtracter {
     }
 
     /**
-     * Phân giải đồng tham chiếu; loại câu trùng lặp, dư thừa; xếp hạng câu.
+     * Phân giải đồng tham chiếu (???); loại câu trùng lặp, dư thừa; xếp hạng
+     * câu.
      *
      * @param maxWord số chữ (không phải số từ)
      * @return list các câu đã được extract
@@ -122,27 +138,21 @@ public class MyExtracter {
             sentence.isRemove = true;
         }
         while (counter < maxWord) {
-//            boolean flag = false;
             for (MySentence sentence : sentences) {
                 if (sentence.rank == rank && sentence.tokensList.size() > 10) {
                     if (rank + 1 >= sentences.size() || maxWord - counter < sentence.tokensList.size()) {
                         counter = maxWord + 1;
                     } else {
-//                    rank++;
-//                    flag = true;
                         sentence.isRemove = false;
                         for (MyToken token : sentence.tokensList) {
                             if (!token.punctuation) {
                                 counter += token.word.split("_").length;
                             }
                         }
-//                    break;
                     }
                 }
             }
-//            if (flag) {
             rank++;
-//            }
         }
 
         remove();
@@ -150,12 +160,13 @@ public class MyExtracter {
     }
 
     public static void main(String[] args) {
+        Synonym.Init();
         MyTokenizer tokenizer = new MyTokenizer();
-        ArrayList<MySentence> sentences = tokenizer.createTokens("corpus/Plaintext/khoahoc_giaoduc/KHGD2.txt");
+        ArrayList<MySentence> sentences = tokenizer.createTokens("corpus/Plaintext/kinhte/KT01.txt");
         MyReducer re = new MyReducer(sentences);
-        WordsGraph wg = new WordsGraph(re.reduction());
-        MyExtracter se = new MyExtracter(wg.combination());
-        sentences = se.extract(120);
+        WordGraphs wg = new WordGraphs(re.reduction());
+        MyExtracter se = new MyExtracter(wg.generateSentences());
+        sentences = se.extract(100);
         for (MySentence mySentence : sentences) {
             System.out.println(mySentence.toString());
             System.out.println(mySentence.getScore() + " ; " + mySentence.rank);

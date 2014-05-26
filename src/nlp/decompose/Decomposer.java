@@ -191,7 +191,7 @@ public class Decomposer {
                     for (MySentence sentence : sentences) {
                         for (MyToken token : sentence.tokensList) {
                             if (token.word.toLowerCase().equals(word.toLowerCase())) {
-                                list.add(new Position(token.iSentence, token.iPosition));
+                                list.add(new Position(token.nSentence, token.nPosition));
 //                                System.out.print(s + "," + p + "  ;  ");
                             }
                         }
@@ -344,7 +344,7 @@ public class Decomposer {
         for (MyToken token : tokens) {
             for (int j = 0; j < topKSentence.length; j++) {
                 if (token.word.length() > 3 && !token.semiStopWord
-                        && !token.stopWord && topKSentence[j] == token.iSentence) {
+                        && !token.stopWord && topKSentence[j] == token.nSentence) {
                     wordInTopKSentence.add(token.word);
                 }
             }
@@ -352,10 +352,10 @@ public class Decomposer {
 
         // setup train list
         for (MyToken token : tokens) {
-            if (selectedSentence.contains(token.iSentence)) {
+            if (selectedSentence.contains(token.nSentence)) {
                 TrainData trainData = null;
                 for (Position position : positions) {
-                    if (token.iSentence == position.s && token.iPosition == position.p) {
+                    if (token.nSentence == position.s && token.nPosition == position.p) {
                         trainData = new TrainData(token, TrainData.yVALUE.RETAIN);
                     }
                 }
@@ -483,7 +483,7 @@ public class Decomposer {
         for (MyToken token : tokens) {
             for (int j = 0; j < topKSentence.length; j++) {
                 if (token.word.length() > 3 && !token.semiStopWord
-                        && !token.stopWord && topKSentence[j] == token.iSentence) {
+                        && !token.stopWord && topKSentence[j] == token.nSentence) {
                     wordInTopKSentence.add(token.word);
                 }
             }

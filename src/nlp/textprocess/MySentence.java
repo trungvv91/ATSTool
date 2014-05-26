@@ -56,7 +56,7 @@ public class MySentence {
     public int[] getSubject() {
         int start = getAdverbClause() + 1;
         int end = start;
-        while (tokensList.get(end).iPhrase == tokensList.get(start).iPhrase) {
+        while (tokensList.get(end).nPhrase == tokensList.get(start).nPhrase) {
             end++;
         }
 
@@ -79,6 +79,7 @@ public class MySentence {
                 }
             }
             score /= counter;
+//            score /= tokensList.size();
         }
         return score;
     }
@@ -130,7 +131,7 @@ public class MySentence {
         for (int i = 0; i < sentences.size(); i++) {
             ArrayList<MyToken> list = sentences.get(i).tokensList;
             for (MyToken datum : list) {
-                datum.iSentence = i;
+                datum.nSentence = i;
                 data.add(datum);
             }
         }

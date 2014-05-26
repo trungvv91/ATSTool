@@ -31,7 +31,7 @@ Package:
 		- StopWords.java: Mảng Stop-Words
 		- Synonym.java: Đọc danh sách từ đồng nghĩa
 	- nlp.graph:
-		- WordsGraph.java: Chương trình chính chạy tóm tắt
+		- WordGraphs.java: Chương trình chính chạy tóm tắt
 	- nlp.textprocess: 
 		- MyToken.java: model cho 1 token (1 từ)
 		- MySentence.java: model cho 1 câu

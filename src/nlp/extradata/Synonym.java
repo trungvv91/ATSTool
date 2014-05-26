@@ -8,30 +8,38 @@ import java.util.*;
 import nlp.util.IOUtil;
 
 /**
+ * Từ điển từ đồng nghĩa (:) và trái nghĩa (::)
  *
  * @author Trung
  */
 public class Synonym {
 
-    public Map<String, String> synonymMap = new HashMap<>();
-    private final String filename = "data/VNsynonym.txt";
+    public static Map<String, String> synonymMap;
+    static final String filename = "data/VNsynonym.txt";
 
-    public boolean isSynonym(String str) {
+    public static boolean isSynonym(String str) {
         return synonymMap.containsKey(str.toLowerCase());
     }
 
-    public String[] getSynonyms(String str) {
+    public static String[] getSynonyms(String str) {
         String tmp = synonymMap.get(str.toLowerCase());
-        String[] array = tmp.split(",");
-        return array;
+        if (tmp != null) {
+            String[] array = tmp.split(",");
+            return array;
+        } else {
+            return new String[]{};
+        }
     }
 
-    public Synonym() {
-        ArrayList<String> lines = IOUtil.ReadFileByLine(filename);
-        for (String line : lines) {
-            if (!line.contains("::")) {
-                String[] tokens = line.split("\\:");
-                synonymMap.put(tokens[0], tokens[1]);
+    public static void Init() {
+        if (synonymMap == null) {
+            synonymMap = new HashMap<>();
+            ArrayList<String> lines = IOUtil.ReadFileByLine(filename);
+            for (String line : lines) {
+                if (!line.contains("::")) {     // không trái nghĩa
+                    String[] tokens = line.split("\\:");
+                    synonymMap.put(tokens[0], tokens[1]);
+                }
             }
         }
     }

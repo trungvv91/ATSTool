@@ -116,9 +116,10 @@ public class MyTokenizer {
         String sdEditFile = outputFile + ".sd.edit";
         midprocess(sdFile, sdEditFile);
         cmd.runCmd(cmd.vnTokenizer(sdEditFile, outputFile));
-//        IOUtil.DeleteFile(editFile);
-//        IOUtil.DeleteFile(sdFile);
-//        IOUtil.DeleteFile(sdEditFile);
+        
+        IOUtil.DeleteFile(editFile);
+        IOUtil.DeleteFile(sdFile);
+        IOUtil.DeleteFile(sdEditFile);
     }
 
     /**
@@ -204,9 +205,9 @@ public class MyTokenizer {
                     }
                 }
             }
-            token.iPosition = tokenCounter++;
-            token.iPhrase = phraseCounter;
-            token.iSentence = sentenceCounter;
+            token.nPosition = tokenCounter++;
+            token.nPhrase = phraseCounter;
+            token.nSentence = sentenceCounter;
             token.stopWord = stopword.isStopWord(token.word);
 
             if (token.posTag.equals("E") || token.posTag.equals("M") || token.posTag.equals("T")
@@ -229,7 +230,26 @@ public class MyTokenizer {
             tokens.add(token);
         }
 
-        return setKeywords(tokens);
+        ArrayList<MySentence> sentences = setKeywords(tokens);
+        
+        // outfile
+        String str = "";
+        for (MySentence sentence : sentences) {
+            for (MyToken token : sentence.tokensList) {
+                str += token.toString() + "\n";
+            }
+            str += "\n";
+        }
+        IOUtil.WriteToFile("temp/" + fName + ".data.txt", str);
+        
+        IOUtil.DeleteFile(inputFilePreprocessed);
+        IOUtil.DeleteFile(outputFileSD);
+        IOUtil.DeleteFile(outputFileSDEdited);
+        IOUtil.DeleteFile(outputFileTagger);
+        IOUtil.DeleteFile(outputFileTaggerSD);
+        IOUtil.DeleteFile(outputFileChunker);
+        
+        return sentences;
     }
 
     /**
@@ -306,6 +326,14 @@ public class MyTokenizer {
     }
 
     public static void main(String[] args) {
-        System.out.println("".split("\\s+").length);
+        MyTokenizer tokenizer = new MyTokenizer();
+        tokenizer.tokenize("corpus/AutoSummary/kinhte/KT01.txt", "temp/auto.tok");
+//        ArrayList<MySentence> sentences = tokenizer.createTokens("corpus/Plaintext/kinhte/KT01.txt");
+//        for (MySentence sentence : sentences) {
+//            for (MyToken token : sentence.tokensList) {
+//                System.out.println(token.toString());
+//            }
+//            System.out.println("");
+//        }
     }
 }

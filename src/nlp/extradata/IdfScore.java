@@ -24,8 +24,9 @@ public class IdfScore {
         ArrayList<String> lines = IOUtil.ReadFileByLine(filename);
         for (String line : lines) {
             String[] tokens = line.split(" ");
+            String word = tokens[0];
             double idf = Double.parseDouble(tokens[1]);
-            idfScoreMap.put(tokens[0], idf);
+            idfScoreMap.put(word, idf);
         }
     }
 
@@ -36,21 +37,21 @@ public class IdfScore {
      */
     public void tf_isf(ArrayList<MyToken> tokens) {
         System.out.println("Start of isf-scoring...");
-        int S = tokens.get(tokens.size() - 1).iSentence + 1;      // the total number of sentences in the document
+        int S = tokens.get(tokens.size() - 1).nSentence + 1;      // the total number of sentences in the document
         HashMap<String, int[]> tf_map = new HashMap<>();       // map có key là từ, value là mảng S+1 giá trị, với giá trị cuối lưu số phần tử khác 0 của arr, hay số câu chứa w
         for (int i = 0; i < tokens.size(); i++) {
-            MyToken di = tokens.get(i);
+            MyToken ti = tokens.get(i);
             int[] arr_tf;
-            String key = di.word + "#" + di.posTag;
+            String key = ti.word + "#" + ti.posTag;
             if (tf_map.containsKey(key)) {
                 arr_tf = tf_map.get(key);
-                if (arr_tf[di.iSentence] == 0) {
+                if (arr_tf[ti.nSentence] == 0) {
                     arr_tf[S]++;
                 }
-                arr_tf[di.iSentence]++;
+                arr_tf[ti.nSentence]++;
             } else {
                 arr_tf = new int[S + 1];
-                arr_tf[di.iSentence] = 1;
+                arr_tf[ti.nSentence] = 1;
                 arr_tf[S] = 1;
             }
             tf_map.put(key, arr_tf);
@@ -60,8 +61,8 @@ public class IdfScore {
                 continue;
             }
             int[] arr_tf = tf_map.get(token.word + "#" + token.posTag);
-            int tf = arr_tf[token.iSentence];
-            double isf = Math.log10(S / (arr_tf[S] + 0.0));
+            int tf = arr_tf[token.nSentence];
+            double isf = 1 + Math.log10(S / (arr_tf[S] + 0.0));
             token.tf_isf = tf * isf;
         }
         System.out.println("End of isf-scoring...\n");
@@ -73,27 +74,18 @@ public class IdfScore {
             if (ti.punctuation || ti.stopWord || ti.semiStopWord) {
                 continue;
             }
-            if (ti.tf == 0) {
-                int count = 1;
-                for (int j = i + 1; j < tokens.size(); j++) {
-                    MyToken tj = tokens.get(j);
-                    if (ti.equals(tj)) {
-                        count++;
-                        tj.tf = -i;     /// lưu lại chỉ số của thằng giống nó đã tính ở trước
-                    }
+            int tf = 1;
+            for (int j = i + 1; j < tokens.size(); j++) {
+                MyToken tj = tokens.get(j);
+                if (ti.equals(tj)) {
+                    tf++;
                 }
-                ti.tf = count;
-            } else if (ti.tf < 0) {
-                ti.tf = tokens.get(-ti.tf).tf;      /// chỉ số được lưu dùng ở đây
             }
-
+            double idf = Math.log(21628.0);
             if (idfScoreMap.containsKey(ti.word)) {
-                ti.idf = idfScoreMap.get(ti.word);
-            } else {
-                ti.idf = Math.log(21628.0);        /// !!!
+                idf = idfScoreMap.get(ti.word);
             }
-
-            ti.tf_idf = ti.idf * ti.tf;
+            ti.tf_idf = idf * tf;
         }
         System.out.println("End of idf-scoring...\n");
     }

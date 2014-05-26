@@ -38,9 +38,9 @@ public class TrainData {
         this.word = datum.word;
         this.posTag = datum.posTag;
         this.chunk = datum.chunk;
-        this.iSentence = datum.iSentence;
+        this.iSentence = datum.nSentence;
 //        this.iPhrase = datum.iPhrase;
-        this.iPosition = datum.iPosition;
+        this.iPosition = datum.nPosition;
         if (datum.punctuation) {
             if (datum.endOfSentence) {
                 this.punctuation = 2;

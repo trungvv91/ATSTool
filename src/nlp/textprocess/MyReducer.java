@@ -39,7 +39,7 @@ public class MyReducer {
             for (MyToken token : sentence.tokensList) {
                 for (int j = 0; j < topKSentence.length; j++) {
                     if (token.word.length() > 3 && !token.semiStopWord
-                            && !token.stopWord && topKSentence[j] == token.iSentence) {
+                            && !token.stopWord && topKSentence[j] == token.nSentence) {
                         wordInTopKSentence.add(token.word);
                     }
                 }
@@ -117,7 +117,7 @@ public class MyReducer {
                     break;              // tìm last important token
                 }
             }
-            while (eIndex > -1 && eIndex < tokens.size() - 1 && tokens.get(eIndex + 1).iPhrase == tokens.get(eIndex).iPhrase) {
+            while (eIndex > -1 && eIndex < tokens.size() - 1 && tokens.get(eIndex + 1).nPhrase == tokens.get(eIndex).nPhrase) {
                 eIndex++;                    // tìm phrase tương ứng
             }
 //            fragments[si][1] = eIndex;
@@ -136,7 +136,7 @@ public class MyReducer {
                         && tokens.get(tIndex).chunk.endsWith("PP");
                 flag = endWithNP || endWithVP || endWithVerb;
                 if (flag) {
-                    while (tIndex < tokens.size() - 1 && tokens.get(tIndex + 1).iPhrase == tokens.get(tIndex).iPhrase) {
+                    while (tIndex < tokens.size() - 1 && tokens.get(tIndex + 1).nPhrase == tokens.get(tIndex).nPhrase) {
                         tIndex++;
                     }
                     eIndex = tIndex;
@@ -288,16 +288,16 @@ public class MyReducer {
             int phr = 0;    // phrase
             for (int p = 0; p < sen_si.size() - 1; p++) {
                 MyToken token = sen_si.get(p);
-                token.iPosition = p;
-                token.iPhrase = phr;
-                if (sen_si.get(p + 1).iPhrase != token.iPhrase) {
+                token.nPosition = p;
+                token.nPhrase = phr;
+                if (sen_si.get(p + 1).nPhrase != token.nPhrase) {
                     phr++;
                 }
             }
-            sen_si.get(sen_si.size() - 1).iPhrase = phr;
+            sen_si.get(sen_si.size() - 1).nPhrase = phr;
             if (lastToken != null) {
-                lastToken.iPosition = sen_si.size();
-                lastToken.iPhrase = phr + 1;
+                lastToken.nPosition = sen_si.size();
+                lastToken.nPhrase = phr + 1;
                 sen_si.add(lastToken);
             }
         }

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import nlp.extradata.Punctuation;
+import nlp.extradata.Synonym;
 
 /**
  *
@@ -22,21 +23,19 @@ public class MyToken {
     /**
      * the position of sentence
      */
-    public int iSentence;
+    public int nSentence;
     /**
      * the position of phrase in sentence
      */
-    public int iPhrase;
+    public int nPhrase;
     /**
      * the position of token in sentence
      */
-    public int iPosition;
+    public int nPosition;
 
     /**
      * tf-idf và tf-isf
      */
-    public int tf;                  // tần suất xuất hiện trong cả document
-    public double idf;              // tần suất nghịch đảo document (không phải tf-isf)
     public double tf_idf;
     public double tf_isf;
 
@@ -50,9 +49,7 @@ public class MyToken {
         this.word = word;
         this.posTag = posTag;
         this.chunk = chunk;
-        tf = 0;
-        idf = 0;
-        iPhrase = -1;
+        nPhrase = -1;
         stopWord = false;
         semiStopWord = false;
         punctuation = false;
@@ -61,7 +58,7 @@ public class MyToken {
     }
 
     public static int getNumberOfSentences(ArrayList<MyToken> data) {
-        return data.get(data.size() - 1).iSentence + 1;
+        return data.get(data.size() - 1).nSentence + 1;
     }
 
     public static List<MyToken> SentenceToDatum(List<ArrayList<MyToken>> sentences) {
@@ -69,7 +66,7 @@ public class MyToken {
         for (List<MyToken> sentence : sentences) {
             for (int i = 0; i < sentence.size(); i++) {
                 MyToken datum = sentence.get(i);
-                datum.iSentence = i;
+                datum.nSentence = i;
                 data.add(datum);
             }
         }
@@ -102,10 +99,9 @@ public class MyToken {
 
     @Override
     public String toString() {
-//        return word + "\t" + posTag + "\t" + chunk + "\t(" + iPosition + "," + iPhrase + "," + iSentence + ")\t"
-//                + ((int) (tf_isf * 1000)) / 1000.0 + "\t" + ((stopWord || semiStopWord) ? "1" : "0");
-        return word + "\t" + posTag + "\t" + chunk + "\t" + iPosition + "\t" + iPhrase + "\t" + iSentence
-                + "\t" + ((int) (tf_isf * 1000)) / 1000.0 + "\t" + ((stopWord || semiStopWord) ? "1" : "0");
+        return word + "\t" + posTag + "\t" + chunk + "\t" + nPosition + "\t" + nPhrase + "\t" + nSentence
+                + "\t" + ((int) (tf_isf * 1000)) / 1000.0 + "\t" + ((stopWord || semiStopWord) ? "1" : "0")
+                + "\t" + (keyword ? "1" : "0");
     }
 
     @Override
@@ -128,15 +124,22 @@ public class MyToken {
         return hash;
     }
 
-    public MyToken copy() {
-        MyToken newDatum = new MyToken(word, posTag, chunk);
-        newDatum.iSentence = this.iSentence;
-        newDatum.iPhrase = this.iPhrase;
-        newDatum.iPosition = this.iPosition;
-        newDatum.tf = this.tf;
-        newDatum.idf = this.idf;
-        newDatum.tf_isf = this.tf_isf;
-        return newDatum;
+    public boolean isSimilarTo(Object obj) {
+        boolean rs = false;
+        if (obj == null || this.getClass() != obj.getClass()) {
+            rs = false;
+        } else {
+            final MyToken objDatum = (MyToken) obj;
+            String[] synonyms = Synonym.getSynonyms(word);
+            for (String synonym : synonyms) {
+                if (synonym.equals(objDatum.word)) {
+                    rs = true;
+                    break;
+                }
+            }
+            rs = rs && this.posTag.equals(objDatum.posTag);
+        }
+        return rs;
     }
 
     public static void main(String[] args) {

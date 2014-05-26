@@ -29,6 +29,21 @@ public class IOUtil {
             file.delete();
         }
     }
+    
+    public static void DeleteFolder(String foldername) {
+        File file = new File(foldername);
+        if (file.exists() && file.isDirectory()) {
+            for (String sub : file.list()) {
+                File subfile = new File(sub);
+                if (subfile.isFile()) {
+                    DeleteFile(sub);
+                } else {
+                    DeleteFolder(sub);
+                }
+            }
+            file.delete();
+        }
+    }
 
     public static void AppendFile(String sourceFile, String desFile) {
         try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(sourceFile), StandardCharsets.UTF_8));
@@ -200,9 +215,9 @@ public class IOUtil {
                 continue;
             }
             File[] files = directory.listFiles();    // Reading directory contents
-            for (File file : files) {
+            for (int k = 0; k < files.length; k++) {
                 try {
-                    String name = file.getName();
+                    String name = files[k].getName();
 //                    ArrayList<String> lines = IOUtil.ReadFileByLine(directory.getPath() + "/" + name);
 //                    String text = "";
 //                    for (int i = 1; i < lines.size(); i++) {
@@ -246,13 +261,13 @@ public class IOUtil {
 //                        }
 //                    }
 //                    System.out.println("corpus/Summary1/" + d + "/" + name + ": \n" + text);
-                    IOUtil.WriteToFile("corpus/Plaintext/" + d + "/" + name, text);
+                    IOUtil.WriteToFile("corpus/BaselineSummary/" + d + "/" + name, text);
 //                    decomposer.createTrainData("corpus/Plaintext/" + d + "/" + name,
 //                            "corpus/Summary/" + d + "/" + name, "data/train.nlp");
                     counter++;
                 } catch (Exception ex) {
 //                continue;
-                    System.out.println("Failure on file " + file.getPath() + "!\n\n");
+                    System.out.println("Failure on file " + files[k].getPath() + "!\n\n");
 //                    counter--;
                 }
             }

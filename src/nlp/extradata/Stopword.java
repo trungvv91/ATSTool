@@ -27,18 +27,8 @@ public class Stopword {
     }
 
     public static void main(String[] args) {
-        //System.out.println(checkStopWord("xoẹt"));
         Stopword stopword = new Stopword();
-        //stopword.getStopWords();
         System.out.println(stopword.isStopWord("xoẹt"));
-
-//        Locale vnLocale = new Locale("vi", "VN");
-//        Locale.setDefault(vnLocale);
-//        Collator vnCollator = Collator.getInstance();
-//        System.out.println(vnCollator.compare("a", "bá"));
-//        System.out.println("xoẹt".compareTo("xa_xả"));
-//        System.out.println("xoẹt".compareTo("xăm_xăm"));
-//        System.out.println("xoẹt".compareTo("xềnh_xệch"));
     }
 
 }
