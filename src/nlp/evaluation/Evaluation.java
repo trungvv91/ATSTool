@@ -36,16 +36,14 @@ public class Evaluation {
                 continue;
             }
             File[] files = directory.listFiles();    // Reading directory contents
-            for (int k = 0; k < 2; k++) {
+            for (File file : files) {
                 try {
-                    String name = files[k].getName();
+                    String name = file.getName();
                     String text = IOUtil.ReadFile(directory.getPath() + "/" + name);
                     String[] sentences = text.split("\n");
-
                     String s = IOUtil.ReadFile("corpus/Summary/" + d + "/" + name);
                     int nWords = s.split("\\s+").length;        // lấy số từ theo văn bản tóm tắt tay
                     System.out.println(nWords);
-
                     ArrayList<Integer> list = new ArrayList<>();
                     for (int i = 0; i < sentences.length; i++) {
                         list.add(i);
@@ -55,20 +53,20 @@ public class Evaluation {
                     for (int i = 0; i < list.size(); i++) {
                         arrIndices[i] = list.get(i);
                     }
-
                     String str = "";
+//                    int maxWords = IOUtil.ReadFile(file.getPath()).split("\\s+").length;
+//                    maxWords = (maxWords < 120) ? maxWords : 120;
                     int wordCounter = 0, i = 0;
-                    while (wordCounter < 120 * 0.8) {
+                    while (wordCounter < nWords * 0.8) {
                         String sentence = sentences[arrIndices[i++]];
                         wordCounter += sentence.split("\\s+").length + 2;
                         str += sentence + "\n";
                     }
                     System.out.println(wordCounter + "\n");
-
                     IOUtil.WriteToFile("corpus/BaselineSummary/" + d + "/" + name, str);
                     counter++;
                 } catch (Exception ex) {
-                    System.out.println("Failure on file " + files[k].getPath() + "!\n\n");
+                    System.out.println("Failure on file " + file.getPath() + "!\n\n");
                 }
             }
         }
@@ -273,8 +271,8 @@ public class Evaluation {
 //            System.out.println("Recall = " + r[0] + "\tPrecision = " + r[1] + "\tF = " + r[2]);
 //        }
         
-//        eval.createBaseLine();
-        File dir = new File("corpus/AutoSummary/");
+        eval.createBaseLine();
+        File dir = new File("corpus/BaselineSummary/");
         String[] directories = dir.list();
         int counter = 0;
         double[][] avg = new double[4][3];

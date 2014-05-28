@@ -56,7 +56,7 @@ public class Summarization {
      * Tóm tắt 1 xâu
      *
      * @param sourceText
-     * @param wordMax
+     * @param wordMax - số chữ (không phải số từ)
      * @return
      */
     public String summarize(String sourceText, int wordMax) {
@@ -76,7 +76,7 @@ public class Summarization {
      *
      * @param input file gốc
      * @param output file tóm tắt
-     * @param wordMax
+     * @param wordMax - số chữ (không phải số từ)
      */
     public void summarize(String input, String output, int wordMax) {
         MyTokenizer tokenizer = new MyTokenizer();
@@ -90,23 +90,36 @@ public class Summarization {
     }
 
     public static void main(String[] args) {
-//        String s = IOUtil.ReadFile("corpus/Plaintext/kinhte/KT01.txt");
         Summarization sum = new Summarization();
-        File sourceFile = new File("corpus/Plaintext");
-        String[] directories = sourceFile.list();
-        int counter = 0;
-
-        for (String d : directories) {
-            File directory = new File("corpus/Plaintext/" + d);
-            if (directory.isFile()) {
-                continue;
-            }
-            File[] files = directory.listFiles();    // Reading directory contents
-            for (File file : files) {
-                sum.summarize(file.getPath(), "corpus/AutoSummary/" + d + "/" + file.getName(), 120);
-                counter++;
-            }
-        }
-        System.out.println("\n" + counter + " văn bản đã được tóm tắt");
+//        MyTokenizer tokenizer = new MyTokenizer();
+//        long start = System.nanoTime();
+//        ArrayList<MySentence> sentences = tokenizer.createTokens("corpus/Plaintext/kinhte/KT01.txt");
+//        long end = System.nanoTime();
+//        System.out.println((end - start) / 1e6);
+//        MyReducer re = new MyReducer(sentences);
+//        WordGraphs wg = new WordGraphs(re.reduction());
+//        MyExtracter se = new MyExtracter(wg.generateSentences());
+//        sentences = se.extract(100);
+//        String outString = sum.decoration(sentences);
+//        IOUtil.WriteToFile("corpus/AutoSummary/kinhte/KT01.txt", outString);
+        
+        sum.summarize("corpus/Plaintext/kinhte/KT01.txt", "corpus/AutoSummary/kinhte/KT01.txt", 90);
+        
+//        File sourceFile = new File("corpus/Plaintext");
+//        String[] directories = sourceFile.list();
+//        int counter = 0;
+//
+//        for (String d : directories) {
+//            File directory = new File("corpus/Plaintext/" + d);
+//            if (directory.isFile()) {
+//                continue;
+//            }
+//            File[] files = directory.listFiles();    // Reading directory contents
+//            for (File file : files) {
+//                sum.summarize(file.getPath(), "corpus/AutoSummary/" + d + "/" + file.getName(), 100);
+//                counter++;
+//            }
+//        }
+//        System.out.println("\n" + counter + " văn bản đã được tóm tắt");
     }
 }

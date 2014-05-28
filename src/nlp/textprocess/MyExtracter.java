@@ -137,7 +137,8 @@ public class MyExtracter {
         for (MySentence sentence : sentences) {
             sentence.isRemove = true;
         }
-        while (counter < maxWord) {
+        int dem = 0;
+        while (dem < 10 && counter < maxWord) {
             for (MySentence sentence : sentences) {
                 if (sentence.rank == rank && sentence.tokensList.size() > 10) {
                     if (rank + 1 >= sentences.size() || maxWord - counter < sentence.tokensList.size()) {
@@ -153,6 +154,7 @@ public class MyExtracter {
                 }
             }
             rank++;
+            dem++;
         }
 
         remove();

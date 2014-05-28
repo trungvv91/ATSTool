@@ -7,7 +7,6 @@ package nlp.evaluation;
 
 import java.io.File;
 import java.text.DecimalFormat;
-import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import nlp.util.IOUtil;
@@ -22,17 +21,18 @@ public class EvalUI extends javax.swing.JFrame {
     final Evaluation eval;
     final DecimalFormat decimalFormat;
     final Summarization sum;
+//    final float rate = 0.3f;
 
     /**
      * Creates new form EvalUI
      */
-    public EvalUI() {        
+    public EvalUI() {
         decimalFormat = new DecimalFormat("#.######");
         eval = new Evaluation();
         sum = new Summarization();
 
         initComponents();
-        
+
         fc = new JFileChooser();
         fc.setCurrentDirectory(new File("corpus"));
         fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
@@ -41,7 +41,12 @@ public class EvalUI extends javax.swing.JFrame {
         btnAutoSum.setEnabled(false);
     }
 
-    private void summarizeFolder(String source, String autosum, int maxWords) {
+    /**
+     *
+     * @param source
+     * @param autosum
+     */
+    private void summarizeFolder(String source, String autosum) {
         File sourceFile = new File(source);
         String[] directories = sourceFile.list();
         File auto = new File(autosum);
@@ -61,6 +66,8 @@ public class EvalUI extends javax.swing.JFrame {
                 if (!auto_sub.exists()) {
                     auto_sub.mkdir();
                 }
+                int maxWords = (int) (1.05 * IOUtil.ReadFile(txtSum.getText() + "/" + d + "/" + file.getName()).split("\\s+").length);
+//                maxWords = (maxWords < 120) ? maxWords : 120;
                 sum.summarize(file.getPath(), autosum + "/" + d + "/" + file.getName(), maxWords);
                 counter++;
             }
@@ -96,7 +103,7 @@ public class EvalUI extends javax.swing.JFrame {
                     }
                     output += "\n";
                     counter++;
-                }catch (Exception ex) {
+                } catch (Exception ex) {
 //                    System.out.println("Failure on file " + files[k].getPath() + "!\n\n");
                 }
             }
@@ -316,7 +323,9 @@ public class EvalUI extends javax.swing.JFrame {
                 rouge = eval.rouge(autoSumPath, new String[]{sumPath});
             } else {
                 autoSumPath = "temp/1.temp";
-                sum.summarize(sourcePath, autoSumPath, 120);
+                int maxWords = (int) (1.05 * IOUtil.ReadFile(sumPath).split("\\s+").length);
+//                maxWords = (maxWords < 120) ? maxWords : 120;
+                sum.summarize(sourcePath, autoSumPath, maxWords);
                 rouge = eval.rouge(autoSumPath, new String[]{sumPath});
                 IOUtil.DeleteFile(autoSumPath);
             }
@@ -325,7 +334,7 @@ public class EvalUI extends javax.swing.JFrame {
                 rouge = evalFolder(autoSumPath, sumPath);
             } else {
                 autoSumPath = "temp/AutoSummary";
-                summarizeFolder(sourcePath, autoSumPath, 120);
+                summarizeFolder(sourcePath, autoSumPath);
                 rouge = evalFolder(autoSumPath, sumPath);
                 IOUtil.DeleteFolder(sourcePath);
             }

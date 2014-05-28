@@ -1,6 +1,6 @@
 package nlp.textprocess;
 
-import nlp.extradata.IdfScore;
+import nlp.extradata.Tf_IsfScore;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;
@@ -21,12 +21,12 @@ public class MyTokenizer {
 
     final Stopword stopword;
     final CmdUtil cmd;
-    final IdfScore idfScore;
+    final Tf_IsfScore idfScore;
 
     public MyTokenizer() {
         cmd = new CmdUtil();
         stopword = new Stopword();
-        idfScore = new IdfScore();
+        idfScore = new Tf_IsfScore();
     }
 
     /**
@@ -232,15 +232,15 @@ public class MyTokenizer {
 
         ArrayList<MySentence> sentences = setKeywords(tokens);
         
-        // outfile
-        String str = "";
-        for (MySentence sentence : sentences) {
-            for (MyToken token : sentence.tokensList) {
-                str += token.toString() + "\n";
-            }
-            str += "\n";
-        }
-        IOUtil.WriteToFile("temp/" + fName + ".data.txt", str);
+//        // outfile
+//        String str = "";
+//        for (MySentence sentence : sentences) {
+//            for (MyToken token : sentence.tokensList) {
+//                str += token.toString() + "\n";
+//            }
+//            str += "\n";
+//        }
+//        IOUtil.WriteToFile("temp/" + fName + ".data.txt", str);
         
         IOUtil.DeleteFile(inputFilePreprocessed);
         IOUtil.DeleteFile(outputFileSD);
@@ -327,7 +327,7 @@ public class MyTokenizer {
 
     public static void main(String[] args) {
         MyTokenizer tokenizer = new MyTokenizer();
-        tokenizer.tokenize("corpus/AutoSummary/kinhte/KT01.txt", "temp/auto.tok");
+        tokenizer.tokenize("corpus/Summary/kinhte/KT01.txt", "temp/auto.tok");
 //        ArrayList<MySentence> sentences = tokenizer.createTokens("corpus/Plaintext/kinhte/KT01.txt");
 //        for (MySentence sentence : sentences) {
 //            for (MyToken token : sentence.tokensList) {

@@ -99,6 +99,9 @@ public class MyReducer {
                 }
             }
         }
+        
+        IOUtil.DeleteFile(testFile);
+        IOUtil.DeleteFile(resultFile);
     }
 
     /**
